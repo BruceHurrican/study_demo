@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-                android:name="com.bruce.study.demo.SwipeRefreshLayoutDemo.SwipeRefreshLayoutActivity"
+                android:name="com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

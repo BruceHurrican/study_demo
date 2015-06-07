@@ -1,4 +1,4 @@
-package com.bruce.study.demo.SwipeRefreshLayoutDemo;
+package com.bruce.study.demo.swipe_refresh_layout_demo;
 
 import android.app.Activity;
 import android.os.Bundle;

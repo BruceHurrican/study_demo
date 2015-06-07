@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import com.bruce.study.demo.SwipeRefreshLayoutDemo.SwipeRefreshLayoutActivity;
+import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
 import java.util.ArrayList;
 
@@ -40,7 +40,7 @@ public class MyActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(MyActivity.this, "你点击了第" + (position + 1) + "条Demo", Toast.LENGTH_SHORT).show();
-                it.setClass(MyActivity.this,demos.get(position));
+                it.setClass(MyActivity.this, demos.get(position));
                 startActivity(it);
             }
         });

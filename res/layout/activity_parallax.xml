@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <com.bruce.study.demo.parallax_listview_demo.widget.ParallaxScrollListView
+            android:id="@+id/pslv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@null"
+            android:duplicateParentState="true"
+            android:scrollingCache="false"
+            android:headerDividersEnabled="false"
+            android:overScrollMode="never"
+            android:scrollbars="none"/>
+</RelativeLayout>

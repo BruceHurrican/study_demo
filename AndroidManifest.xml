@@ -26,5 +26,8 @@
         <activity
                 android:name=".shape_loading_demo.ShapeLoadingActivity"
                 android:launchMode="singleTask"/>
+        <activity
+                android:name=".parallax_listview_demo.ParallaxActivity"
+                android:launchMode="singleTask"/>
     </application>
 </manifest>

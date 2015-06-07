@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
@@ -47,6 +48,7 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
 
         addDemoContainer(SwipeRefreshLayoutActivity.class, "谷歌自带下拉刷新组件");
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");
+        addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
 
         lv_demo_list.setOnItemClickListener(this);
     }

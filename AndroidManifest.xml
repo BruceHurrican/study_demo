@@ -23,5 +23,8 @@
         <activity
                 android:name="com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity"
                 android:launchMode="singleTask"/>
+        <activity
+                android:name=".shape_loading_demo.ShapeLoadingActivity"
+                android:launchMode="singleTask"/>
     </application>
 </manifest>

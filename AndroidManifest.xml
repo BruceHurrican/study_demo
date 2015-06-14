@@ -29,5 +29,8 @@
         <activity
                 android:name=".parallax_listview_demo.ParallaxActivity"
                 android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.popup_window.PopupWindowActivity"
+                android:launchMode="singleTask"/>
     </application>
 </manifest>

@@ -10,7 +10,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
-import com.bruce.study.demo.studydata.popup_window.PopupWindowActivity;
+import com.bruce.study.demo.studydata.ActivityLifeStyle.LifeStyleActivity;
+import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");
         addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
         addDemoContainer(PopupWindowActivity.class, "练习PopupWindow");
+        addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
 
         lv_demo_list.setOnItemClickListener(this);
     }

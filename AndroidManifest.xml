@@ -30,7 +30,14 @@
                 android:name=".parallax_listview_demo.ParallaxActivity"
                 android:launchMode="singleTask"/>
         <activity
-                android:name=".studydata.popup_window.PopupWindowActivity"
+                android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.ActivityLifeStyle.LifeStyleActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.ActivityLifeStyle.LifeStyleOtherActivity"
+                android:theme="@android:style/Theme.Dialog"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

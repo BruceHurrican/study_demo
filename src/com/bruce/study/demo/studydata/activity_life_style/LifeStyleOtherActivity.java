@@ -1,4 +1,4 @@
-package com.bruce.study.demo.studydata.ActivityLifeStyle;
+package com.bruce.study.demo.studydata.activity_life_style;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -17,7 +17,7 @@ public class LifeStyleOtherActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_life_style_other);
+        setContentView(R.layout.studydata_activity_life_style_lother);
         Log.v(TAG, "onCreate");
         btn_life_style_other = (Button) findViewById(R.id.btn_life_style_other);
         btn_life_style_other.setOnClickListener(new View.OnClickListener() {

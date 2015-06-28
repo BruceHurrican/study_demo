@@ -8,7 +8,7 @@
             android:layout_height="3dp"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="82dp"
-            android:src="@drawable/shadow"/>
+            android:src="@drawable/shapeloading_shadow"/>
     <TextView
             android:id="@+id/prompt_tv"
             android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-package com.bruce.study.demo.studydata.ActivityLifeStyle;
+package com.bruce.study.demo.studydata.activity_life_style;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -19,7 +19,7 @@ public class LifeStyleActivity extends Activity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_life_style);
+        setContentView(R.layout.studydata_activity_life_style);
         Log.v(TAG, "onCreate");
         btn_life_style = (Button) findViewById(R.id.btn_life_style);
         btn_life_style.setOnClickListener(this);

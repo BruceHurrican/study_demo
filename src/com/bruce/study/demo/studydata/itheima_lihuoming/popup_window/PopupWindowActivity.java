@@ -20,16 +20,16 @@ import java.util.List;
 public class PopupWindowActivity extends Activity {
     private PopupWindow popupWindow;
     private View parent;
-    private int[] images = {R.drawable.i1, R.drawable.i2, R.drawable.i3, R.drawable.i4,
-            R.drawable.i5, R.drawable.i6, R.drawable.i7, R.drawable.i8};
+    private int[] images = {R.drawable.itheima_popwindow_i1, R.drawable.itheima_popwindow_i2, R.drawable.itheima_popwindow_i3, R.drawable.itheima_popwindow_i4,
+            R.drawable.itheima_popwindow_i5, R.drawable.itheima_popwindow_i6, R.drawable.itheima_popwindow_i7, R.drawable.itheima_popwindow_i8};
     private String[] names = {"搜索", "文件管理", "下载管理", "全屏", "网址", "书签", "加入书签", "分享页面"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_popup_window);
+        setContentView(R.layout.itheima_activity_popup_window);
 
-        View contentView = getLayoutInflater().inflate(R.layout.view_popup_window, null);
+        View contentView = getLayoutInflater().inflate(R.layout.itheima_view_popup_window, null);
         GridView gridView = (GridView) contentView.findViewById(R.id.gridview);
         gridView.setAdapter(getAdapter());
         gridView.setOnItemClickListener(new ItemClickListener());
@@ -37,7 +37,7 @@ public class PopupWindowActivity extends Activity {
         popupWindow = new PopupWindow(contentView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupWindow.setFocusable(true); // 取得焦点
         popupWindow.setBackgroundDrawable(new BitmapDrawable());
-        popupWindow.setAnimationStyle(R.style.popupWindowAnimation);
+        popupWindow.setAnimationStyle(R.style.itheimaPopupWindowAnimation);
         parent = this.findViewById(R.id.ll_main);
     }
 
@@ -59,7 +59,7 @@ public class PopupWindowActivity extends Activity {
             item.put("name", names[i]);
             data.add(item);
         }
-        SimpleAdapter simpleAdapter = new SimpleAdapter(this, data, R.layout.item_grid, new String[]{"image", "name"}, new int[]{R.id.imageview, R.id.textview});
+        SimpleAdapter simpleAdapter = new SimpleAdapter(this, data, R.layout.itheima_item_grid, new String[]{"image", "name"}, new int[]{R.id.imageview, R.id.textview});
         return simpleAdapter;
     }
 

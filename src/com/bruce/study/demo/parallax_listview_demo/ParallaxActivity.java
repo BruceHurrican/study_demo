@@ -20,9 +20,9 @@ public class ParallaxActivity extends Activity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_parallax);
+        setContentView(R.layout.parallax_activity);
         mListView = (ParallaxScrollListView) findViewById(R.id.pslv);
-        View header = LayoutInflater.from(this).inflate(R.layout.view_listview_header,null);
+        View header = LayoutInflater.from(this).inflate(R.layout.parallax_view_listview_header,null);
         mImageView = (ImageView)header.findViewById(R.id.iv_header_image);
 
         mListView.setParallaxImageView(mImageView);
@@ -34,7 +34,7 @@ public class ParallaxActivity extends Activity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_parallax,menu);
+        getMenuInflater().inflate(R.menu.parallax_menu,menu);
         return true;
     }
 

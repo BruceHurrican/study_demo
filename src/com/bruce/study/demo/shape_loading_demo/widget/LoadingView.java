@@ -66,7 +66,7 @@ public class LoadingView extends FrameLayout{
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.view_load,null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.shapeloading_view_load,null);
         mDistance = dip2px(54f);
         LayoutParams layoutParams=new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         layoutParams.gravity= Gravity.CENTER;

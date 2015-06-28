@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- used in EditTextActivity.java -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+            android:id="@+id/tv_edittextproject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="hello"/>
+    <EditText
+            android:id="@+id/et_edittextproject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="提示信息"
+            android:password="true"/>
+    <Button
+            android:id="@+id/btn_edittextproject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取EditText内容"/>
+</LinearLayout>

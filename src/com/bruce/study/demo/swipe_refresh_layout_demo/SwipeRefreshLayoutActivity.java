@@ -22,7 +22,7 @@ public class SwipeRefreshLayoutActivity extends Activity implements SwipeRefresh
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_swipe_refresh_layout);
+        setContentView(R.layout.swiperefresh_activity_layout);
         mListView = (ListView) findViewById(R.id.listview);
         mListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getData()));
 

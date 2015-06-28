@@ -10,7 +10,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
-import com.bruce.study.demo.studydata.ActivityLifeStyle.LifeStyleActivity;
+import com.bruce.study.demo.studydata.activity_life_style.LifeStyleActivity;
+import com.bruce.study.demo.studydata.button_project.ButtonProject;
+import com.bruce.study.demo.studydata.edittext_project.EditTextActivity;
+import com.bruce.study.demo.studydata.imagebutton_project.ImageButtonActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
@@ -53,6 +56,9 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
         addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
         addDemoContainer(PopupWindowActivity.class, "练习PopupWindow");
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
+        addDemoContainer(ButtonProject.class, "Button 监听练习");
+        addDemoContainer(ImageButtonActivity.class, "ImageButton 练习");
+        addDemoContainer(EditTextActivity.class, "EditText 练习");
 
         lv_demo_list.setOnItemClickListener(this);
     }

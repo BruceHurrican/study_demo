@@ -33,11 +33,20 @@
                 android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"
                 android:launchMode="singleTask"/>
         <activity
-                android:name=".studydata.ActivityLifeStyle.LifeStyleActivity"
+                android:name=".studydata.activity_life_style.LifeStyleActivity"
                 android:launchMode="singleTask"/>
         <activity
-                android:name=".studydata.ActivityLifeStyle.LifeStyleOtherActivity"
+                android:name=".studydata.activity_life_style.LifeStyleOtherActivity"
                 android:theme="@android:style/Theme.Dialog"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.button_project.ButtonProject"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.imagebutton_project.ImageButtonActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.edittext_project.EditTextActivity"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

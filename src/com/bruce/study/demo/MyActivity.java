@@ -1,20 +1,33 @@
+/*
+ * Copyright (c) 2015.
+ *   This document is just for Bruce's personal study.
+ *   Some lines from Internet. Everyone can download and use for study, but can
+ *   not be used for commercial purpose. The author does not bear the
+ *   corresponding disputes arising therefrom.
+ *   Please delete within 24 hours after download.
+ *   If you have good suggestions for this code, you can contact BurrceHurrican@foxmail.com.
+ *   本文件为Bruce's个人学习android的demo, 其中所用到的代码来源于互联网，仅作为学习交流使用。
+ *   任和何人可以下载并使用, 但是不能用于商业用途。
+ *   作者不承担由此带来的相应纠纷。
+ *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
+ */
+
 package com.bruce.study.demo;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.*;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.activity_life_style.LifeStyleActivity;
 import com.bruce.study.demo.studydata.button_project.ButtonProject;
+import com.bruce.study.demo.studydata.checkbox_project.CheckBoxActivity;
 import com.bruce.study.demo.studydata.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.imagebutton_project.ImageButtonActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
+import com.bruce.study.demo.studydata.radiobutton_project.RadioButtonActivity;
 import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
 import java.util.ArrayList;
@@ -55,10 +68,13 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");
         addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
         addDemoContainer(PopupWindowActivity.class, "练习PopupWindow");
+        //---------------Android开发经典案例60个源码demo------------------------------
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
         addDemoContainer(ButtonProject.class, "Button 监听练习");
         addDemoContainer(ImageButtonActivity.class, "ImageButton 练习");
         addDemoContainer(EditTextActivity.class, "EditText 练习");
+        addDemoContainer(CheckBoxActivity.class, "CheckBox 练习");
+        addDemoContainer(RadioButtonActivity.class, "RadioButton 练习");
 
         lv_demo_list.setOnItemClickListener(this);
     }

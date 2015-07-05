@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2015.
+  ~   This document is just for Bruce's personal study.
+  ~   Some lines from Internet. Everyone can download and use for study, but can
+  ~   not be used for commercial purpose. The author does not bear the
+  ~   corresponding disputes arising therefrom.
+  ~   Please delete within 24 hours after download.
+  ~   If you have good suggestions for this code, you can contact BurrceHurrican@foxmail.com.
+  ~   本文件为Bruce's个人学习android的demo, 其中所用到的代码来源于互联网，仅作为学习交流使用。
+  ~   任和何人可以下载并使用, 但是不能用于商业用途。
+  ~   作者不承担由此带来的相应纠纷。
+  ~   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="默认进度条："/>
+    <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="progress1"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小圆形进度条："/>
+    <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="progress2"
+            style="?android:attr/progressBarStyleSmall"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="大圆形进度条："/>
+    <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="progress3"
+            style="?android:attr/progressBarStyleLarge"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="条形进度条："/>
+    <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="progress4"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:id="@+id/progressbar"
+            android:max="100"
+            android:progress="30"
+            android:secondaryProgress="70"/>
+</LinearLayout>

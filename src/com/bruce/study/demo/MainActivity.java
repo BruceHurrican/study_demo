@@ -18,7 +18,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import com.bruce.study.demo.base.BaseActivity;
+import com.bruce.study.demo.log.Logs;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.activity_life_style.LifeStyleActivity;
@@ -27,24 +31,24 @@ import com.bruce.study.demo.studydata.checkbox_project.CheckBoxActivity;
 import com.bruce.study.demo.studydata.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.imagebutton_project.ImageButtonActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
+import com.bruce.study.demo.studydata.progressbar_project.ProgressBarActivity;
 import com.bruce.study.demo.studydata.radiobutton_project.RadioButtonActivity;
+import com.bruce.study.demo.studydata.seekbar_project.SeekBarActivity;
+import com.bruce.study.demo.studydata.tab_project.TabActivity;
 import com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by BruceHurrican on 2015/5/24.
  */
-public class MyActivity extends Activity implements AdapterView.OnItemClickListener{
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, Serializable {
+    private static final long serialVersionUID = -3277762441808693645L;
     private ArrayList<Class<? extends Activity>> demos;
     private ArrayList<String> demoNamesList;
-    private  ListView lv_demo_list;
+    private ListView lv_demo_list;
     private Intent it;
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -54,10 +58,15 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
         initContainer();
     }
 
+    @Override
+    public String getTAG() {
+        return "MainActivity -- >";
+    }
+
     /**
      * 初始化demo容器
      */
-    private void initContainer(){
+    private void initContainer() {
         demos = new ArrayList<>(5);
         demoNamesList = new ArrayList<>(5);
         lv_demo_list = (ListView) findViewById(R.id.lv__demo_list);
@@ -75,24 +84,31 @@ public class MyActivity extends Activity implements AdapterView.OnItemClickListe
         addDemoContainer(EditTextActivity.class, "EditText 练习");
         addDemoContainer(CheckBoxActivity.class, "CheckBox 练习");
         addDemoContainer(RadioButtonActivity.class, "RadioButton 练习");
+        addDemoContainer(ProgressBarActivity.class, "ProgressBar 练习");
+        addDemoContainer(SeekBarActivity.class, "SeekBar 练习");
+        addDemoContainer(TabActivity.class, "TabActivity 练习");
 
         lv_demo_list.setOnItemClickListener(this);
+        Logs.i(TAG,"加载列表完成");
     }
 
     /**
      * 增加demo
-     * @param cls demo class
+     *
+     * @param cls  demo class
      * @param name demo 名称
      */
-    private void addDemoContainer(Class<? extends Activity> cls, String name){
+    private void addDemoContainer(Class<? extends Activity> cls, String name) {
         demos.add(cls);
         demoNamesList.add(name);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(MyActivity.this, "你点击了第" + (position + 1) + "条Demo", Toast.LENGTH_SHORT).show();
-        it.setClass(MyActivity.this, demos.get(position));
+//        Toast.makeText(MainActivity.this, "你点击了第" + (position + 1) + "条Demo", Toast.LENGTH_SHORT).show();
+        showToastShort("你点击了第" + (position + 1) + "条Demo");
+        it.setClass(MainActivity.this, demos.get(position));
+        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo");
         startActivity(it);
     }
 }

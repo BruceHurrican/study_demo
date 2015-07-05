@@ -13,14 +13,35 @@
   ~   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
   -->
 
-<!-- used in ImageButtonActivity.java -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
-    <ImageButton
-            android:id="@+id/imgbtn"
+              android:layout_height="match_parent"
+              android:background="@drawable/studydata_tabproject_bg2">
+    <Button
+            android:id="@+id/btn_tabproject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is Tab1"/>
+    <EditText
+            android:id="@+id/et_tabproject"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is Tab2"/>
+    <LinearLayout
+            android:id="@+id/ll_tabproject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/studydata_imgbtnproject_nopress"/>
+            android:orientation="vertical"
+            android:background="@drawable/studydata_tabproject_bg">
+        <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is Tab3"/>
+        <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is Tab3-2"/>
+    </LinearLayout>
+
 </LinearLayout>

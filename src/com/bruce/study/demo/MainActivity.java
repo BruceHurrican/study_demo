@@ -24,6 +24,7 @@ import android.widget.ListView;
 import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.log.Logs;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
+import com.bruce.study.demo.util_demo.PhoneInfoActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.activity_life_style.LifeStyleActivity;
 import com.bruce.study.demo.studydata.button_project.ButtonProject;
@@ -63,6 +64,12 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         return "MainActivity -- >";
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
+
     /**
      * 初始化demo容器
      */
@@ -73,6 +80,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         lv_demo_list.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, demoNamesList));
         it = new Intent();
 
+        addDemoContainer(PhoneInfoActivity.class, "工具类demo");
         addDemoContainer(SwipeRefreshLayoutActivity.class, "谷歌自带下拉刷新组件");
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");
         addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
@@ -89,7 +97,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(TabActivity.class, "TabActivity 练习");
 
         lv_demo_list.setOnItemClickListener(this);
-        Logs.i(TAG,"加载列表完成");
+        Logs.i(TAG, "加载列表完成");
     }
 
     /**

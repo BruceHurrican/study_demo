@@ -20,6 +20,16 @@
     <uses-sdk
             android:minSdkVersion="14"
             android:targetSdkVersion="21"/>
+    <!-- 获取联网权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- 获取写入SDcard 权限 -->
+    <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="ANDROID.PERMISSION.MOUNT_UNMOUNT_FILESYSTEMS"/>
+
     <application
             android:name=".DemoApplication"
             android:allowBackup="true"
@@ -76,6 +86,9 @@
                 android:launchMode="singleTask"/>
         <activity
                 android:name=".studydata.tab_project.TabActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".util_demo.PhoneInfoActivity"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

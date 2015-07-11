@@ -37,12 +37,6 @@ public abstract class BaseActivity extends Activity {
 
     public abstract String getTAG();
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
     public void showToastShort(String text) {
         if (null != context) {
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();

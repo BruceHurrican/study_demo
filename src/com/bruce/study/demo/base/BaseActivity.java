@@ -37,6 +37,26 @@ public abstract class BaseActivity extends Activity {
 
     public abstract String getTAG();
 
+    public final void logV(String text) {
+        Logs.v(this.getLocalClassName() + "-->", text);
+    }
+
+    public final void logD(String text) {
+        Logs.d(this.getLocalClassName() + "-->", text);
+    }
+
+    public final void logI(String text) {
+        Logs.i(this.getLocalClassName() + "-->", text);
+    }
+
+    public final void logW(String text) {
+        Logs.w(this.getLocalClassName() + "-->", text);
+    }
+
+    public final void logE(String text) {
+        Logs.e(this.getLocalClassName() + "-->", text);
+    }
+
     public void showToastShort(String text) {
         if (null != context) {
             Toast.makeText(context, text, Toast.LENGTH_SHORT).show();

@@ -29,7 +29,8 @@
     <!-- 获取写入SDcard 权限 -->
     <uses-permission android:name="ANDROID.PERMISSION.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="ANDROID.PERMISSION.MOUNT_UNMOUNT_FILESYSTEMS"/>
-
+    <!-- 横竖屏切换 权限 -->
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
     <application
             android:name=".DemoApplication"
             android:allowBackup="true"
@@ -93,6 +94,13 @@
                 android:launchMode="singleTask"/>
         <activity
                 android:name=".studydata.baseadapter_project.BaseAdapterActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.dialog_project.DialogActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.switch_screen_project.SwitchScreenActivity"
+                android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

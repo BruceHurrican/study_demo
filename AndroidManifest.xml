@@ -45,6 +45,9 @@
             </intent-filter>
         </activity>
         <activity
+                android:name=".util_demo.PhoneInfoActivity"
+                android:launchMode="singleTask"/>
+        <activity
                 android:name="com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity"
                 android:launchMode="singleTask"/>
         <activity
@@ -53,6 +56,7 @@
         <activity
                 android:name=".parallax_listview_demo.ParallaxActivity"
                 android:launchMode="singleTask"/>
+        <!-- 学习资料小demo -->
         <activity
                 android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"
                 android:launchMode="singleTask"/>
@@ -88,7 +92,7 @@
                 android:name=".studydata.tab_project.TabActivity"
                 android:launchMode="singleTask"/>
         <activity
-                android:name=".util_demo.PhoneInfoActivity"
+                android:name=".studydata.baseadapter_project.BaseAdapterActivity"
                 android:launchMode="singleTask"/>
     </application>
 </manifest>

@@ -24,6 +24,7 @@ import android.widget.ListView;
 import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.log.Logs;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
+import com.bruce.study.demo.studydata.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.activity_life_style.LifeStyleActivity;
@@ -95,6 +96,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(ProgressBarActivity.class, "ProgressBar 练习");
         addDemoContainer(SeekBarActivity.class, "SeekBar 练习");
         addDemoContainer(TabActivity.class, "TabActivity 练习");
+        addDemoContainer(BaseAdapterActivity.class, "BaseAdapter 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         Logs.i(TAG, "加载列表完成");
@@ -114,9 +116,9 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        Toast.makeText(MainActivity.this, "你点击了第" + (position + 1) + "条Demo", Toast.LENGTH_SHORT).show();
-        showToastShort("你点击了第" + (position + 1) + "条Demo");
+        showToastShort("你点击了第" + (position + 1) + "条Demo--" + demoNamesList.get(position));
         it.setClass(MainActivity.this, demos.get(position));
-        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo");
+        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo--"+demoNamesList.get(position));
         startActivity(it);
     }
 }

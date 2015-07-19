@@ -26,6 +26,8 @@ import com.bruce.study.demo.log.Logs;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.studydata.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.studydata.dialog_project.DialogActivity;
+import com.bruce.study.demo.studydata.game_view_framework_project.GameViewActivity;
+import com.bruce.study.demo.studydata.surfaceview_project.SurfaceViewActivity;
 import com.bruce.study.demo.studydata.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
@@ -45,6 +47,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
+ * 主Activity
  * Created by BruceHurrican on 2015/5/24.
  */
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, Serializable {
@@ -101,6 +104,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(BaseAdapterActivity.class, "BaseAdapter 练习");
         addDemoContainer(DialogActivity.class, "Dialog 练习");
         addDemoContainer(SwitchScreenActivity.class, "横竖屏切换 练习");
+        addDemoContainer(GameViewActivity.class, "游戏框架View 练习");
+        addDemoContainer(SurfaceViewActivity.class, "SurfaceView 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         Logs.i(TAG, "加载列表完成");

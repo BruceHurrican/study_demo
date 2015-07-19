@@ -102,5 +102,11 @@
                 android:name=".studydata.switch_screen_project.SwitchScreenActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
                 android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.game_view_framework_project.GameViewActivity"
+                android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.surfaceview_project.SurfaceViewActivity"
+                android:launchMode="singleTask"/>
     </application>
 </manifest>

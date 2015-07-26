@@ -108,5 +108,8 @@
         <activity
                 android:name=".studydata.surfaceview_project.SurfaceViewActivity"
                 android:launchMode="singleTask"/>
+        <activity
+                android:name=".studydata.bezier_project.BezierActivity"
+                android:launchMode="singleTask"/>
     </application>
 </manifest>

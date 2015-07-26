@@ -25,6 +25,7 @@ import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.log.Logs;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.studydata.baseadapter_project.BaseAdapterActivity;
+import com.bruce.study.demo.studydata.bezier_project.BezierActivity;
 import com.bruce.study.demo.studydata.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.game_view_framework_project.GameViewActivity;
 import com.bruce.study.demo.studydata.surfaceview_project.SurfaceViewActivity;
@@ -106,6 +107,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(SwitchScreenActivity.class, "横竖屏切换 练习");
         addDemoContainer(GameViewActivity.class, "游戏框架View 练习");
         addDemoContainer(SurfaceViewActivity.class, "SurfaceView 练习");
+        addDemoContainer(BezierActivity.class, "贝塞尔曲线 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         Logs.i(TAG, "加载列表完成");
@@ -125,9 +127,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        Toast.makeText(MainActivity.this, "你点击了第" + (position + 1) + "条Demo", Toast.LENGTH_SHORT).show();
-        showToastShort("你点击了第" + (position + 1) + "条Demo--" + demoNamesList.get(position));
+//        showToastShort("你点击了第" + (position + 1) + "条Demo--" + demoNamesList.get(position));
+        showToastShort(String.format("你点击了第 %s 条Demo %s", position + 1, demoNamesList.get(position)));
         it.setClass(MainActivity.this, demos.get(position));
-        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo--"+demoNamesList.get(position));
+//        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo--"+demoNamesList.get(position));
+        Logs.i(TAG, String.format("你点击了第 %s 条Demo %s",position + 1,demoNamesList.get(position)));
         startActivity(it);
     }
 }

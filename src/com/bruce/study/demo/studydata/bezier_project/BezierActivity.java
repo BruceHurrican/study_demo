@@ -12,28 +12,31 @@
  *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
  */
 
-package com.bruce.study.java.exercise;
+package com.bruce.study.demo.studydata.bezier_project;
+
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+import com.bruce.study.demo.base.BaseActivity;
 
 /**
- * java exercise
- * Created by BruceHurrican on 2015/5/24.
+ * 贝塞尔曲线 练习
+ * Created by BruceHurrican on 2015/7/26.
  */
-public class KKtest01 {
-    public static void main(String[] args) {
-        KKmethod k1 = new KKmethod();
-        k1.method2();
+public class BezierActivity extends BaseActivity {
+
+    @Override
+    public String getTAG() {
+        return null;
     }
 
-    private static class KKmethod {
-        private void method1() {
-            int aa = 2048;
-            System.out.println(aa >> 10);
-        }
-
-        private void method2(){
-            String str = "";
-            str = String.format("adbc  %S jj @ %s",222,"234" );
-            System.out.println(str);
-        }
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // 设置全屏
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        // 显示贝塞尔曲线
+        setContentView(new BezierView(this));
     }
 }

@@ -24,8 +24,12 @@ import java.io.File;
  * 获取手机内部存储空间和外部存储空间
  * Created by BruceHurrican on 2015/7/11.
  */
-public class StorageUtil {
+public final class StorageUtil {
     private static final int ERROR = -1;
+    public static final String TAG = "StorageUtil";
+
+    private StorageUtil() {
+    }
 
     /**
      * SDCARD是否存在
@@ -42,7 +46,7 @@ public class StorageUtil {
      */
     public static long getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
-        Log.d("StorageUtil", "getAvailableInternalMemorySize path:" + path);
+        Log.d(TAG, "getAvailableInternalMemorySize path:" + path);
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
@@ -57,7 +61,7 @@ public class StorageUtil {
      */
     public static long getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
-        Log.d("StorageUtil", "getTotalInternalMemorySize path:" + path);
+        Log.d(TAG, "getTotalInternalMemorySize path:" + path);
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSize();
         long totalBlocks = stat.getBlockCount();
@@ -72,13 +76,13 @@ public class StorageUtil {
     public static long getAvailableExternalMemorySize() {
         if (isSDcardExists()) {
             File path = Environment.getExternalStorageDirectory();
-            Log.d("StorageUtil", "getAvailableExternalMemorySize path:" + path);
+            Log.d(TAG, "getAvailableExternalMemorySize path:" + path);
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             long availableBlocks = stat.getAvailableBlocks();
             return availableBlocks * blockSize;
         } else {
-            Log.d("StorageUtil", "getAvailableExternalMemorySize no permission");
+            Log.d(TAG, "getAvailableExternalMemorySize no permission");
             return ERROR;
         }
     }
@@ -91,7 +95,7 @@ public class StorageUtil {
     public static long getTotalExternalMemorySize() {
         if (isSDcardExists()) {
             File path = Environment.getExternalStorageDirectory();
-            Log.d("StorageUtil", "getExternalStorageDirectory path:" + path);
+            Log.d(TAG, "getExternalStorageDirectory path:" + path);
             StatFs stat = new StatFs(path.getPath());
             long blockSize = stat.getBlockSize();
             //getBlockSize()已经被getBlockSizeLong()代替
@@ -99,7 +103,7 @@ public class StorageUtil {
             //getBlockCount()已经被getBlockCountLong()代替
             return totalBlocks * blockSize;
         } else {
-            Log.d("StorageUtil", "getExternalStorageDirectory no permission");
+            Log.d(TAG, "getExternalStorageDirectory no permission");
             return ERROR;
         }
     }

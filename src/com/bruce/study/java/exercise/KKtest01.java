@@ -21,18 +21,23 @@ package com.bruce.study.java.exercise;
 public class KKtest01 {
     public static void main(String[] args) {
         KKmethod k1 = new KKmethod();
-        k1.method2();
+        k1.method3();
     }
 
     private static class KKmethod {
-        private void method1() {
+        private void method3() {
+            Float aa = 12.23F;
+            System.out.println(aa.intValue());
+        }
+
+        private void method2() {
             int aa = 2048;
             System.out.println(aa >> 10);
         }
 
-        private void method2(){
+        private void method1() {
             String str = "";
-            str = String.format("adbc  %S jj @ %s",222,"234" );
+            str = String.format("adbc  %S jj @ %s", 222, "234");
             System.out.println(str);
         }
     }

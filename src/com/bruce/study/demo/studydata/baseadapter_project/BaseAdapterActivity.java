@@ -22,7 +22,6 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseActivity;
-import com.bruce.study.demo.log.Logs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +31,8 @@ import java.util.List;
  * Created by BruceHurrican on 2015/7/18.
  */
 public class BaseAdapterActivity extends BaseActivity implements AdapterView.OnItemClickListener {
-    private ListView lv_base_adapter;
-    private List<MyListItemAttr> list;
-    private MyAdapter adapter;
+    private static final String STRING_FORMAT_1 = "点击了第 %S 个选项item";
+    private static final String STRING_FORMAT_2 = "点击了第 %s 个按钮btn";
 
     @Override
     public String getTAG() {
@@ -45,25 +43,25 @@ public class BaseAdapterActivity extends BaseActivity implements AdapterView.OnI
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.studydata_activity_baseadapterproject);
-        lv_base_adapter = (ListView) findViewById(R.id.lv_base_adapter);
-        list = new ArrayList<>(5);
+        ListView lv_base_adapter = (ListView) findViewById(R.id.lv_base_adapter);
+        List<MyListItemAttr> list = new ArrayList<>(5);
         for (int i = 0; i < 5; i++) {
             list.add(new MyListItemAttr(R.drawable.studydata_ic_baseadapter_1, "AA-" + i, "AA按钮-" + i));
             list.add(new MyListItemAttr(R.drawable.studydata_ic_baseadapter_2, "BB-" + i, "BB按钮-" + i));
             list.add(new MyListItemAttr(R.drawable.studydata_ic_baseadapter_3, "CC-" + i, "CC按钮-" + i));
         }
-        adapter = new MyAdapter(this, list);
+        MyAdapter adapter = new MyAdapter(this, list);
         lv_base_adapter.setAdapter(adapter);
         lv_base_adapter.setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "点击了第 " + position + " 个选项item", Toast.LENGTH_SHORT).show();
-        Logs.d(TAG, "点击了第 " + position + " 个选项item");
+        Toast.makeText(this, String.format(STRING_FORMAT_1, position), Toast.LENGTH_SHORT).show();
+        logD(String.format(STRING_FORMAT_1, position));
     }
 
-    private class MyListItemAttr {
+    private static class MyListItemAttr {
         public int imgID;
         public String text;
         public String btnText;
@@ -130,8 +128,8 @@ public class BaseAdapterActivity extends BaseActivity implements AdapterView.OnI
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(context, "点击了第 " + v.getTag() + " 个按钮btn", Toast.LENGTH_SHORT).show();
-            Logs.d(TAG, "点击了第 " + v.getTag() + " 个按钮btn");
+            Toast.makeText(context, String.format(STRING_FORMAT_2, v.getTag()), Toast.LENGTH_SHORT).show();
+            logI(String.format(STRING_FORMAT_2, v.getTag()));
         }
     }
 

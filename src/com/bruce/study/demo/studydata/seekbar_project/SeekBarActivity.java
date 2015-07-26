@@ -27,7 +27,6 @@ import com.bruce.study.demo.log.Logs;
  */
 public class SeekBarActivity extends BaseActivity {
     private TextView tv_sb;
-    private SeekBar sb;
 
     @Override
     public String getTAG() {
@@ -38,26 +37,26 @@ public class SeekBarActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.studydata_activity_seekbarproject);
-        sb = (SeekBar) findViewById(R.id.sb);
+        SeekBar sb = (SeekBar) findViewById(R.id.sb);
         tv_sb = (TextView) findViewById(R.id.tv_sb);
         sb.setSecondaryProgress(20);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 tv_sb.setText("当前<拖动条>的值为：" + progress);
-                Logs.i(TAG, "当前<拖动条>的值为：" + progress);
+                Logs.i(getTAG(), "当前<拖动条>的值为：" + progress);
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 tv_sb.setText("拖动中...");
-                Logs.i(TAG, "拖动中...");
+                Logs.i(getTAG(), "拖动中...");
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 tv_sb.setText("<拖动条>完成拖动");
-                Logs.i(TAG, "<拖动条>完成拖动");
+                Logs.i(getTAG(), "<拖动条>完成拖动");
             }
         });
     }

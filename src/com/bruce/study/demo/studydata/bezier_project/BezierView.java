@@ -32,11 +32,9 @@ import java.util.Random;
  */
 public class BezierView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private SurfaceHolder surfaceHolder;
-    private Paint paint;
-    private Thread thread;
     private boolean flag;
-    private Canvas canvas;
-    public static int screenWidth, screenHeight;
+
+    public int screenWidth, screenHeight;
     // 贝塞尔曲线成员变量（起始点,控制，终止点，3点坐标）
     private int startX, startY, controlX, controlY, endX, endY;
     // Path
@@ -50,7 +48,7 @@ public class BezierView extends SurfaceView implements SurfaceHolder.Callback, R
         super(context);
         surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-        paint = new Paint();
+        Paint paint = new Paint();
         paint.setColor(Color.GREEN);
         paint.setAntiAlias(true);
         setFocusable(true);
@@ -67,18 +65,18 @@ public class BezierView extends SurfaceView implements SurfaceHolder.Callback, R
      * 游戏绘图
      */
     public void myDraw() {
+        Canvas mCanvas = null;
         try {
-            canvas = surfaceHolder.lockCanvas();
-            if (null != canvas) {
-                canvas.drawColor(Color.BLACK);
-                drawBezier(canvas);
+            mCanvas = surfaceHolder.lockCanvas();
+            if (null != mCanvas) {
+                mCanvas.drawColor(Color.BLACK);
+                drawBezier(mCanvas);
             }
         } catch (Exception e) {
-            e.printStackTrace();
             Logs.e("BezierView -- >", "绘制贝塞尔曲线失败");
         } finally {
-            if (null != canvas) {
-                surfaceHolder.unlockCanvasAndPost(canvas);
+            if (null != mCanvas) {
+                surfaceHolder.unlockCanvasAndPost(mCanvas);
             }
         }
     }
@@ -118,7 +116,7 @@ public class BezierView extends SurfaceView implements SurfaceHolder.Callback, R
         screenWidth = getWidth();
         screenHeight = getHeight();
         flag = true;
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
     }
 
@@ -144,7 +142,7 @@ public class BezierView extends SurfaceView implements SurfaceHolder.Callback, R
                     Thread.sleep(50 - (end - start));
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Logs.e("InterruptedException",e.toString());
             }
         }
     }

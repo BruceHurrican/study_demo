@@ -40,7 +40,7 @@ public class RadioButtonActivity extends Activity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (group == radioGroup) {
+                if (group.equals(radioGroup)) {
                     String rbName = null;
                     if (checkedId == rb1.getId()) {
                         rbName = rb1.getText().toString();

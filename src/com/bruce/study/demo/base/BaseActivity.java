@@ -26,35 +26,37 @@ import com.bruce.study.demo.log.Logs;
  */
 public abstract class BaseActivity extends Activity {
     private Context context;
-    protected String TAG;
+    private final String TAG = getTAG();
+    private String logsTag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = BaseActivity.this;
-        TAG = getTAG();
+//        TAG = getTAG();
+        logsTag = getLocalClassName() + "-->";
     }
 
     public abstract String getTAG();
 
     public final void logV(String text) {
-        Logs.v(this.getLocalClassName() + "-->", text);
+        Logs.v(logsTag, text);
     }
 
     public final void logD(String text) {
-        Logs.d(this.getLocalClassName() + "-->", text);
+        Logs.d(logsTag, text);
     }
 
     public final void logI(String text) {
-        Logs.i(this.getLocalClassName() + "-->", text);
+        Logs.i(logsTag, text);
     }
 
     public final void logW(String text) {
-        Logs.w(this.getLocalClassName() + "-->", text);
+        Logs.w(logsTag, text);
     }
 
     public final void logE(String text) {
-        Logs.e(this.getLocalClassName() + "-->", text);
+        Logs.e(logsTag, text);
     }
 
     public void showToastShort(String text) {

@@ -16,7 +16,6 @@ package com.bruce.study.demo.util_demo;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseActivity;
@@ -30,9 +29,6 @@ import com.bruce.study.demo.utils.StorageUtil;
  * Created by BruceHurrican on 2015/7/11.
  */
 public class PhoneInfoActivity extends BaseActivity implements View.OnClickListener {
-    private Button btn_utildemo_build_factory, btn_utildemo_package_permission, btn_utildemo_share_apps,
-            btn_utildemo_non_system_app, btn_utildemo_root_permission, btn_utildemo_screen,
-            btn_utildemo_network, btn_utildemo_browser, btn_utildemo_sdcardinfo;
     private TextView tv_utildemo;
 
     @Override
@@ -44,15 +40,15 @@ public class PhoneInfoActivity extends BaseActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.utildemo_activity);
-        btn_utildemo_build_factory = (Button) findViewById(R.id.btn_utildemo_build_factory);
-        btn_utildemo_package_permission = (Button) findViewById(R.id.btn_utildemo_package_permission);
-        btn_utildemo_share_apps = (Button) findViewById(R.id.btn_utildemo_share_apps);
-        btn_utildemo_non_system_app = (Button) findViewById(R.id.btn_utildemo_non_system_app);
-        btn_utildemo_root_permission = (Button) findViewById(R.id.btn_utildemo_root_permission);
-        btn_utildemo_screen = (Button) findViewById(R.id.btn_utildemo_screen);
-        btn_utildemo_network = (Button) findViewById(R.id.btn_utildemo_network);
-        btn_utildemo_browser = (Button) findViewById(R.id.btn_utildemo_browser);
-        btn_utildemo_sdcardinfo = (Button) findViewById(R.id.btn_utildemo_sdcardinfo);
+        findViewById(R.id.btn_utildemo_build_factory);
+        findViewById(R.id.btn_utildemo_package_permission);
+        findViewById(R.id.btn_utildemo_share_apps);
+        findViewById(R.id.btn_utildemo_non_system_app);
+        findViewById(R.id.btn_utildemo_root_permission);
+        findViewById(R.id.btn_utildemo_screen);
+        findViewById(R.id.btn_utildemo_network);
+        findViewById(R.id.btn_utildemo_browser);
+        findViewById(R.id.btn_utildemo_sdcardinfo);
         tv_utildemo = (TextView) findViewById(R.id.tv_utildemo);
     }
 
@@ -72,13 +68,13 @@ public class PhoneInfoActivity extends BaseActivity implements View.OnClickListe
                 tv_utildemo.setText(PublicUtil.getAllNonSystemApps(PhoneInfoActivity.this));
                 break;
             case R.id.btn_utildemo_root_permission:
-                tv_utildemo.setText("当前手机是否已经root ?" + (isRootSystem() ? "已经root" : "未root"));
+                tv_utildemo.setText(PublicUtil.isRootSystem());
                 break;
             case R.id.btn_utildemo_screen:
                 tv_utildemo.setText(PublicUtil.getScreenInPixels(PhoneInfoActivity.this));
                 break;
             case R.id.btn_utildemo_network:
-                tv_utildemo.setText("当前手机是否联网 ?" + (isNetWorkAvailable() ? "已经联网" : "未连接网络"));
+                tv_utildemo.setText(PublicUtil.isNetWorkAvailable(PhoneInfoActivity.this));
                 break;
             case R.id.btn_utildemo_browser:
                 openSystemBrowser();
@@ -87,24 +83,6 @@ public class PhoneInfoActivity extends BaseActivity implements View.OnClickListe
                 tv_utildemo.setText(getStorageInfo());
                 break;
         }
-    }
-
-    /**
-     * 判断手机是否已经root
-     *
-     * @return boolean
-     */
-    private boolean isRootSystem() {
-        return PublicUtil.isRootSystem();
-    }
-
-    /**
-     * 判断当前手机是否联网
-     *
-     * @return boolean
-     */
-    public boolean isNetWorkAvailable() {
-        return PublicUtil.isNetWorkAvailable(PhoneInfoActivity.this);
     }
 
     /**

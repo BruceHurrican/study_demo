@@ -27,7 +27,7 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/6/22.
  */
 public class LifeStyleActivity extends Activity implements View.OnClickListener {
-    private final String TAG = "LifeStyleActivity -->";
+    private static final String TAG = "LifeStyleActivity -->";
     private Button btn_life_style;
 
     @Override
@@ -42,7 +42,7 @@ public class LifeStyleActivity extends Activity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
-        if (v == btn_life_style) {
+        if (v.equals(btn_life_style)) {
             Intent it = new Intent();
             it.setClass(this, LifeStyleOtherActivity.class);
             this.startActivity(it);

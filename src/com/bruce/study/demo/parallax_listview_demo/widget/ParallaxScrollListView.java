@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2015.
+ *   This document is just for Bruce's personal study.
+ *   Some lines from Internet. Everyone can download and use for study, but can
+ *   not be used for commercial purpose. The author does not bear the
+ *   corresponding disputes arising therefrom.
+ *   Please delete within 24 hours after download.
+ *   If you have good suggestions for this code, you can contact BurrceHurrican@foxmail.com.
+ *   本文件为Bruce's个人学习android的demo, 其中所用到的代码来源于互联网，仅作为学习交流使用。
+ *   任和何人可以下载并使用, 但是不能用于商业用途。
+ *   作者不承担由此带来的相应纠纷。
+ *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
+ */
+
 package com.bruce.study.demo.parallax_listview_demo.widget;
 
 import android.content.Context;
@@ -16,21 +30,13 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/6/13.
  */
 public class ParallaxScrollListView extends ListView implements AbsListView.OnScrollListener {
-    public final static double NO_ZOOM = 1;
-    public final static double ZOOM_X2 = 2;
+    public static final double NO_ZOOM = 1;
+    public static final double ZOOM_X2 = 2;
 
     private ImageView mImageView;
     private int mDrawableMaxHeight = -1;
     private int mImageViewHeight = -1;
     private int mDefaultImageViewHeight = 0;
-
-    private interface OnOverScrollByListener {
-        public boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangerY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent);
-    }
-
-    private interface OnTouchEventListener {
-        public void onTouchEvent(MotionEvent ev);
-    }
 
     public ParallaxScrollListView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -129,17 +135,15 @@ public class ParallaxScrollListView extends ListView implements AbsListView.OnSc
     private OnTouchEventListener touchListener = new OnTouchEventListener() {
         @Override
         public void onTouchEvent(MotionEvent ev) {
-            if (ev.getAction() == MotionEvent.ACTION_UP) {
-                if (mImageViewHeight - 1 < mImageView.getHeight()) {
-                    ResetAnimation animation = new ResetAnimation(mImageView, mImageViewHeight);
-                    animation.setDuration(300);
-                    mImageView.startAnimation(animation);
-                }
+            if (ev.getAction() == MotionEvent.ACTION_UP && mImageViewHeight - 1 < mImageView.getHeight()) {
+                ResetAnimation animation = new ResetAnimation(mImageView, mImageViewHeight);
+                animation.setDuration(300);
+                mImageView.startAnimation(animation);
             }
         }
     };
 
-    public class ResetAnimation extends Animation {
+    public static class ResetAnimation extends Animation {
         int targetHeight;
         int originalHeight;
         int extraHeight;
@@ -155,9 +159,18 @@ public class ParallaxScrollListView extends ListView implements AbsListView.OnSc
         @Override
         protected void applyTransformation(float interpolatedTime, Transformation t) {
             int newHeight;
-            newHeight = (int) (targetHeight - extraHeight * (1 - interpolatedTime));
+            double temp = 1 - (double) interpolatedTime;
+            newHeight = (int) (targetHeight -extraHeight * temp);
             mView.getLayoutParams().height = newHeight;
             mView.requestLayout();
         }
+    }
+
+    private interface OnOverScrollByListener {
+        boolean overScrollBy(int deltaX, int deltaY, int scrollX, int scrollY, int scrollRangeX, int scrollRangerY, int maxOverScrollX, int maxOverScrollY, boolean isTouchEvent);
+    }
+
+    private interface OnTouchEventListener {
+        void onTouchEvent(MotionEvent ev);
     }
 }

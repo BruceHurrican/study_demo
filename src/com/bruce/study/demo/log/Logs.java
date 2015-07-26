@@ -20,9 +20,19 @@ import android.util.Log;
  * 日志基类
  * Created by BruceHurrican on 2015/7/5.
  */
-public class Logs {
+public final class Logs {
     public static final boolean isDebug = true;
+    private static Logs instance;
 
+    private Logs() {
+    }
+
+    public static Logs getInstance(){
+        if (null != instance){
+            instance = new Logs();
+        }
+        return instance;
+    }
     public static void v(String tag, String text) {
         if (isDebug) {
             Log.v(tag, text);

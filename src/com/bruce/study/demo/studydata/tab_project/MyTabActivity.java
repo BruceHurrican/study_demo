@@ -24,25 +24,23 @@ import com.bruce.study.demo.log.Logs;
  * TabActivity 练习
  * Created by BruceHurrican on 2015/7/5.
  */
-public class TabActivity extends android.app.TabActivity {
+public class MyTabActivity extends android.app.TabActivity {
     public static final String TAG = "TabActivity -- >";
-    private TabHost.TabSpec ts1, ts2, ts3;
-    private TabHost tabHost; // 分页菜单(tab的容器)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tabHost = this.getTabHost();
+        TabHost tabHost = this.getTabHost(); // 分页菜单(tab的容器)
         // 利用 LayoutInflater 将布局与分页菜单一起显示
         LayoutInflater.from(this).inflate(R.layout.studydata_activity_tabproject, tabHost.getTabContentView());
-        ts1 = tabHost.newTabSpec("tabOne"); // 实例化一个分页
+        TabHost.TabSpec ts1 = tabHost.newTabSpec("tabOne");
         ts1.setIndicator("Tab01"); // 设置此分页显示的标题
         ts1.setContent(R.id.btn_tabproject); // 设置此分页的资源id
         // 设置此分页显示的标题和图标
-        ts2 = tabHost.newTabSpec("tabTwo");
+        TabHost.TabSpec ts2 = tabHost.newTabSpec("tabTwo");
         ts2.setIndicator("Tab02", getResources().getDrawable(R.drawable.studydata_tabproject_icon));
         ts2.setContent(R.id.et_tabproject);
-        ts3 = tabHost.newTabSpec("tabThree");
+        TabHost.TabSpec ts3 = tabHost.newTabSpec("tabThree");
         ts3.setIndicator("Tab03");
         ts3.setContent(R.id.ll_tabproject);
         tabHost.addTab(ts1);

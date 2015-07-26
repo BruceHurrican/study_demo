@@ -90,7 +90,7 @@
                 android:name=".studydata.seekbar_project.SeekBarActivity"
                 android:launchMode="singleTask"/>
         <activity
-                android:name=".studydata.tab_project.TabActivity"
+                android:name=".studydata.tab_project.MyTabActivity"
                 android:launchMode="singleTask"/>
         <activity
                 android:name=".studydata.baseadapter_project.BaseAdapterActivity"

@@ -23,7 +23,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import com.bruce.study.demo.log.Logs;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,7 +33,10 @@ import java.util.List;
  * 工具类
  * Created by BruceHurrican on 2015/7/11.
  */
-public class PublicUtil {
+public final class PublicUtil {
+    private PublicUtil() {
+    }
+
     /**
      * 获取手机设备相关信息
      *
@@ -75,7 +78,7 @@ public class PublicUtil {
      * 查询手机内所有支持分享的应用
      */
     public static String getShareApps(Context context) {
-        List<ResolveInfo> mApps = new ArrayList<ResolveInfo>(5);
+        List<ResolveInfo> mApps;
         Intent intent = new Intent(Intent.ACTION_SEND, null);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setType("text/plain");
@@ -123,9 +126,9 @@ public class PublicUtil {
         return stringBuilder.toString();
     }
 
-    private final static int kSystemRootStateUnknow = -1;
-    private final static int kSystemRootStateDisable = 0;
-    private final static int kSystemRootStateEnable = 1;
+    private static final int kSystemRootStateUnknow = -1;
+    private static final int kSystemRootStateDisable = 0;
+    private static final int kSystemRootStateEnable = 1;
     private static int systemRootState = kSystemRootStateUnknow;
 
     /**
@@ -133,12 +136,11 @@ public class PublicUtil {
      *
      * @return boolean
      */
-    public static boolean isRootSystem() {
+    public static String isRootSystem() {
         if (systemRootState == kSystemRootStateEnable) {
-            return true;
+            return "当前手机是否已经root ? 已经root";
         } else if (systemRootState == kSystemRootStateDisable) {
-
-            return false;
+            return "当前手机是否已经root ? 未root";
         }
         File f = null;
         final String kSuSearchPaths[] = {"/system/bin/", "/system/xbin/",
@@ -149,15 +151,14 @@ public class PublicUtil {
                 f = new File(kSuSearchPath + "su");
                 if (f != null && f.exists()) {
                     systemRootState = kSystemRootStateEnable;
-                    return true;
+                    return "当前手机是否已经root ? 已经root";
                 }
             }
         } catch (Exception e) {
-            Log.e("PublicUtil", "e:" + e);
-            e.printStackTrace();
+            Logs.e("PublicUtil", "e:" + e);
         }
         systemRootState = kSystemRootStateDisable;
-        return false;
+        return "当前手机是否已经root ? 未root";
     }
 
     /**
@@ -180,22 +181,22 @@ public class PublicUtil {
      *
      * @return boolean
      */
-    public static boolean isNetWorkAvailable(Context context) {
+    public static String isNetWorkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         boolean isWifiOK = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
-        Log.i("PublicUtil", "isWifiOK -->"+isWifiOK);
+        Logs.i("PublicUtil", "isWifiOK -->" + isWifiOK);
         boolean isInternetOK = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-        Log.i("PublicUtil", "isInternetOK -->"+isInternetOK);
-        return isWifiOK || isInternetOK;
+        Logs.i("PublicUtil", "isInternetOK -->" + isInternetOK);
+        return (isWifiOK || isInternetOK) ? "当前手机是否联网 ? 已经联网" : "当前手机是否联网 ? 未连接网络";
     }
 
     /**
      * 调用系统浏览器打开网址
      *
      * @param context
-     * @param uri 全路径网址
+     * @param uri     全路径网址
      */
-    public static void openSystemBrowser(Context context,String uri) {
+    public static void openSystemBrowser(Context context, String uri) {
         Intent it = new Intent("android.intent.action.VIEW", Uri.parse(uri));
         context.startActivity(it);
     }

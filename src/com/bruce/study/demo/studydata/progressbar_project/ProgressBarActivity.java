@@ -14,17 +14,16 @@
 
 package com.bruce.study.demo.studydata.progressbar_project;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ProgressBar;
 import com.bruce.study.demo.R;
+import com.bruce.study.demo.base.BaseActivity;
 
 /**
  * ProgressBar 练习
  * Created by BruceHurrican on 2015/7/5.
  */
-public class ProgressBarActivity extends Activity implements Runnable {
-    private Thread th;
+public class ProgressBarActivity extends BaseActivity implements Runnable {
     private ProgressBar pb;
     private boolean stateChange; // 标识进度值最大最小的状态
 
@@ -33,8 +32,13 @@ public class ProgressBarActivity extends Activity implements Runnable {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.studydata_activity_progressbarproject);
         pb = (ProgressBar) findViewById(R.id.progressbar);
-        th = new Thread(this);
+        Thread th = new Thread(this);
         th.start();
+    }
+
+    @Override
+    public String getTAG() {
+        return "ProgressBarActivity -- >";
     }
 
     @Override
@@ -42,9 +46,9 @@ public class ProgressBarActivity extends Activity implements Runnable {
         while (true) {
             int current = pb.getProgress();
             int currentMax = pb.getMax();
-            int secondCurrent = pb.getSecondaryProgress();
+//            int secondCurrent = pb.getSecondaryProgress();
             // 以下代码实现进度值越来越大，越来越小的一个动态效果
-            if (stateChange == false) {
+            if (!stateChange) {
                 if (current >= currentMax) {
                     stateChange = true;
                 } else {
@@ -64,7 +68,7 @@ public class ProgressBarActivity extends Activity implements Runnable {
             try {
                 Thread.sleep(50);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                logE(e.toString());
             }
         }
     }

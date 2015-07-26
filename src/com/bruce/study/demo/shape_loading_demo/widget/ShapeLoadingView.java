@@ -1,3 +1,17 @@
+/*
+ * Copyright (c) 2015.
+ *   This document is just for Bruce's personal study.
+ *   Some lines from Internet. Everyone can download and use for study, but can
+ *   not be used for commercial purpose. The author does not bear the
+ *   corresponding disputes arising therefrom.
+ *   Please delete within 24 hours after download.
+ *   If you have good suggestions for this code, you can contact BurrceHurrican@foxmail.com.
+ *   本文件为Bruce's个人学习android的demo, 其中所用到的代码来源于互联网，仅作为学习交流使用。
+ *   任和何人可以下载并使用, 但是不能用于商业用途。
+ *   作者不承担由此带来的相应纠纷。
+ *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
+ */
+
 package com.bruce.study.demo.shape_loading_demo.widget;
 
 import android.content.Context;
@@ -12,13 +26,13 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/6/7.
  */
 public class ShapeLoadingView extends View {
-    private float genhao3 = 1.7320508075689f;
+    private double genhao3 = 1.7320508075689;
     private Shape mShape = Shape.SHAPE_CIRCLE;
 
     /**
      * 用贝赛尔曲线画圆
      */
-    private float mMagicNumber = 0.55228475f;
+    private double mMagicNumber = 0.55228475f;
 
     public ShapeLoadingView(Context context) {
         super(context);
@@ -42,10 +56,10 @@ public class ShapeLoadingView extends View {
     }*/
 
     private Paint mPaint;
-    private float mControlX = 0;
-    private float mControlY = 0;
-    private float mAnimPercent;
-    private float triangle2Circle = 0.25555555f;
+    private double mControlX = 0;
+    private double mControlY = 0;
+    private double mAnimPercent;
+    private double triangle2Circle = 0.25555555f;
 
     private void init() {
         mPaint = new Paint();
@@ -66,27 +80,27 @@ public class ShapeLoadingView extends View {
                     mAnimPercent += 0.1611113;
                     // trinangle to circle
                     Path path = new Path();
-                    path.moveTo(relativeXFromView(0.5f), relativeYFromView(0f));
+                    path.moveTo((float) relativeXFromView(0.5), (float) relativeYFromView(0));
                     if (mAnimPercent >= 1) {
                         mShape = Shape.SHAPE_CIRCLE;
                         mIsLoading = false;
                         mAnimPercent = 1;
                     }
-                    float controlX = mControlX - relativeXFromView(mAnimPercent * triangle2Circle) * genhao3;
-                    float controlY = mControlY - relativeYFromView(mAnimPercent * triangle2Circle);
+                    double controlX = mControlX - relativeXFromView(mAnimPercent * triangle2Circle) * genhao3;
+                    double controlY = mControlY - relativeYFromView(mAnimPercent * triangle2Circle);
 
-                    path.quadTo(relativeXFromView(1f) - controlX, controlY, relativeXFromView(0.5f + genhao3 / 4), relativeYFromView(0.75f));
-                    path.quadTo(relativeXFromView(0.5f), relativeYFromView(0.75f + 2 * mAnimPercent * triangle2Circle), relativeXFromView(0.5f - genhao3 / 4), relativeYFromView(0.75f));
-                    path.quadTo(controlX, controlY, relativeXFromView(0.5f), relativeYFromView(0f));
+                    path.quadTo((float) (relativeXFromView(1) - controlX), (float) controlY, (float) relativeXFromView(0.5f + genhao3 / 4), (float) relativeYFromView(0.75f));
+                    path.quadTo((float) relativeXFromView(0.5f), (float) relativeYFromView(0.75f + 2 * mAnimPercent * triangle2Circle), (float) relativeXFromView(0.5f - genhao3 / 4), (float) relativeYFromView(0.75f));
+                    path.quadTo((float) controlX, (float) controlY, (float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
                     path.close();
                     canvas.drawPath(path, mPaint);
                     invalidate();
                 } else {
                     Path path = new Path();
                     mPaint.setColor(getResources().getColor(R.color.triangle));
-                    path.moveTo(relativeXFromView(0.5f), relativeYFromView(0f));
-                    path.lineTo(relativeXFromView(1f), relativeYFromView(genhao3 / 2f));
-                    path.lineTo(relativeXFromView(0f), relativeYFromView(genhao3 / 2f));
+                    path.moveTo((float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
+                    path.lineTo((float) relativeXFromView(1f), (float) relativeYFromView(genhao3 / 2f));
+                    path.lineTo((float) relativeXFromView(0f), (float) relativeYFromView(genhao3 / 2f));
 
                     mControlX = relativeXFromView(0.5f - genhao3 / 8f);
                     mControlY = relativeYFromView(3 / 8f);
@@ -97,18 +111,18 @@ public class ShapeLoadingView extends View {
                 break;
             case SHAPE_CIRCLE:
                 if (mIsLoading) {
-                    float magicNumber = mMagicNumber + mAnimPercent;
+                    double magicNumber = mMagicNumber + mAnimPercent;
                     mAnimPercent += 0.12;
                     if (magicNumber + mAnimPercent >= 1.9f) {
                         mShape = Shape.SHAPE_RECT;
                         mIsLoading = false;
                     }
                     Path path = new Path();
-                    path.moveTo(relativeXFromView(0.5f), relativeYFromView(0f));
-                    path.cubicTo(relativeXFromView(0.5f + magicNumber / 2), relativeYFromView(0f), relativeXFromView(1f), relativeYFromView(0.5f - magicNumber / 2), relativeXFromView(1f), relativeYFromView(0.5f));
-                    path.cubicTo(relativeXFromView(1f), relativeXFromView(0.5f + magicNumber / 2), relativeXFromView(0.5f + magicNumber / 2), relativeYFromView(1f), relativeXFromView(0.5f), relativeYFromView(1f));
-                    path.cubicTo(relativeXFromView(0.5f - magicNumber / 2), relativeXFromView(1f), relativeXFromView(0), relativeYFromView(0.5f + magicNumber / 2), relativeXFromView(0f), relativeYFromView(0.5f));
-                    path.cubicTo(relativeXFromView(0f), relativeXFromView(0.5f - magicNumber / 2), relativeXFromView(0.5f - magicNumber / 2), relativeYFromView(0f), relativeXFromView(0.5f), relativeYFromView(0f));
+                    path.moveTo((float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
+                    path.cubicTo((float) relativeXFromView(0.5f + magicNumber / 2), (float) relativeYFromView(0f), (float) relativeXFromView(1f), (float) relativeYFromView(0.5f - magicNumber / 2), (float) relativeXFromView(1f), (float) relativeYFromView(0.5f));
+                    path.cubicTo((float) relativeXFromView(1f), (float) relativeXFromView(0.5f + magicNumber / 2), (float) relativeXFromView(0.5f + magicNumber / 2), (float) relativeYFromView(1f), (float) relativeXFromView(0.5f), (float) relativeYFromView(1f));
+                    path.cubicTo((float) relativeXFromView(0.5f - magicNumber / 2), (float) relativeXFromView(1f), (float) relativeXFromView(0), (float) relativeYFromView(0.5f + magicNumber / 2), (float) relativeXFromView(0f), (float) relativeYFromView(0.5f));
+                    path.cubicTo((float) relativeXFromView(0f), (float) relativeXFromView(0.5f - magicNumber / 2), (float) relativeXFromView(0.5f - magicNumber / 2), (float) relativeYFromView(0f), (float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
                     path.close();
                     canvas.drawPath(path, mPaint);
                     invalidate();
@@ -116,21 +130,21 @@ public class ShapeLoadingView extends View {
                     mPaint.setColor(getResources().getColor(R.color.circle));
                     Path path = new Path();
 
-                    float magicNumber = mMagicNumber;
-                    path.moveTo(relativeXFromView(0.5f), relativeYFromView(0f));
-                    path.cubicTo(relativeXFromView(0.5f + magicNumber / 2), 0,
-                            relativeXFromView(1), relativeYFromView(magicNumber / 2),
-                            relativeXFromView(1f), relativeYFromView(0.5f));
+                    double magicNumber = mMagicNumber;
+                    path.moveTo((float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
+                    path.cubicTo((float) relativeXFromView(0.5f + magicNumber / 2), 0,
+                            (float) relativeXFromView(1), (float) relativeYFromView(magicNumber / 2),
+                            (float) relativeXFromView(1f), (float) relativeYFromView(0.5f));
                     path.cubicTo(
-                            relativeXFromView(1), relativeXFromView(0.5f + magicNumber / 2),
-                            relativeXFromView(0.5f + magicNumber / 2), relativeYFromView(1f),
-                            relativeXFromView(0.5f), relativeYFromView(1f));
-                    path.cubicTo(relativeXFromView(0.5f - magicNumber / 2), relativeXFromView(1f),
-                            relativeXFromView(0), relativeYFromView(0.5f + magicNumber / 2),
-                            relativeXFromView(0f), relativeYFromView(0.5f));
-                    path.cubicTo(relativeXFromView(0f), relativeXFromView(0.5f - magicNumber / 2),
-                            relativeXFromView(0.5f - magicNumber / 2), relativeYFromView(0),
-                            relativeXFromView(0.5f), relativeYFromView(0f));
+                            (float) relativeXFromView(1), (float) relativeXFromView(0.5f + magicNumber / 2),
+                            (float) relativeXFromView(0.5f + magicNumber / 2), (float) relativeYFromView(1f),
+                            (float) relativeXFromView(0.5f), (float) relativeYFromView(1f));
+                    path.cubicTo((float) relativeXFromView(0.5f - magicNumber / 2), (float) relativeXFromView(1f),
+                            (float) relativeXFromView(0), (float) relativeYFromView(0.5f + magicNumber / 2),
+                            (float) relativeXFromView(0f), (float) relativeYFromView(0.5f));
+                    path.cubicTo((float) relativeXFromView(0f), (float) relativeXFromView(0.5f - magicNumber / 2),
+                            (float) relativeXFromView(0.5f - magicNumber / 2), (float) relativeYFromView(0),
+                            (float) relativeXFromView(0.5f), (float) relativeYFromView(0f));
                     mAnimPercent = 0;
 
                     path.close();
@@ -150,13 +164,13 @@ public class ShapeLoadingView extends View {
                         mAnimPercent = 1;
                     }
                     Path path = new Path();
-                    path.moveTo(relativeXFromView(0.5f * mAnimPercent), 0);
-                    path.lineTo(relativeYFromView(1 - 0.5f * mAnimPercent), 0);
-                    float distanceX = (mControlX) * mAnimPercent;
-                    float distanceY = (relativeYFromView(1f) - mControlY) * mAnimPercent;
+                    path.moveTo((float) relativeXFromView(0.5f * mAnimPercent), 0);
+                    path.lineTo((float) relativeYFromView(1 - 0.5f * mAnimPercent), 0);
+                    double distanceX = (mControlX) * mAnimPercent;
+                    double distanceY = (relativeYFromView(1f) - mControlY) * mAnimPercent;
 
-                    path.lineTo(relativeXFromView(1f) - distanceX, relativeYFromView(1f) - distanceY);
-                    path.lineTo(relativeXFromView(0f) + distanceX, relativeYFromView(1f) - distanceY);
+                    path.lineTo((float) (relativeXFromView(1f) - distanceX), (float) (relativeYFromView(1f) - distanceY));
+                    path.lineTo((float) (relativeXFromView(0f) + distanceX), (float) (relativeYFromView(1f) - distanceY));
 
                     path.close();
 
@@ -169,10 +183,10 @@ public class ShapeLoadingView extends View {
                     mControlX = relativeXFromView(0.5f - genhao3 / 4);
                     mControlY = relativeYFromView(0.75f);
                     Path path = new Path();
-                    path.moveTo(relativeXFromView(0f), relativeYFromView(0f));
-                    path.lineTo(relativeXFromView(1f), relativeYFromView(0f));
-                    path.lineTo(relativeXFromView(1f), relativeYFromView(1f));
-                    path.lineTo(relativeXFromView(0f), relativeYFromView(1f));
+                    path.moveTo((float) relativeXFromView(0f), (float) relativeYFromView(0f));
+                    path.lineTo((float) relativeXFromView(1f), (float) relativeYFromView(0f));
+                    path.lineTo((float) relativeXFromView(1f), (float) relativeYFromView(1f));
+                    path.lineTo((float) relativeXFromView(0f), (float) relativeYFromView(1f));
                     path.close();
                     mAnimPercent = 0;
                     canvas.drawPath(path, mPaint);
@@ -181,11 +195,11 @@ public class ShapeLoadingView extends View {
         }
     }
 
-    private float relativeXFromView(float percent) {
+    private double relativeXFromView(double percent) {
         return getWidth() * percent;
     }
 
-    private float relativeYFromView(float percent) {
+    private double relativeYFromView(double percent) {
         return getHeight() * percent;
     }
 

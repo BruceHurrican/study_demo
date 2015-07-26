@@ -43,7 +43,7 @@ public class CheckBoxActivity extends Activity implements CompoundButton.OnCheck
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         // buttonView 选中状态发生改变的那个按钮
-        if (cb1 == buttonView || cb2 == buttonView || cb3 == buttonView) {
+        if (cb1.equals(buttonView) || cb2.equals(buttonView) || cb3.equals(buttonView)) {
             if (isChecked) {
                 Toast.makeText(CheckBoxActivity.this, buttonView.getText() + "选中", Toast.LENGTH_SHORT).show();
             } else {

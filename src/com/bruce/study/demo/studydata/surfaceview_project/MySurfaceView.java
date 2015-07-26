@@ -22,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import com.bruce.study.demo.log.Logs;
 
 /**
  * 自定义SurfaceView
@@ -35,10 +36,8 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     private Paint paint;
     private int textX = 40;
     private int textY = 40;
-    private Thread thread;
     private boolean threadDeadFlag;
-    private Canvas canvas;
-    private int screenHeight, screenWidth;
+//    private int screenHeight, screenWidth;
 
     public MySurfaceView(Context context) {
         super(context);
@@ -58,10 +57,10 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
      */
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        screenWidth = getWidth();
-        screenHeight = getHeight();
+//        screenWidth = getWidth();
+//        screenHeight = getHeight();
         threadDeadFlag = true;
-        thread = new Thread(this);
+        Thread thread = new Thread(this);
         thread.start();
     }
 
@@ -88,6 +87,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void myDraw() {
+        Canvas canvas = null;
         try {
             canvas = surfaceHolder.lockCanvas();
             if (null != canvas) {
@@ -95,7 +95,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 canvas.drawText("SurfaceView练习", textX, textY, paint);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logs.e("MySurfaceView -->",e.toString());
         } finally {
             if (null != canvas) {
                 surfaceHolder.unlockCanvasAndPost(canvas);
@@ -134,7 +134,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     Thread.sleep(50 - (end - start));
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                Logs.e("MySurfaceView -- >",e.toString());
             }
         }
     }

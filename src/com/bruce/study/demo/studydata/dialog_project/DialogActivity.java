@@ -21,7 +21,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseActivity;
@@ -41,7 +40,7 @@ public class DialogActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.studydata_activity_dialogproject);
-        LinearLayout ll_dialog = (LinearLayout) findViewById(R.id.ll_dialog);
+//        LinearLayout ll_dialog = (LinearLayout) findViewById(R.id.ll_dialog);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setIcon(android.R.drawable.ic_dialog_info);
         builder.setTitle("对话框");

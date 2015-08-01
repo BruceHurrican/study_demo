@@ -31,6 +31,7 @@
     <uses-permission android:name="ANDROID.PERMISSION.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 横竖屏切换 权限 -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <!-- ======================================华丽丽的分隔线===================================== -->
     <application
             android:name=".DemoApplication"
             android:allowBackup="true"
@@ -38,7 +39,7 @@
             android:icon="@drawable/icon_workdemo">
         <activity
                 android:name=".MainActivity"
-                android:launchMode="singleTop"
+                android:launchMode="singleTask"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -47,69 +48,76 @@
         </activity>
         <activity
                 android:name=".util_demo.PhoneInfoActivity"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
         <activity
                 android:name="com.bruce.study.demo.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
         <activity
                 android:name=".shape_loading_demo.ShapeLoadingActivity"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
         <activity
                 android:name=".parallax_listview_demo.ParallaxActivity"
-                android:launchMode="singleTask"/>
-        <!-- 学习资料小demo -->
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.viewpage.ViewPagerActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.masking_buttons.MaskingActivity"
+                android:launchMode="singleTop"/>
+        <!-- it黑马demo -->
         <activity
                 android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
+        <!-- Android开发经典案例60个demo -->
         <activity
-                android:name=".studydata.activity_life_style.LifeStyleActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.activity_life_style.LifeStyleActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.activity_life_style.LifeStyleOtherActivity"
+                android:name=".studydata.demos60.activity_life_style.LifeStyleOtherActivity"
                 android:theme="@android:style/Theme.Dialog"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.button_project.ButtonProject"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.button_project.ButtonProject"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.imagebutton_project.ImageButtonActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.imagebutton_project.ImageButtonActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.edittext_project.EditTextActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.edittext_project.EditTextActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.checkbox_project.CheckBoxActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.checkbox_project.CheckBoxActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.radiobutton_project.RadioButtonActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.radiobutton_project.RadioButtonActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.progressbar_project.ProgressBarActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.progressbar_project.ProgressBarActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.seekbar_project.SeekBarActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.seekbar_project.SeekBarActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.tab_project.MyTabActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.tab_project.MyTabActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.baseadapter_project.BaseAdapterActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.baseadapter_project.BaseAdapterActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.dialog_project.DialogActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.dialog_project.DialogActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.switch_screen_project.SwitchScreenActivity"
+                android:name=".studydata.demos60.switch_screen_project.SwitchScreenActivity"
                 android:configChanges="orientation|keyboardHidden|screenSize"
-                android:launchMode="singleTask"/>
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.game_view_framework_project.GameViewActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.game_view_framework_project.GameViewActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.surfaceview_project.SurfaceViewActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.surfaceview_project.SurfaceViewActivity"
+                android:launchMode="singleTop"/>
         <activity
-                android:name=".studydata.bezier_project.BezierActivity"
-                android:launchMode="singleTask"/>
+                android:name=".studydata.demos60.bezier_project.BezierActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

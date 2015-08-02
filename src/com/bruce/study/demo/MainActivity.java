@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some lines from Internet. Everyone can download and use for study, but can
+ *   Some resources from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -33,6 +33,7 @@ import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.demos60.game_view_framework_project.GameViewActivity;
 import com.bruce.study.demo.studydata.demos60.imagebutton_project.ImageButtonActivity;
+import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.studydata.demos60.progressbar_project.ProgressBarActivity;
 import com.bruce.study.demo.studydata.demos60.radiobutton_project.RadioButtonActivity;
@@ -94,7 +95,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(ParallaxActivity.class, "下拉刷新头图片放大");
         addDemoContainer(PopupWindowActivity.class, "PopupWindow 练习");
         addDemoContainer(ViewPagerActivity.class, "ViewPager 练习");
-        addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘练习 练习");
+        addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
+        addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
         addDemoContainer(ButtonProject.class, "Button 监听练习");

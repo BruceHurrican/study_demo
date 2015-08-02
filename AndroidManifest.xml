@@ -2,7 +2,7 @@
 <!--
   ~ Copyright (c) 2015.
   ~   This document is just for Bruce's personal study.
-  ~   Some lines from Internet. Everyone can download and use for study, but can
+  ~   Some resources from the Internet. Everyone can download and use it for study, but can
   ~   not be used for commercial purpose. The author does not bear the
   ~   corresponding disputes arising therefrom.
   ~   Please delete within 24 hours after download.
@@ -63,6 +63,10 @@
                 android:launchMode="singleTop"/>
         <activity
                 android:name=".studydata.masking_buttons.MaskingActivity"
+                android:launchMode="singleTop"/>
+
+        <activity
+                android:name=".studydata.handler_thread.HandlerThreadDemoActivity"
                 android:launchMode="singleTop"/>
         <!-- it黑马demo -->
         <activity

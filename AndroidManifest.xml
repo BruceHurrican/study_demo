@@ -2,7 +2,7 @@
 <!--
   ~ Copyright (c) 2015.
   ~   This document is just for Bruce's personal study.
-  ~   Some resources from the Internet. Everyone can download and use it for study, but can
+  ~   Some resources come from the Internet. Everyone can download and use it for study, but can
   ~   not be used for commercial purpose. The author does not bear the
   ~   corresponding disputes arising therefrom.
   ~   Please delete within 24 hours after download.
@@ -122,6 +122,9 @@
                 android:launchMode="singleTop"/>
         <activity
                 android:name=".studydata.demos60.bezier_project.BezierActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.canvas_project.CanvasActivity"
                 android:launchMode="singleTop"/>
     </application>
 </manifest>

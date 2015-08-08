@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some resources from the Internet. Everyone can download and use it for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -28,6 +28,7 @@ import com.bruce.study.demo.studydata.demos60.activity_life_style.LifeStyleActiv
 import com.bruce.study.demo.studydata.demos60.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.studydata.demos60.bezier_project.BezierActivity;
 import com.bruce.study.demo.studydata.demos60.button_project.ButtonProject;
+import com.bruce.study.demo.studydata.demos60.canvas_project.CanvasActivity;
 import com.bruce.study.demo.studydata.demos60.checkbox_project.CheckBoxActivity;
 import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
@@ -113,6 +114,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(GameViewActivity.class, "游戏框架View 练习");
         addDemoContainer(SurfaceViewActivity.class, "SurfaceView 练习");
         addDemoContainer(BezierActivity.class, "贝塞尔曲线 练习");
+        addDemoContainer(CanvasActivity.class, "Canvas 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载列表完成");

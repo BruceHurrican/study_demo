@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some lines from Internet. Everyone can download and use for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -15,6 +15,7 @@
 package com.bruce.study.demo.util_demo;
 
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.view.View;
 import android.widget.TextView;
 import com.bruce.study.demo.R;
@@ -98,10 +99,15 @@ public class PhoneInfoActivity extends BaseActivity implements View.OnClickListe
      * @return String
      */
     private String getStorageInfo() {
-        return "SDCard 是否存在 ?" + (StorageUtil.isSDcardExists() ? "SDCard 存在" : "SDCard 不存在") + "\n手机内部总储存空间-" +
-                (StorageUtil.getTotalInternalMemorySize() >> 10 >> 10) + " MB\n手机内部剩余储存空间-" + (StorageUtil
-                .getAvailableInternalMemorySize() >> 10 >> 10) + " MB\n手机SDCard 总储存空间-" + (StorageUtil
-                .getTotalExternalMemorySize() >> 10 >> 10) + " MB\n手机SDCard 剩余储存空间-" + (StorageUtil
-                .getAvailableExternalMemorySize() >> 10 >> 10) + " MB";
+//        return "SDCard 是否存在 ?" + (StorageUtil.isSDcardExists() ? "SDCard 存在" : "SDCard 不存在") + "\n手机内部总储存空间-" +
+//                (StorageUtil.getTotalInternalMemorySize() >> 10 >> 10) + " MB\n手机内部剩余储存空间-" + (StorageUtil
+//                .getAvailableInternalMemorySize() >> 10 >> 10) + " MB\n手机SDCard 总储存空间-" + (StorageUtil
+//                .getTotalExternalMemorySize() >> 10 >> 10) + " MB\n手机SDCard 剩余储存空间-" + (StorageUtil
+//                .getAvailableExternalMemorySize() >> 10 >> 10) + " MB";
+        return "SDCard 是否存在 ?" + (StorageUtil.isSDcardExists() ? "SDCard 存在" : "SDCard 不存在") +
+                "\n手机内部总储存空间-" + Formatter.formatFileSize(this, StorageUtil.getTotalInternalMemorySize()) +
+                "\n手机内部剩余储存空间-" + Formatter.formatFileSize(this, StorageUtil.getAvailableInternalMemorySize())
+                + "\n手机SDCard 总储存空间-" + Formatter.formatFileSize(this, StorageUtil.getTotalExternalMemorySize())
+                + "\n手机SDCard 剩余储存空间-" + Formatter.formatFileSize(this, StorageUtil.getAvailableExternalMemorySize());
     }
 }

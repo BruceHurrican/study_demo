@@ -31,6 +31,7 @@ import com.bruce.study.demo.studydata.demos60.bitmap_project.BitmapActivity;
 import com.bruce.study.demo.studydata.demos60.button_project.ButtonProject;
 import com.bruce.study.demo.studydata.demos60.canvas_project.CanvasActivity;
 import com.bruce.study.demo.studydata.demos60.checkbox_project.CheckBoxActivity;
+import com.bruce.study.demo.studydata.demos60.clip_canvas_project.ClipCanvasActivity;
 import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.demos60.game_view_framework_project.GameViewActivity;
@@ -101,6 +102,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(ClipCanvasActivity.class, "可视化区域练习");
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
         addDemoContainer(ButtonProject.class, "Button 监听练习");
         addDemoContainer(ImageButtonActivity.class, "ImageButton 练习");

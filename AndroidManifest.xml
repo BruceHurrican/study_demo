@@ -133,5 +133,8 @@
         <activity
                 android:name=".studydata.demos60.bitmap_project.BitmapActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.clip_canvas_project.ClipCanvasActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

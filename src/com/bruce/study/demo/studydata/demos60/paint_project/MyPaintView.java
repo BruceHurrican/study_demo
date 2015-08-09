@@ -29,10 +29,7 @@ import com.bruce.study.demo.log.Logs;
  */
 public class MyPaintView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     private SurfaceHolder surfaceHolder;
-    private Thread th;
     private boolean flag;
-    private Canvas canvas;
-    private int screenW, screenH;
 
     public MyPaintView(Context context) {
         super(context);
@@ -43,14 +40,13 @@ public class MyPaintView extends SurfaceView implements SurfaceHolder.Callback, 
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        screenW = getWidth();
-        screenH = getHeight();
         flag = true;
-        th = new Thread(this);
+        Thread th = new Thread(this);
         th.start();
     }
 
     private void myDraw() {
+        Canvas canvas = null;
         try {
             canvas = surfaceHolder.lockCanvas();
             if (null != canvas) {

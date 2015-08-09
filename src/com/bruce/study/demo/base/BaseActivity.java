@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some resources from the Internet. Everyone can download and use it for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -77,8 +77,149 @@ public abstract class BaseActivity extends Activity {
         }
     }
 
-    private UIHandler mUIHandler;
+    /**
+     * 子类在使用sendUIMessage前需要调用initUIHandler方法来初始化mUIHandler对象
+     */
+    public void initUIHandler() {
+        if (null == mUIHandler) {
+            mUIHandler = new UIHandler(this);
+        }
+    }
 
+    /**
+     * 获得UIHandler，主线程的handler
+     *
+     * @return
+     */
+    public UIHandler getUIHandler() {
+        if (null == mUIHandler) {
+            logE("UIHandler 为空");
+        }
+        return mUIHandler;
+    }
+
+    /**
+     * 处理UIHandler收到的消息，一般子类需要重写该方法
+     *
+     * @param msg
+     */
+    public void handleUIMessage(Message msg) {
+        // super 一般不做处理，如果有共用的可以考虑在此处理
+    }
+
+    // 目前只提供两个sendUIMessage的方法，如果需要使用其他handler发送消息的方法getUIHandler后处理
+    public void sendUIMessage(Message msg) {
+        if (null != mUIHandler) {
+            mUIHandler.sendMessage(msg);
+        } else {
+            uiHandlerNotInit();
+        }
+    }
+
+    public void sendUIMessageEmpty(int what) {
+        sendUIMessageEmptyDelayed(what, 0);
+    }
+
+    public void sendUIMessageEmptyDelayed(int what, long delayMillis) {
+        if (null != mUIHandler) {
+            mUIHandler.sendEmptyMessageDelayed(what, delayMillis);
+        } else {
+            uiHandlerNotInit();
+        }
+    }
+
+    /**
+     * 需要在父类onDestroy中调用，如果有特殊地方需要调用清除消息，可以调用
+     */
+    public void recycleUIHandler() {
+        if (null != mUIHandler) {
+            mUIHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    /**
+     * 子类在使用handleWorkerMessage前需要调用initWorkerHandler方法来初始化mWorkerHandler和mHandlerThread对象
+     *
+     * @param name
+     */
+    public void initWorkerHandler(String name) {
+        if (mHandlerThread == null && mWorkerHandler == null) {
+            mHandlerThread = new HandlerThread(name);
+            mHandlerThread.start();
+            mWorkerHandler = new WorkerHandler(mHandlerThread.getLooper(), this);
+        } else {
+            logE("initWorkerHandler is called ,don't called again!");
+        }
+    }
+
+    public void initWorkerHandler() {
+        initWorkerHandler("workThread");
+    }
+
+    /**
+     * UIHandler 未初始化，统一调用此方法
+     */
+    public void uiHandlerNotInit() {
+        showToastShort("UIHandler 未初始化");
+        logE("UIHandler 未初始化");
+    }
+
+    /**
+     * 获得mWorkerHandler,子线程的WorkerHandler
+     *
+     * @return
+     */
+    public WorkerHandler getWorkerHandler() {
+        if (null == mWorkerHandler) {
+            logE("获取WorkerHandler实例为空");
+        }
+        return mWorkerHandler;
+    }
+
+    /**
+     * 处理WorkerHandler收到的消息，一般子类需要重写该方法
+     *
+     * @param msg
+     */
+    public void handleWorkerMessage(Message msg) {
+        // super 一般不做处理，如果有共用的可以考虑在此处理
+    }
+
+    // 目前只提供两个sendWorkerMessage的方法，如果需要使用其他handler发送消息的方法getmUIHandler后处理
+    public void sendWorkderMessage(Message msg) {
+        if (null != mWorkerHandler) {
+            mWorkerHandler.sendMessage(msg);
+        } else {
+            workerHandlerNotInit();
+        }
+    }
+
+    public void sendWorkerMessageEmpty(int what) {
+        if (null != mWorkerHandler) {
+            mWorkerHandler.sendEmptyMessage(what);
+        } else {
+            workerHandlerNotInit();
+        }
+    }
+
+    /**
+     * WorkerHandler 未初始化，统一调用此方法
+     */
+    private void workerHandlerNotInit() {
+        showToastShort("WorkerHandler 未初始化");
+        logE("WorkerHandler 未初始化");
+    }
+
+    public void recycleWorkerHandler() {
+        if (null != mHandlerThread && null != mWorkerHandler) {
+            mHandlerThread.quit();
+            mWorkerHandler.removeCallbacksAndMessages(null);
+        }
+    }
+
+    private UIHandler mUIHandler;
+    private WorkerHandler mWorkerHandler;
+    private HandlerThread mHandlerThread;
     public static class UIHandler extends Handler {
         WeakReference<BaseActivity> weakReference;
 
@@ -104,69 +245,6 @@ public abstract class BaseActivity extends Activity {
     }
 
     /**
-     * 子类在使用sendUIMessage前需要调用initUIHandler方法来初始化mUIHandler对象
-     */
-    public void initUIHandler() {
-        if (null == mUIHandler) {
-            mUIHandler = new UIHandler(this);
-        }
-    }
-
-    /**
-     * 获得UIHandler，主线程的handler
-     *
-     * @return
-     */
-    public UIHandler getUIHandler() {
-        if (null == mUIHandler) {
-            throw new NullPointerException("UIHandler 为空");
-        }
-        return mUIHandler;
-    }
-
-    /**
-     * 处理UIHandler收到的消息，一般子类需要重写该方法
-     *
-     * @param msg
-     */
-    public void handleUIMessage(Message msg) {
-        // super 一般不做处理，如果有共用的可以考虑在此处理
-    }
-
-    // 目前只提供两个sendUIMessage的方法，如果需要使用其他handler发送消息的方法getUIHandler后处理
-    public void sendUIMessage(Message msg) {
-        if (null != mUIHandler) {
-            mUIHandler.sendMessage(msg);
-        } else {
-//            uiHandlerNotInit();
-        }
-    }
-
-    public void sendUIMessageEmpty(int what) {
-        sendUIMessageEmptyDelayed(what, 0);
-    }
-
-    public void sendUIMessageEmptyDelayed(int what, long delayMillis) {
-        if (null != mUIHandler) {
-            mUIHandler.sendEmptyMessageDelayed(what, delayMillis);
-        } else {
-//            uiHandlerNotInit();
-        }
-    }
-
-    /**
-     * 需要在父类onDestroy中调用，如果有特殊地方需要调用清除消息，可以调用
-     */
-    public void recycleUIHandler() {
-        if (null != mUIHandler) {
-            mUIHandler.removeCallbacksAndMessages(null);
-        }
-    }
-
-    private WorkerHandler mWorkerHandler;
-    private HandlerThread mHandlerThread;
-
-    /**
      * 了线程Handler，用作耗时处理，替换AsyncTask做后台请求
      */
     public static class WorkerHandler extends Handler {
@@ -184,70 +262,6 @@ public abstract class BaseActivity extends Activity {
             if (null != activity) {
                 activity.handleWorkerMessage(msg);
             }
-        }
-    }
-
-    /**
-     * 子类在使用handleWorkerMessage前需要调用initWorkerHandler方法来初始化mWorkerHandler和mHandlerThread对象
-     *
-     * @param name
-     */
-    public void initWorkerHandler(String name) {
-        if (mHandlerThread == null && mWorkerHandler == null) {
-            mHandlerThread = new HandlerThread(name);
-            mHandlerThread.start();
-            mWorkerHandler = new WorkerHandler(mHandlerThread.getLooper(), this);
-        } else {
-            logE("initWorkerHandler is called ,don't called again!");
-        }
-    }
-
-    public void initWorkerHandler() {
-        initWorkerHandler("workThread");
-    }
-
-    /**
-     * 获得mWorkerHandler,子线程的WorkerHandler
-     *
-     * @return
-     */
-    public WorkerHandler getWorkerHandler() {
-        if (null == mWorkerHandler) {
-            throw new NullPointerException("获取WorkerHandler实例为空");
-        }
-        return mWorkerHandler;
-    }
-
-    /**
-     * 处理WorkerHandler收到的消息，一般子类需要重写该方法
-     *
-     * @param msg
-     */
-    public void handleWorkerMessage(Message msg) {
-        // super 一般不做处理，如果有共用的可以考虑在此处理
-    }
-
-    // 目前只提供两个sendWorkerMessage的方法，如果需要使用其他handler发送消息的方法getmUIHandler后处理
-    public void sendWorkderMessage(Message msg) {
-        if (null != mWorkerHandler) {
-            mWorkerHandler.sendMessage(msg);
-        } else {
-//            workerHandlerNotInit();
-        }
-    }
-
-    public void sendWorkerMessageEmpty(int what) {
-        if (null != mWorkerHandler) {
-            mWorkerHandler.sendEmptyMessage(what);
-        } else {
-//            workerHandlerNotInit();
-        }
-    }
-
-    public void recycleWorkerHandler() {
-        if (null != mHandlerThread && null != mWorkerHandler) {
-            mHandlerThread.quit();
-            mWorkerHandler.removeCallbacksAndMessages(null);
         }
     }
 }

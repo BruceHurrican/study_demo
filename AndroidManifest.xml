@@ -16,7 +16,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.bruce.study.demo"
           android:versionCode="1"
-          android:versionName="1.0">
+          android:versionName="1.0"
+          android:installLocation="preferExternal"><!-- 此属性 优先将APP安装在SD卡中 -->
     <uses-sdk
             android:minSdkVersion="14"
             android:targetSdkVersion="21"/>

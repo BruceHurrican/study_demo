@@ -126,5 +126,11 @@
         <activity
                 android:name=".studydata.demos60.canvas_project.CanvasActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.paint_project.PaintActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.bitmap_project.BitmapActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

@@ -27,6 +27,7 @@ import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.demos60.activity_life_style.LifeStyleActivity;
 import com.bruce.study.demo.studydata.demos60.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.studydata.demos60.bezier_project.BezierActivity;
+import com.bruce.study.demo.studydata.demos60.bitmap_project.BitmapActivity;
 import com.bruce.study.demo.studydata.demos60.button_project.ButtonProject;
 import com.bruce.study.demo.studydata.demos60.canvas_project.CanvasActivity;
 import com.bruce.study.demo.studydata.demos60.checkbox_project.CheckBoxActivity;
@@ -34,6 +35,7 @@ import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.demos60.game_view_framework_project.GameViewActivity;
 import com.bruce.study.demo.studydata.demos60.imagebutton_project.ImageButtonActivity;
+import com.bruce.study.demo.studydata.demos60.paint_project.PaintActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.studydata.demos60.progressbar_project.ProgressBarActivity;
@@ -115,6 +117,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(SurfaceViewActivity.class, "SurfaceView 练习");
         addDemoContainer(BezierActivity.class, "贝塞尔曲线 练习");
         addDemoContainer(CanvasActivity.class, "Canvas 练习");
+        addDemoContainer(PaintActivity.class, "Paint 练习");
+        addDemoContainer(BitmapActivity.class, "Bitmap 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载列表完成");

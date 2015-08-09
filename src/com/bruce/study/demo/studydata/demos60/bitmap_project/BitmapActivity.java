@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
@@ -13,12 +12,28 @@
  *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
  */
 
-package com.bruce.study.demo;
+package com.bruce.study.demo.studydata.demos60.bitmap_project;
 
-import android.app.Application;
+import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+import com.bruce.study.demo.base.BaseActivity;
 
 /**
- * Created by BruceHurrican on 2015/6/7.
+ * Bitmap 练习
+ * Created by BruceHurrican on 2015/8/9.
  */
-public class DemoApplication extends Application{
+public class BitmapActivity extends BaseActivity {
+    @Override
+    public String getTAG() {
+        return null;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(new MyBitmapView(this));
+    }
 }

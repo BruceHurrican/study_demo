@@ -136,5 +136,8 @@
         <activity
                 android:name=".studydata.demos60.clip_canvas_project.ClipCanvasActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.animation_project.AnimationActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

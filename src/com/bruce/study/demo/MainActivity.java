@@ -25,6 +25,7 @@ import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.demos60.activity_life_style.LifeStyleActivity;
+import com.bruce.study.demo.studydata.demos60.animation_project.AnimationActivity;
 import com.bruce.study.demo.studydata.demos60.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.studydata.demos60.bezier_project.BezierActivity;
 import com.bruce.study.demo.studydata.demos60.bitmap_project.BitmapActivity;
@@ -102,6 +103,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(AnimationActivity.class, "动画效果 练习");
         addDemoContainer(ClipCanvasActivity.class, "可视化区域练习");
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");
         addDemoContainer(ButtonProject.class, "Button 监听练习");

@@ -25,9 +25,11 @@ import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.studydata.demos60.activity_life_style.LifeStyleActivity;
+import com.bruce.study.demo.studydata.demos60.animation_frame_project.FrameActivity;
 import com.bruce.study.demo.studydata.demos60.animation_project.AnimationActivity;
 import com.bruce.study.demo.studydata.demos60.baseadapter_project.BaseAdapterActivity;
 import com.bruce.study.demo.studydata.demos60.bezier_project.BezierActivity;
+import com.bruce.study.demo.studydata.demos60.bitmap_active_project.BitmapActiveActivity;
 import com.bruce.study.demo.studydata.demos60.bitmap_project.BitmapActivity;
 import com.bruce.study.demo.studydata.demos60.button_project.ButtonProject;
 import com.bruce.study.demo.studydata.demos60.canvas_project.CanvasActivity;
@@ -91,7 +93,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         demos = new ArrayList<>(5);
         demoNamesList = new ArrayList<>(5);
         ListView lv_demo_list = (ListView) findViewById(R.id.lv__demo_list);
-        lv_demo_list.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, demoNamesList));
+//        lv_demo_list.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, demoNamesList));
+        lv_demo_list.setAdapter(new ArrayAdapter<>(this, R.layout.main_item, demoNamesList));
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
@@ -103,6 +106,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(FrameActivity.class, "帧动画 练习");
+        addDemoContainer(BitmapActiveActivity.class, "动态位图 练习");
         addDemoContainer(AnimationActivity.class, "动画效果 练习");
         addDemoContainer(ClipCanvasActivity.class, "可视化区域练习");
         addDemoContainer(LifeStyleActivity.class, "Activity生命周期");

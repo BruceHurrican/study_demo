@@ -139,5 +139,11 @@
         <activity
                 android:name=".studydata.demos60.animation_project.AnimationActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.bitmap_active_project.BitmapActiveActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.animation_frame_project.FrameActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

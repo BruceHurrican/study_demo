@@ -13,21 +13,13 @@
   ~   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
   -->
 
-<!-- 主Demo布局文件 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent"
-        >
-    <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="工作Demo"
-            android:singleLine="true"
-            />
-    <ListView
-            android:id="@+id/lv__demo_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-</LinearLayout>
-
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@android:id/text1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:textSize="20sp"
+          android:padding="10dp"
+          android:textColor="@android:color/white"
+          android:scrollHorizontally="true"
+          android:singleLine="true"/>

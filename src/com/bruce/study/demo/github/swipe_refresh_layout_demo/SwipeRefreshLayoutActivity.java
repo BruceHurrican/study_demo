@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some lines from Internet. Everyone can download and use for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -12,7 +12,7 @@
  *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
  */
 
-package com.bruce.study.demo.swipe_refresh_layout_demo;
+package com.bruce.study.demo.github.swipe_refresh_layout_demo;
 
 import android.app.Activity;
 import android.os.Bundle;

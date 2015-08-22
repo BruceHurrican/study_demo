@@ -13,17 +13,14 @@
   ~   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <com.bruce.study.demo.github.parallax_listview_demo.widget.ParallaxScrollListView
-            android:id="@+id/pslv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@null"
-            android:duplicateParentState="true"
-            android:scrollingCache="false"
-            android:headerDividersEnabled="false"
-            android:overScrollMode="never"
-            android:scrollbars="none"/>
-</RelativeLayout>
+<resources>
+    <!-- used in CustomShapeImageView.java -->
+    <declare-styleable name="CustomShapeImageView">
+        <attr name="shape" format="integer">
+            <enum name="circle" value="1"/>
+            <enum name="rectangle" value="2"/>
+            <enum name="svg" value="3"/>
+        </attr>
+        <attr name="svg_raw_resource" format="reference"/>
+    </declare-styleable>
+</resources>

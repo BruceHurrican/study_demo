@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some lines from Internet. Everyone can download and use for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -12,7 +12,7 @@
  *   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
  */
 
-package com.bruce.study.demo.parallax_listview_demo;
+package com.bruce.study.demo.github.parallax_listview_demo;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -22,7 +22,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import com.bruce.study.demo.R;
-import com.bruce.study.demo.parallax_listview_demo.widget.ParallaxScrollListView;
+import com.bruce.study.demo.github.parallax_listview_demo.widget.ParallaxScrollListView;
 
 /**
  * 下拉刷新头图片放大

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
- *   Some lines from Internet. Everyone can download and use for study, but can
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can
  *   not be used for commercial purpose. The author does not bear the
  *   corresponding disputes arising therefrom.
  *   Please delete within 24 hours after download.
@@ -21,10 +21,15 @@ package com.bruce.study.java.exercise;
 public class KKtest01 {
     public static void main(String[] args) {
         KKmethod k1 = new KKmethod();
-        k1.method3();
+        k1.method4();
     }
 
     private static class KKmethod {
+        private void method4() {
+            String TAG = KKmethod.class.getSimpleName();
+            System.out.println(TAG);
+        }
+
         private void method3() {
             Float aa = 12.23F;
             System.out.println(aa.intValue());

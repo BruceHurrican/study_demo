@@ -150,5 +150,8 @@
         <activity
                 android:name=".studydata.demos60.animation_frame_project.FrameActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.clip_bitmap_movie_project.ClipBitmapMovieActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

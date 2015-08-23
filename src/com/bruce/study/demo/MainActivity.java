@@ -36,6 +36,7 @@ import com.bruce.study.demo.studydata.demos60.bitmap_project.BitmapActivity;
 import com.bruce.study.demo.studydata.demos60.button_project.ButtonProject;
 import com.bruce.study.demo.studydata.demos60.canvas_project.CanvasActivity;
 import com.bruce.study.demo.studydata.demos60.checkbox_project.CheckBoxActivity;
+import com.bruce.study.demo.studydata.demos60.clip_bitmap_movie_project.ClipBitmapMovieActivity;
 import com.bruce.study.demo.studydata.demos60.clip_canvas_project.ClipCanvasActivity;
 import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
@@ -108,6 +109,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(ClipBitmapMovieActivity.class, "剪切动画 练习");
         addDemoContainer(FrameActivity.class, "帧动画 练习");
         addDemoContainer(BitmapActiveActivity.class, "动态位图 练习");
         addDemoContainer(AnimationActivity.class, "动画效果 练习");
@@ -154,6 +156,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it.setClass(MainActivity.this, demos.get(position));
 //        Logs.i(TAG, "你点击了第" + (position + 1) + "条Demo--"+demoNamesList.get(position));
         logI(String.format("你点击了第 %s 条Demo %s", position + 1, demoNamesList.get(position)));
+        logI("当前线程为 -->" + Thread.currentThread());
         startActivity(it);
     }
 }

@@ -153,5 +153,8 @@
         <activity
                 android:name=".studydata.demos60.clip_bitmap_movie_project.ClipBitmapMovieActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.player_project.PlayerActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

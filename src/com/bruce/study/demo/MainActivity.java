@@ -43,6 +43,7 @@ import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.demos60.game_view_framework_project.GameViewActivity;
 import com.bruce.study.demo.studydata.demos60.imagebutton_project.ImageButtonActivity;
 import com.bruce.study.demo.studydata.demos60.paint_project.PaintActivity;
+import com.bruce.study.demo.studydata.demos60.player_project.PlayerActivity;
 import com.bruce.study.demo.studydata.demos60.progressbar_project.ProgressBarActivity;
 import com.bruce.study.demo.studydata.demos60.radiobutton_project.RadioButtonActivity;
 import com.bruce.study.demo.studydata.demos60.seekbar_project.SeekBarActivity;
@@ -109,6 +110,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(PlayerActivity.class, "操作游戏主角 练习");
         addDemoContainer(ClipBitmapMovieActivity.class, "剪切动画 练习");
         addDemoContainer(FrameActivity.class, "帧动画 练习");
         addDemoContainer(BitmapActiveActivity.class, "动态位图 练习");

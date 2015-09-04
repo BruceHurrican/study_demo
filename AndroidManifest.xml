@@ -156,5 +156,20 @@
         <activity
                 android:name=".studydata.demos60.player_project.PlayerActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.rectcollision_project.RectCollisionActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.circlecollision_project.CircleCollisionActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.rectcollision2_project.RectCollisionActivity2"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.regioncollision_project.RegionCollisonActivity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.mediaplayer_project.MediaPlayerActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

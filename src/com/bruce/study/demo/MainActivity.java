@@ -52,6 +52,7 @@ import com.bruce.study.demo.studydata.demos60.rectcollision2_project.RectCollisi
 import com.bruce.study.demo.studydata.demos60.rectcollision_project.RectCollisionActivity;
 import com.bruce.study.demo.studydata.demos60.regioncollision_project.RegionCollisonActivity;
 import com.bruce.study.demo.studydata.demos60.seekbar_project.SeekBarActivity;
+import com.bruce.study.demo.studydata.demos60.soundpool_project.SoundPoolActivity;
 import com.bruce.study.demo.studydata.demos60.surfaceview_project.SurfaceViewActivity;
 import com.bruce.study.demo.studydata.demos60.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
@@ -115,6 +116,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(SoundPoolActivity.class, "sound pool 练习");
         addDemoContainer(MediaPlayerActivity.class, "播放器 练习");
         addDemoContainer(RegionCollisonActivity.class, "碰撞检测 练习");
         addDemoContainer(RectCollisionActivity2.class, "多矩形碰撞 练习");

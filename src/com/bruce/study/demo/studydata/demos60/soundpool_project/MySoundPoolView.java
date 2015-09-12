@@ -53,11 +53,18 @@ public class MySoundPoolView extends SurfaceView implements SurfaceHolder.Callba
             @Override
             public void run() {
                 soundPool.play(soundId_short, 1f, 1f, 0, 0, 1);
-                Logs.d(TAG, "短音效播放结束");
-                soundPool.play(soundId_long, 1f, 1f, 0, 0, 1);
-                Logs.d(TAG, "长音效播放结束");
             }
         }, 2000);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                if (sampleId == soundId_short) {
+                    Logs.d(TAG, "短音效播放结束");
+                    soundPool.play(soundId_long, 1f, 1f, 0, 0, 1);
+                    Logs.d(TAG, "长音效播放结束");
+                }
+            }
+        });
     }
 
     @Override

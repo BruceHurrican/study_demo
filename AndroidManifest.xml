@@ -174,5 +174,8 @@
         <activity
                 android:name=".studydata.demos60.soundpool_project.SoundPoolActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.demos60.httpclient.MyHttpClientActivity"
+                android:launchMode="singleTop"/>
     </application>
 </manifest>

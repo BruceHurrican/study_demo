@@ -42,6 +42,7 @@ import com.bruce.study.demo.studydata.demos60.clip_canvas_project.ClipCanvasActi
 import com.bruce.study.demo.studydata.demos60.dialog_project.DialogActivity;
 import com.bruce.study.demo.studydata.demos60.edittext_project.EditTextActivity;
 import com.bruce.study.demo.studydata.demos60.game_view_framework_project.GameViewActivity;
+import com.bruce.study.demo.studydata.demos60.httpclient.MyHttpClientActivity;
 import com.bruce.study.demo.studydata.demos60.imagebutton_project.ImageButtonActivity;
 import com.bruce.study.demo.studydata.demos60.mediaplayer_project.MediaPlayerActivity;
 import com.bruce.study.demo.studydata.demos60.paint_project.PaintActivity;
@@ -116,6 +117,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(MaskingActivity.class, "屏蔽手机物理键盘 练习");
         addDemoContainer(HandlerThreadDemoActivity.class, "HandlerThread 练习");
         //---------------Android开发经典案例60个源码demo------------------------------
+        addDemoContainer(MyHttpClientActivity.class, "自定义网络请求 练习");
         addDemoContainer(SoundPoolActivity.class, "sound pool 练习");
         addDemoContainer(MediaPlayerActivity.class, "播放器 练习");
         addDemoContainer(RegionCollisonActivity.class, "碰撞检测 练习");

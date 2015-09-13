@@ -14,32 +14,31 @@
 
 package com.bruce.study.demo.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.*;
-import android.widget.Toast;
+import android.support.v4.app.Fragment;
 import com.bruce.study.demo.log.Logs;
 
 import java.lang.ref.WeakReference;
 
 /**
- * 基类Activity
- * Created by BruceHurrican on 2015/7/5.
+ * 基类Fragment
+ * Created by BruceHurrican on 2015/9/13.
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseFragment extends Fragment {
     private Context context;
     private final String TAG = getTAG();
     private String logsTag;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        context = BaseActivity.this;
-//        TAG = getTAG();
-        logsTag = getLocalClassName() + "-->";
-    }
-
     public abstract String getTAG();
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+//        TAG = getTAG();
+        logsTag = TAG + "-->";
+    }
 
     public final void logV(String text) {
         Logs.v(logsTag, text);
@@ -59,32 +58,6 @@ public abstract class BaseActivity extends Activity {
 
     public final void logE(String text) {
         Logs.e(logsTag, text);
-    }
-
-    public void showToastShort(String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (null != context) {
-                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
-                } else {
-                    Logs.e(TAG, "打印日志出错");
-                }
-            }
-        });
-    }
-
-    public void showToastLong(String text) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (null != context) {
-                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
-                } else {
-                    Logs.e(TAG, "print log error");
-                }
-            }
-        });
     }
 
     /**
@@ -170,7 +143,7 @@ public abstract class BaseActivity extends Activity {
      * UIHandler 未初始化，统一调用此方法
      */
     public void uiHandlerNotInit() {
-        showToastShort("UIHandler 未初始化");
+//        showToastShort("UIHandler 未初始化");
         logE("UIHandler 未初始化");
     }
 
@@ -216,7 +189,7 @@ public abstract class BaseActivity extends Activity {
      * WorkerHandler 未初始化，统一调用此方法
      */
     private void workerHandlerNotInit() {
-        showToastShort("WorkerHandler 未初始化");
+//        showToastShort("WorkerHandler 未初始化");
         logE("WorkerHandler 未初始化");
     }
 
@@ -232,25 +205,25 @@ public abstract class BaseActivity extends Activity {
     private HandlerThread mHandlerThread;
 
     public static class UIHandler extends Handler {
-        WeakReference<BaseActivity> weakReference;
+        WeakReference<BaseFragment> weakReference;
 
         /**
          * 防止 Handler 泄露，需要定义成内部静态类，Handler 也是造成内在泄露的一个重要的源头，主要 Handler 属于 TLS(Thread Local Storage)变量，生命周期和 Activity 是不一致的，
          * Handler 引用 Activity 会存在内在泄露
          *
-         * @param activity
+         * @param fragment
          */
-        public UIHandler(BaseActivity activity) {
+        public UIHandler(BaseFragment fragment) {
             super(Looper.getMainLooper());
-            this.weakReference = new WeakReference<BaseActivity>(activity);
+            this.weakReference = new WeakReference<BaseFragment>(fragment);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final BaseActivity activity = weakReference.get();
-            if (null != activity) {
-                activity.handleUIMessage(msg);
+            final BaseFragment fragment = weakReference.get();
+            if (null != fragment) {
+                fragment.handleUIMessage(msg);
             }
         }
     }
@@ -259,19 +232,19 @@ public abstract class BaseActivity extends Activity {
      * 了线程Handler，用作耗时处理，替换AsyncTask做后台请求
      */
     public static class WorkerHandler extends Handler {
-        WeakReference<BaseActivity> weakReference;
+        WeakReference<BaseFragment> weakReference;
 
-        public WorkerHandler(Looper looper, BaseActivity activity) {
+        public WorkerHandler(Looper looper, BaseFragment fragment) {
             super(looper);
-            this.weakReference = new WeakReference<BaseActivity>(activity);
+            this.weakReference = new WeakReference<BaseFragment>(fragment);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final BaseActivity activity = weakReference.get();
-            if (null != activity) {
-                activity.handleWorkerMessage(msg);
+            final BaseFragment fragment = weakReference.get();
+            if (null != fragment) {
+                fragment.handleWorkerMessage(msg);
             }
         }
     }

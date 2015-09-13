@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2015.
+ * Copyright (c) 2015. 
  *   This document is just for Bruce's personal study.
- *   Some resources come from the Internet. Everyone can download and use it for study, but can
- *   not be used for commercial purpose. The author does not bear the
- *   corresponding disputes arising therefrom.
+ *   Some resources come from the Internet. Everyone can download and use it for study, but can 
+ *   not be used for commercial purpose. The author does not bear the 
+ *   corresponding disputes arising therefrom. 
  *   Please delete within 24 hours after download.
  *   If you have good suggestions for this code, you can contact BurrceHurrican@foxmail.com.
  *   本文件为Bruce's个人学习android的demo, 其中所用到的代码来源于互联网，仅作为学习交流使用。
@@ -14,19 +14,19 @@
 
 package com.bruce.study.demo.base;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.*;
+import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 import com.bruce.study.demo.log.Logs;
 
 import java.lang.ref.WeakReference;
 
 /**
- * 基类Activity
- * Created by BruceHurrican on 2015/7/5.
+ * 基类FragmentActivity
+ * Created by BruceHurrican on 2015/9/13.
  */
-public abstract class BaseActivity extends Activity {
+public abstract class BaseFragmentActivity extends FragmentActivity{
     private Context context;
     private final String TAG = getTAG();
     private String logsTag;
@@ -34,7 +34,7 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        context = BaseActivity.this;
+        context = BaseFragmentActivity.this;
 //        TAG = getTAG();
         logsTag = getLocalClassName() + "-->";
     }
@@ -232,7 +232,7 @@ public abstract class BaseActivity extends Activity {
     private HandlerThread mHandlerThread;
 
     public static class UIHandler extends Handler {
-        WeakReference<BaseActivity> weakReference;
+        WeakReference<BaseFragmentActivity> weakReference;
 
         /**
          * 防止 Handler 泄露，需要定义成内部静态类，Handler 也是造成内在泄露的一个重要的源头，主要 Handler 属于 TLS(Thread Local Storage)变量，生命周期和 Activity 是不一致的，
@@ -240,15 +240,15 @@ public abstract class BaseActivity extends Activity {
          *
          * @param activity
          */
-        public UIHandler(BaseActivity activity) {
+        public UIHandler(BaseFragmentActivity activity) {
             super(Looper.getMainLooper());
-            this.weakReference = new WeakReference<BaseActivity>(activity);
+            this.weakReference = new WeakReference<BaseFragmentActivity>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final BaseActivity activity = weakReference.get();
+            final BaseFragmentActivity activity = weakReference.get();
             if (null != activity) {
                 activity.handleUIMessage(msg);
             }
@@ -259,17 +259,17 @@ public abstract class BaseActivity extends Activity {
      * 了线程Handler，用作耗时处理，替换AsyncTask做后台请求
      */
     public static class WorkerHandler extends Handler {
-        WeakReference<BaseActivity> weakReference;
+        WeakReference<BaseFragmentActivity> weakReference;
 
-        public WorkerHandler(Looper looper, BaseActivity activity) {
+        public WorkerHandler(Looper looper, BaseFragmentActivity activity) {
             super(looper);
-            this.weakReference = new WeakReference<BaseActivity>(activity);
+            this.weakReference = new WeakReference<BaseFragmentActivity>(activity);
         }
 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            final BaseActivity activity = weakReference.get();
+            final BaseFragmentActivity activity = weakReference.get();
             if (null != activity) {
                 activity.handleWorkerMessage(msg);
             }

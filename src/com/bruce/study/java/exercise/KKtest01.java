@@ -15,16 +15,22 @@
 package com.bruce.study.java.exercise;
 
 /**
- * java exercise
+ * java method snippet
  * Created by BruceHurrican on 2015/5/24.
  */
 public class KKtest01 {
     public static void main(String[] args) {
         KKmethod k1 = new KKmethod();
-        k1.method4();
+        k1.method5();
     }
 
     private static class KKmethod {
+        private  void method5(){
+            String aa = "";
+            System.out.println(aa.length());
+            int b = 10;
+            System.out.println(b<<10);
+        }
         private void method4() {
             String TAG = KKmethod.class.getSimpleName();
             System.out.println(TAG);

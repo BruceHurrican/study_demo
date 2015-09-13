@@ -61,6 +61,7 @@ import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.studydata.masking_buttons.MaskingActivity;
 import com.bruce.study.demo.studydata.viewpage.ViewPagerActivity;
+import com.bruce.study.demo.studydata.volley_demo.VolleyActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
 
 import java.io.Serializable;
@@ -108,6 +109,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
+        addDemoContainer(VolleyActivity.class, "volley 练习");
         addDemoContainer(CustomShapeImageViewActivity.class, "图片下载框架练习1");
         addDemoContainer(SwipeRefreshLayoutActivity.class, "谷歌自带下拉刷新组件");
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");

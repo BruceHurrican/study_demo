@@ -16,9 +16,24 @@
 package com.bruce.study.demo;
 
 import android.app.Application;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
 /**
+ * 全局 application
  * Created by BruceHurrican on 2015/6/7.
  */
 public class DemoApplication extends Application{
+    // used in volley_demo
+    private static RequestQueue queues;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        queues = Volley.newRequestQueue(getApplicationContext());
+    }
+
+    public static RequestQueue getHttpQueues(){
+        return queues;
+    }
 }

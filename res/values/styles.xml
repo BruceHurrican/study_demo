@@ -5,4 +5,18 @@
         <item name="android:windowEnterAnimation">@anim/itheima_popup_window_enter</item>
         <item name="android:windowExitAnimation">@anim/itheima_popup_window_out</item>
     </style>
+    <!-- 基类Button样式 -->
+    <style name="BaseButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:onClick">onClick</item>
+    </style>
+    <!-- 基类TextView -->
+    <style name="BaseTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>

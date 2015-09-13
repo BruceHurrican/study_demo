@@ -17,27 +17,16 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <Button
-                    android:id="@+id/btn_volley_image"
-                    android:text="获取图像方法"
-                    style="@style/BaseButton"/>
-            <Button
-                    android:id="@+id/btn_volley_enclose"
-                    android:layout_toRightOf="@id/btn_volley_image"
-                    android:layout_alignBaseline="@id/btn_volley_image"
-                    android:text="二次封装"
-                    style="@style/BaseButton"/>
-            <FrameLayout
-                    android:id="@+id/fl_volley"
-                    android:layout_below="@id/btn_volley_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-        </RelativeLayout>
-    </ScrollView>
+    <Button
+            android:id="@+id/btn_volley_get_string"
+            style="@style/BaseButton"
+            android:text="封装Get String"/>
+    <Button
+            android:id="@+id/btn_volley_post_string"
+            style="@style/BaseButton"
+            android:text="封装POST String"/>
+    <TextView
+            android:id="@+id/tv_volley_fragment_enclose"
+            style="@style/BaseTextView"
+            android:singleLine="false"/>
 </LinearLayout>

@@ -16,6 +16,7 @@ package com.bruce.study.demo.studydata.volley_demo.fragment;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,19 +39,19 @@ import com.bruce.study.demo.studydata.volley_demo.utils.VolleyBitmapCache;
  */
 public class ImageFragment extends BaseFragment implements View.OnClickListener {
     // 获取github demo 头像图片
-    private final String okURL = "https://avatars0.githubusercontent.com/u/8604716?v=3&s=460";
-    private final String wrongURL = "http://www.baidu.com/123.jpg";
+    private static final String okURL = "https://avatars0.githubusercontent.com/u/8604716?v=3&s=460";
+    private static final String wrongURL = "http://www.baidu.com/123.jpg";
     private boolean isLoadOkURL;
-    private VolleyBitmapCache bitmapCache;
     private TextView tv_volley_fragment_image;
     private ImageView iv_volley_fragment_image;
     private NetworkImageView niv_volley_fragment;
     private Button btn_volley_get_image, btn_volley_get_image_loader, btn_volley_get_image_network;
     private ImageLoader loader;
+    private String requestTag = "";
 
     @Override
     public String getTAG() {
-        return "VolleyDemo-ImageFragment";
+        return "VolleyDemo-ImageFragment-->";
     }
 
     @Override
@@ -61,15 +62,16 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         logD("onActivityCreated");
         btn_volley_get_image.setOnClickListener(this);
         btn_volley_get_image_loader.setOnClickListener(this);
         btn_volley_get_image_network.setOnClickListener(this);
-        super.onActivityCreated(savedInstanceState);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         logD("onViewCreated");
         tv_volley_fragment_image = (TextView) view.findViewById(R.id.tv_volley_fragment_image);
         iv_volley_fragment_image = (ImageView) view.findViewById(R.id.iv_volley_fragment_image);
@@ -78,9 +80,8 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         btn_volley_get_image_loader = (Button) view.findViewById(R.id.btn_volley_get_image_loader);
         btn_volley_get_image_network = (Button) view.findViewById(R.id.btn_volley_get_image_network);
         isLoadOkURL = true;
-        bitmapCache = new VolleyBitmapCache();
+        VolleyBitmapCache bitmapCache = new VolleyBitmapCache();
         loader = new ImageLoader(DemoApplication.getHttpQueues(), bitmapCache);
-        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override
@@ -122,6 +123,14 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (TextUtils.isEmpty(requestTag)) {
+            DemoApplication.getHttpQueues().cancelAll(requestTag);
+        }
+    }
+
     /**
      * 获取图片
      *
@@ -145,6 +154,8 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
                 logE(volleyError.toString());
             }
         });
+        requestTag = getTAG();
+        request.setTag(requestTag);
         DemoApplication.getHttpQueues().add(request);
     }
 

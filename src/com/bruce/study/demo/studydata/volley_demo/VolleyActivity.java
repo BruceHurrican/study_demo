@@ -20,23 +20,20 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.bruce.study.demo.DemoApplication;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragmentActivity;
+import com.bruce.study.demo.studydata.volley_demo.fragment.EncloseFragment;
 import com.bruce.study.demo.studydata.volley_demo.fragment.ImageFragment;
 
 /**
  * volley 练习
  * Created by BruceHurrican on 2015/9/13.
  */
-public class VolleyActivity extends BaseFragmentActivity implements View.OnClickListener{
-    private ImageView iv_volley;
-    private TextView tv_volley;
+public class VolleyActivity extends BaseFragmentActivity implements View.OnClickListener {
     private String requestTag = "";
     private FragmentManager fragmentManager;
-    private FragmentTransaction transaction;
+
     @Override
     public String getTAG() {
         return "VolleyActivity -->";
@@ -46,43 +43,37 @@ public class VolleyActivity extends BaseFragmentActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.volley_activity);
-        iv_volley = (ImageView) findViewById(R.id.iv_volley);
-        tv_volley = (TextView) findViewById(R.id.tv_volley);
         fragmentManager = getSupportFragmentManager();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        if (TextUtils.isEmpty(requestTag)){
+        if (TextUtils.isEmpty(requestTag)) {
             DemoApplication.getHttpQueues().cancelAll(requestTag);
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        Fragment fragment = null;
+        switch (v.getId()) {
             case R.id.btn_volley_image:
-                ImageFragment imageFragment = new ImageFragment();
-                switchFragment(imageFragment);
+                fragment = new ImageFragment();
                 break;
             case R.id.btn_volley_enclose:
+                fragment = new EncloseFragment();
                 break;
-            case R.id.btn_volley_get_string:
-                break;
-            case R.id.btn_volley_get_json:
-                break;
-            case R.id.btn_volley_post_string:
-                break;
-            case R.id.btn_volley_post_json:
-                break;
+        }
+        if (null != fragment) {
+            switchFragment(fragment);
         }
     }
 
 
-    private void switchFragment(Fragment fragment){
-        transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fl_volley,fragment);
+    private void switchFragment(Fragment fragment) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fl_volley, fragment);
         transaction.commit();
     }
 }

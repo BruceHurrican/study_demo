@@ -77,6 +77,9 @@
         <activity
                 android:name=".studydata.volley_demo.VolleyActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.recyclerview_demo.RecyclerActivity"
+                android:launchMode="singleTop"/>
         <!-- it黑马demo -->
         <activity
                 android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"

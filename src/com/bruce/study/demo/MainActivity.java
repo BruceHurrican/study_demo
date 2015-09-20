@@ -60,6 +60,7 @@ import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.studydata.masking_buttons.MaskingActivity;
+import com.bruce.study.demo.studydata.recyclerview_demo.RecyclerActivity;
 import com.bruce.study.demo.studydata.viewpage.ViewPagerActivity;
 import com.bruce.study.demo.studydata.volley_demo.VolleyActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
@@ -109,6 +110,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
+        addDemoContainer(RecyclerActivity.class, "RecyclerView 练习");
         addDemoContainer(VolleyActivity.class, "volley 练习");
         addDemoContainer(CustomShapeImageViewActivity.class, "图片下载框架练习1");
         addDemoContainer(SwipeRefreshLayoutActivity.class, "谷歌自带下拉刷新组件");

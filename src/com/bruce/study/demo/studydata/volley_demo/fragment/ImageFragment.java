@@ -31,6 +31,7 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bruce.study.demo.DemoApplication;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragment;
+import com.bruce.study.demo.studydata.volley_demo.widget.MyNetWorkImageView;
 import com.bruce.study.demo.studydata.volley_demo.utils.VolleyBitmapCache;
 
 /**
@@ -39,13 +40,14 @@ import com.bruce.study.demo.studydata.volley_demo.utils.VolleyBitmapCache;
  */
 public class ImageFragment extends BaseFragment implements View.OnClickListener {
     // 获取github demo 头像图片
-    private static final String okURL = "https://avatars0.githubusercontent.com/u/8604716?v=3&s=460";
+    private static final String okURL = "https://www.baidu.com/img/bd_logo1.png";
     private static final String wrongURL = "http://www.baidu.com/123.jpg";
     private boolean isLoadOkURL;
     private TextView tv_volley_fragment_image;
     private ImageView iv_volley_fragment_image;
     private NetworkImageView niv_volley_fragment;
-    private Button btn_volley_get_image, btn_volley_get_image_loader, btn_volley_get_image_network;
+    private MyNetWorkImageView niv_volley_fragment2;
+    private Button btn_volley_get_image, btn_volley_get_image_loader, btn_volley_get_image_network, btn_volley_get_image_network2;
     private ImageLoader loader;
     private String requestTag = "";
 
@@ -67,6 +69,7 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         btn_volley_get_image.setOnClickListener(this);
         btn_volley_get_image_loader.setOnClickListener(this);
         btn_volley_get_image_network.setOnClickListener(this);
+        btn_volley_get_image_network2.setOnClickListener(this);
     }
 
     @Override
@@ -76,9 +79,11 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         tv_volley_fragment_image = (TextView) view.findViewById(R.id.tv_volley_fragment_image);
         iv_volley_fragment_image = (ImageView) view.findViewById(R.id.iv_volley_fragment_image);
         niv_volley_fragment = (NetworkImageView) view.findViewById(R.id.niv_volley_fragment);
+        niv_volley_fragment2 = (MyNetWorkImageView) view.findViewById(R.id.niv_volley_fragment2);
         btn_volley_get_image = (Button) view.findViewById(R.id.btn_volley_get_image);
         btn_volley_get_image_loader = (Button) view.findViewById(R.id.btn_volley_get_image_loader);
         btn_volley_get_image_network = (Button) view.findViewById(R.id.btn_volley_get_image_network);
+        btn_volley_get_image_network2 = (Button) view.findViewById(R.id.btn_volley_get_image_network2);
         isLoadOkURL = true;
         VolleyBitmapCache bitmapCache = new VolleyBitmapCache();
         loader = new ImageLoader(DemoApplication.getHttpQueues(), bitmapCache);
@@ -116,6 +121,17 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
                     isLoadOkURL = false;
                 } else {
                     logD("使用NetworkImageView获取图片方法成功调用--wrongURL");
+                    getImageAndBufferImage(wrongURL);
+                    isLoadOkURL = true;
+                }
+                break;
+            case R.id.btn_volley_get_image_network2:
+                if (isLoadOkURL) {
+                    logD("使用MyNetworkImageView获取图片方法成功调用--okURL");
+                    getMyNetworkImage(okURL);
+                    isLoadOkURL = false;
+                } else {
+                    logD("使用MyNetworkImageView获取图片方法成功调用--wrongURL");
                     getImageAndBufferImage(wrongURL);
                     isLoadOkURL = true;
                 }
@@ -168,6 +184,7 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         tv_volley_fragment_image.setText("开始并缓存图片");
         iv_volley_fragment_image.setImageBitmap(null);
         niv_volley_fragment.setImageBitmap(null);
+        niv_volley_fragment2.setImageBitmap(null);
 //        ImageLoader loader = new ImageLoader(DemoApplication.getHttpQueues(), new VolleyBitmapCache());
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(iv_volley_fragment_image, R.drawable.icon_workdemo, R.drawable.ic_launcher);
         loader.get(url, listener);
@@ -175,7 +192,6 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
 
     /**
      * 使用谷歌图片下载框架 NetworkImageView
-     * TODO 多次加载图片会失败
      *
      * @param url 下载图片地址
      */
@@ -183,9 +199,26 @@ public class ImageFragment extends BaseFragment implements View.OnClickListener 
         tv_volley_fragment_image.setText("使用NetworkImageView开始加载图片");
         iv_volley_fragment_image.setImageBitmap(null);
         niv_volley_fragment.setImageBitmap(null);
+        niv_volley_fragment2.setImageBitmap(null);
 //        ImageLoader loader = new ImageLoader(DemoApplication.getHttpQueues(), new VolleyBitmapCache());
         niv_volley_fragment.setErrorImageResId(R.drawable.ic_launcher);
         niv_volley_fragment.setDefaultImageResId(R.drawable.icon_workdemo);
+        niv_volley_fragment.setImageUrl("", loader); // 此处传入空url目的是取消之前的网络请求，否则会造成后面调用该方法时图片无法加载
         niv_volley_fragment.setImageUrl(url, loader);
+    }
+
+    /**
+     * 使用自定义图片下载框架 MyNetworkImageView
+     *
+     * @param url 下载图片地址
+     */
+    private void getMyNetworkImage(String url) {
+        tv_volley_fragment_image.setText("使用MyNetworkImageView开始加载图片");
+        iv_volley_fragment_image.setImageBitmap(null);
+        niv_volley_fragment2.setImageBitmap(null);
+//        ImageLoader loader = new ImageLoader(DemoApplication.getHttpQueues(), new VolleyBitmapCache());
+        niv_volley_fragment2.setErrorImageResId(R.drawable.ic_launcher);
+        niv_volley_fragment2.setDefaultImageResId(R.drawable.icon_workdemo);
+        niv_volley_fragment2.setImageUrl(url, loader);
     }
 }

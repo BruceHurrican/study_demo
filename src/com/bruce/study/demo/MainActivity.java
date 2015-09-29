@@ -58,8 +58,10 @@ import com.bruce.study.demo.studydata.demos60.surfaceview_project.SurfaceViewAct
 import com.bruce.study.demo.studydata.demos60.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
+import com.bruce.study.demo.studydata.imageviewdemo1.ImageViewDemo1Activity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
 import com.bruce.study.demo.studydata.masking_buttons.MaskingActivity;
+import com.bruce.study.demo.studydata.mybutton_demo1.MyButtonDemo1Activity;
 import com.bruce.study.demo.studydata.recyclerview_demo.RecyclerActivity;
 import com.bruce.study.demo.studydata.viewpage.ViewPagerActivity;
 import com.bruce.study.demo.studydata.volley_demo.VolleyActivity;
@@ -112,6 +114,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
         addDemoContainer(RecyclerActivity.class, "RecyclerView 练习");
         addDemoContainer(VolleyActivity.class, "volley 练习");
+        addDemoContainer(MyButtonDemo1Activity.class, "水波纹button");
+        addDemoContainer(ImageViewDemo1Activity.class, "ImageView 实现跑马灯效果");
         addDemoContainer(CustomShapeImageViewActivity.class, "图片下载框架练习1");
         addDemoContainer(SwipeRefreshLayoutActivity.class, "谷歌自带下拉刷新组件");
         addDemoContainer(ShapeLoadingActivity.class, "58同城加载等待组件");

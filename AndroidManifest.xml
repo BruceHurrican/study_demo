@@ -80,6 +80,12 @@
         <activity
                 android:name=".studydata.recyclerview_demo.RecyclerActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.imageviewdemo1.ImageViewDemo1Activity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.mybutton_demo1.MyButtonDemo1Activity"
+                android:launchMode="singleTop"/>
         <!-- it黑马demo -->
         <activity
                 android:name=".studydata.itheima_lihuoming.popup_window.PopupWindowActivity"

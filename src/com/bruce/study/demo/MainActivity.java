@@ -26,6 +26,7 @@ import com.bruce.study.demo.github.custom_shape_imageview_demo.CustomShapeImageV
 import com.bruce.study.demo.github.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.github.shape_loading_demo.ShapeLoadingActivity;
 import com.bruce.study.demo.github.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity;
+import com.bruce.study.demo.studydata.bluetooth_demo1.BlueTooth1Activity;
 import com.bruce.study.demo.studydata.demos60.activity_life_style.LifeStyleActivity;
 import com.bruce.study.demo.studydata.demos60.animation_frame_project.FrameActivity;
 import com.bruce.study.demo.studydata.demos60.animation_project.AnimationActivity;
@@ -57,6 +58,7 @@ import com.bruce.study.demo.studydata.demos60.soundpool_project.SoundPoolActivit
 import com.bruce.study.demo.studydata.demos60.surfaceview_project.SurfaceViewActivity;
 import com.bruce.study.demo.studydata.demos60.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
+import com.bruce.study.demo.studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.imageviewdemo1.ImageViewDemo1Activity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
@@ -112,6 +114,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
+        addDemoContainer(BlueToothChatActivity.class, "谷歌demo之BlueTooth");
+        addDemoContainer(BlueTooth1Activity.class, "蓝牙练习1");
         addDemoContainer(RecyclerActivity.class, "RecyclerView 练习");
         addDemoContainer(VolleyActivity.class, "volley 练习");
         addDemoContainer(MyButtonDemo1Activity.class, "水波纹button");

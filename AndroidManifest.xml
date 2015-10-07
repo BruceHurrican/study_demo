@@ -32,6 +32,11 @@
     <uses-permission android:name="ANDROID.PERMISSION.MOUNT_UNMOUNT_FILESYSTEMS"/>
     <!-- 横竖屏切换 权限 -->
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <!-- 蓝牙相关权限 -->
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+    <!-- @targetAPI 19 -->
+    <uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED"/>
     <!-- ======================================华丽丽的分隔线===================================== -->
     <application
             android:name=".DemoApplication"
@@ -85,6 +90,9 @@
                 android:launchMode="singleTop"/>
         <activity
                 android:name=".studydata.mybutton_demo1.MyButtonDemo1Activity"
+                android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.bluetooth_demo1.BlueTooth1Activity"
                 android:launchMode="singleTop"/>
         <!-- it黑马demo -->
         <activity
@@ -189,5 +197,16 @@
         <activity
                 android:name=".studydata.demos60.httpclient.MyHttpClientActivity"
                 android:launchMode="singleTop"/>
+        <!-- 谷歌API demo 练习 -->
+        <activity
+                android:name=".studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity"
+                android:launchMode="singleTop"
+                android:configChanges="keyboardHidden|orientation"/>
+        <activity
+                android:name=".studydata.google_api_demos.bluetoothchat_demo.BlueToothChatListActivity"
+                android:launchMode="singleTop"
+                android:theme="@android:style/Theme.Dialog"
+                android:label="@string/select_device"
+                android:configChanges="keyboardHidden|orientation"/>
     </application>
 </manifest>

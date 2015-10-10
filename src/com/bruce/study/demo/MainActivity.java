@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bruce.study.demo.base.BaseActivity;
+import com.bruce.study.demo.github.bluetooth_demo1.BTDemo1Activity;
 import com.bruce.study.demo.github.custom_shape_imageview_demo.CustomShapeImageViewActivity;
 import com.bruce.study.demo.github.parallax_listview_demo.ParallaxActivity;
 import com.bruce.study.demo.github.shape_loading_demo.ShapeLoadingActivity;
@@ -114,6 +115,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
+        addDemoContainer(BTDemo1Activity.class, "蓝牙练习2");
         addDemoContainer(BlueToothChatActivity.class, "谷歌demo之BlueTooth");
         addDemoContainer(BlueTooth1Activity.class, "蓝牙练习1");
         addDemoContainer(RecyclerActivity.class, "RecyclerView 练习");

@@ -68,6 +68,9 @@
         <activity
                 android:name=".github.custom_shape_imageview_demo.CustomShapeImageViewActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".github.bluetooth_demo1.BTDemo1Activity"
+                android:launchMode="singleTop"/>
         <!-- 学习资料demo练习 -->
         <activity
                 android:name=".studydata.viewpage.ViewPagerActivity"

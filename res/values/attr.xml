@@ -23,4 +23,8 @@
         </attr>
         <attr name="svg_raw_resource" format="reference"/>
     </declare-styleable>
+    <!-- used in TitleView.java -->
+    <declare-styleable name="TitleView">
+        <attr name="tileSize" format="integer"/>
+    </declare-styleable>
 </resources>

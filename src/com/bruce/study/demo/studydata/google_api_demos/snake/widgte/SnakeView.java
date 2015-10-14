@@ -24,6 +24,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.bruce.study.demo.R;
+import com.bruce.study.demo.log.Logs;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -291,9 +292,141 @@ public class SnakeView extends TitleView {
         mStatusText.setVisibility(VISIBLE);
     }
 
-    // TODO
     private void addRandomApple(){
+        Coordinate newCoord = null;
+        boolean found = false;
+        while (!found){
+            int newX = 1 +RNG.nextInt(mXTitleCount - 2);
+            int newY = 1 +RNG.nextInt(mYTitleCount - 2);
+            newCoord  = new Coordinate(newX,newY);
 
+            // Make sure it's not already under the snake
+            boolean collision = false;
+            int snakelength = mSnakeTrail.size();
+            for (int i = 0; i < snakelength; i++) {
+                if (mSnakeTrail.get(i).equals(newCoord)){
+                    collision = true;
+                }
+            }
+            // if we're here and there's been no collision, then we have a good location for an apple. Otherwise, we'll circle back and try again.
+            found = !collision;
+        }
+        if (newCoord == null){
+            Logs.e(TAG,"Somehow ended up with a null newCoord!");
+        }
+        mAppleList.add(newCoord);
+    }
+
+    /**
+     * Handles the basic update loop, checking to see if we are in the running
+     * state, determining if a move should be made, updating the snake's location.
+     */
+    public void update(){
+        if (mMode == RUNNING){
+            long now = System.currentTimeMillis();
+            if (now - mlastMove > mMoveDelay){
+                clearTitles();
+                updateWalls();
+                updateSnake();
+                updateApples();
+                mlastMove = now;
+            }
+            mRefreshHandler.sleep(mMoveDelay);
+        }
+    }
+
+    // todo
+    private void updateWalls(){
+        for (int i = 0; i < mXTitleCount; i++) {
+            setTile(GREEN_STAR, i, 0);
+            setTile(GREEN_STAR, i, mYTitleCount - 1);
+        }
+        for (int i = 0; i < mYTitleCount; i++) {
+            setTile(GREEN_STAR, 0, i);
+            setTile(GREEN_STAR,mXTitleCount-1,i);
+        }
+    }
+
+    private void updateApples(){
+        for (Coordinate c : mAppleList){
+            setTile(YELLOW_STAR,c.x,c.y);
+        }
+    }
+
+    /**
+     * Figure out which way the snake is going, see if he's run into anything
+     * (the walls, himself, or an apple). If he's out going to die, we then add
+     * to the front and subtract from the rear in order to simulate motion. If we
+     * want to grow him, we don't subtract from the rear.
+     */
+    private void updateSnake(){
+        boolean growSnake = false;
+
+        // grab the snake by the head
+        Coordinate head = mSnakeTrail.get(0);
+        Coordinate newHead = new Coordinate(1,1);
+        mDirection = mNextDirection;
+        switch (mDirection){
+            case EAST:
+                newHead = new Coordinate(head.x + 1, head.y);
+                break;
+            case WEST:
+                newHead = new Coordinate(head.x - 1, head.y);
+                break;
+            case NORTH:
+                newHead = new Coordinate(head.x, head.y - 1);
+                break;
+            case SOUTH:
+                newHead = new Coordinate(head.x, head.y + 1);
+                break;
+        }
+        // Collision detection
+        if ((newHead.x < 1) || (newHead.y < 1) || (newHead.x > mXTitleCount - 2)
+                || (newHead.y > mYTitleCount - 2)) {
+            setMode(LOSE);
+            return;
+        }
+        // Look for collisions with itself
+        int snakelength = mSnakeTrail.size();
+        for (int snakeindex = 0; snakeindex < snakelength; snakeindex++) {
+            Coordinate c = mSnakeTrail.get(snakeindex);
+            if (c.equals(newHead)) {
+                setMode(LOSE);
+                return;
+            }
+        }
+
+        // Look for apples
+        int applecount = mAppleList.size();
+        for (int appleindex = 0; appleindex < applecount; appleindex++) {
+            Coordinate c = mAppleList.get(appleindex);
+            if (c.equals(newHead)) {
+                mAppleList.remove(c);
+                addRandomApple();
+
+                mScore++;
+                mMoveDelay *= 0.9;
+
+                growSnake = true;
+            }
+        }
+
+        // push a new head onto the ArrayList and pull off the tail
+        mSnakeTrail.add(0, newHead);
+        // except if we want the snake to grow
+        if (!growSnake) {
+            mSnakeTrail.remove(mSnakeTrail.size() - 1);
+        }
+
+        int index = 0;
+        for (Coordinate c : mSnakeTrail) {
+            if (index == 0) {
+                setTile(YELLOW_STAR, c.x, c.y);
+            } else {
+                setTile(RED_STAR, c.x, c.y);
+            }
+            index++;
+        }
     }
 
     /**

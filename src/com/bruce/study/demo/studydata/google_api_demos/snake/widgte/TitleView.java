@@ -78,7 +78,7 @@ public class TitleView extends View {
     /**
      * Resets all tiles to 0(empty).
      */
-    private void clearTitles() {
+    public void clearTitles() {
         for (int i = 0; i < mXTitleCount; i++) {
             for (int j = 0; j < mYTitleCount; j++) {
                 setTile(0, i, j);
@@ -95,7 +95,7 @@ public class TitleView extends View {
      * @param i
      * @param j
      */
-    private void setTile(int tileIndex, int i, int j) {
+    public void setTile(int tileIndex, int i, int j) {
         mTileGrid[i][j] = tileIndex;
     }
 

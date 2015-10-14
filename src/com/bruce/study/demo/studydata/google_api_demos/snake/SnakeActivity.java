@@ -14,6 +14,8 @@
 
 package com.bruce.study.demo.studydata.google_api_demos.snake;
 
+import android.os.Bundle;
+import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseActivity;
 
 /**
@@ -21,9 +23,15 @@ import com.bruce.study.demo.base.BaseActivity;
  * Created by BruceHurrican on 2015/10/10.
  */
 public class SnakeActivity extends BaseActivity{
-
+    //todo
     @Override
     public String getTAG() {
         return null;
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.gd_activity_snake);
     }
 }

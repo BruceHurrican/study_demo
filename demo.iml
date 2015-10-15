@@ -5,6 +5,9 @@
       <configuration>
         <option name="CUSTOM_APK_RESOURCE_FOLDER" value="/out/production/apk" />
         <option name="APK_PATH" value="/out/production/demo/demo.apk" />
+        <proGuardCfgFiles>
+          <file>file://C:/Java/jdk1.8.0_60/tools/proguard/proguard-android.txt</file>
+        </proGuardCfgFiles>
         <option name="UPDATE_PROPERTY_FILES" value="true" />
       </configuration>
     </facet>

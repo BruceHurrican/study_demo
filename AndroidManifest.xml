@@ -202,6 +202,9 @@
                 android:launchMode="singleTop"/>
         <!-- 谷歌API demo 练习 -->
         <activity
+            android:name=".studydata.google_api_demos.snake.SnakeActivity"
+            android:launchMode="singleTop"/>
+        <activity
                 android:name=".studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity"
                 android:launchMode="singleTop"
                 android:configChanges="keyboardHidden|orientation"/>

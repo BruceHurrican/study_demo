@@ -23,10 +23,12 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
+
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.log.Logs;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -82,11 +84,11 @@ public class SnakeView extends TitleView {
     /**
      * a list of Coordinate that make up the snake's body
      */
-    private ArrayList<Coordinate> mSnakeTrail = new ArrayList<>(5);
+    private List<Coordinate> mSnakeTrail = new ArrayList<>(5);
     /**
      * the secret location the juicy apples the snake craves
      */
-    private ArrayList<Coordinate> mAppleList = new ArrayList<>(5);
+    private List<Coordinate> mAppleList = new ArrayList<>(5);
 
     private static final Random RNG = new Random();
     /**
@@ -95,18 +97,20 @@ public class SnakeView extends TitleView {
      * function to cause an update/invalidate to occur at a later date.
      */
     private RefreshHandler mRefreshHandler = new RefreshHandler();
-    private class RefreshHandler extends Handler{
+
+    private class RefreshHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             SnakeView.this.update();
             SnakeView.this.invalidate();
         }
 
-        public void sleep(long delayMillis){
+        public void sleep(long delayMillis) {
             removeMessages(0);
-            sendMessageDelayed(obtainMessage(0),delayMillis);
+            sendMessageDelayed(obtainMessage(0), delayMillis);
         }
     }
+
     public SnakeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initSnakeView();
@@ -117,27 +121,27 @@ public class SnakeView extends TitleView {
         initSnakeView();
     }
 
-    private void initSnakeView(){
+    private void initSnakeView() {
         setFocusable(true);
         Resources r = getContext().getResources();
         resetTiles(4);
-        loadTile(RED_STAR,r.getDrawable(R.drawable.snake_redstar));
+        loadTile(RED_STAR, r.getDrawable(R.drawable.snake_redstar));
         loadTile(YELLOW_STAR, r.getDrawable(R.drawable.snake_yellowstar));
         loadTile(GREEN_STAR, r.getDrawable(R.drawable.snake_greenstar));
     }
 
-    private void initNewGame(){
+    private void initNewGame() {
         mSnakeTrail.clear();
         mAppleList.clear();
 
         // For now we're just going to load up a short default eastbound snake
         // that's just turned north
-        mSnakeTrail.add(new Coordinate(7,7));
-        mSnakeTrail.add(new Coordinate(6,7));
-        mSnakeTrail.add(new Coordinate(5,7));
-        mSnakeTrail.add(new Coordinate(4,7));
-        mSnakeTrail.add(new Coordinate(3,7));
-        mSnakeTrail.add(new Coordinate(2,7));
+        mSnakeTrail.add(new Coordinate(7, 7));
+        mSnakeTrail.add(new Coordinate(6, 7));
+        mSnakeTrail.add(new Coordinate(5, 7));
+        mSnakeTrail.add(new Coordinate(4, 7));
+        mSnakeTrail.add(new Coordinate(3, 7));
+        mSnakeTrail.add(new Coordinate(2, 7));
         mNextDirection = NORTH;
 
         // Two apples to start with
@@ -145,22 +149,23 @@ public class SnakeView extends TitleView {
         addRandomApple();
 
         mMoveDelay = 600;
-        mScore =0;
+        mScore = 0;
     }
 
     /**
      * Given a ArrayList of Coordinates, we need to flatten them into an array
      * of ints before we can stuff them into a map for flattening and storage.
-     * @param evec a ArrayList of Coordinate objects
+     *
+     * @param evec a List of Coordinate objects
      * @return a simple array containing the x/y values of the coordinates as [x1,y1,x2,y2,x3,y3...]
      */
-    private int[] coordArrayListToArray(ArrayList<Coordinate> evec){
+    private int[] coordArrayListToArray(List<Coordinate> evec) {
         int count = evec.size();
-        int[] rawArray = new int[count*2];
+        int[] rawArray = new int[count * 2];
         for (int i = 0; i < count; i++) {
             Coordinate c = evec.get(i);
-            rawArray[2*i] = c.x;
-            rawArray[2*i+1] = c.y;
+            rawArray[2 * i] = c.x;
+            rawArray[2 * i + 1] = c.y;
         }
         return rawArray;
     }
@@ -169,30 +174,32 @@ public class SnakeView extends TitleView {
      * Save game state so that the user does not lose
      * anything if the game process is killed while we are
      * in the background.
+     *
      * @return a Bundle with this view's state
      */
-    public Bundle saveState(){
+    public Bundle saveState() {
         Bundle map = new Bundle();
         map.putIntArray("mAppleList", coordArrayListToArray(mAppleList));
         map.putInt("mDirection", mDirection);
         map.putInt("mNextDirection", mNextDirection);
         map.putLong("mMoveDelay", mMoveDelay);
         map.putLong("mScore", mScore);
-        map.putIntArray("mSnakeTrail",coordArrayListToArray(mSnakeTrail));
+        map.putIntArray("mSnakeTrail", coordArrayListToArray(mSnakeTrail));
         return map;
     }
 
     /**
      * Given a flattened array of ordinate pairs, we reconstitute them into a
      * ArrayList of Coordinate objects
+     *
      * @param rawArray [x1,y1,x2,y2,...]
      * @return a ArrayList of Coordinates
      */
-    private ArrayList<Coordinate> coordArrayToArrayList(int[] rawArray){
+    private ArrayList<Coordinate> coordArrayToArrayList(int[] rawArray) {
         ArrayList<Coordinate> coordArrayList = new ArrayList<>(5);
         int coordCount = rawArray.length;
-        for (int i = 0; i < coordCount; i+=2) {
-            Coordinate c = new Coordinate(rawArray[i],rawArray[i+1]);
+        for (int i = 0; i < coordCount; i += 2) {
+            Coordinate c = new Coordinate(rawArray[i], rawArray[i + 1]);
             coordArrayList.add(c);
         }
         return coordArrayList;
@@ -200,9 +207,10 @@ public class SnakeView extends TitleView {
 
     /**
      * Restore game state if our process is being relaunched
+     *
      * @param icicle a Bundle containing the game state
      */
-    public void restoreState(Bundle icicle){
+    public void restoreState(Bundle icicle) {
         setMode(PAUSE);
         mAppleList = coordArrayToArrayList(icicle.getIntArray("mAppleList"));
         mDirection = icicle.getInt("mDirection");
@@ -210,6 +218,49 @@ public class SnakeView extends TitleView {
         mMoveDelay = icicle.getLong("mMoveDelay");
         mScore = icicle.getLong("mScore");
         mSnakeTrail = coordArrayToArrayList(icicle.getIntArray("mSnakeTrail"));
+    }
+
+    public void moveUp() {
+        if (mMode == READY | mMode == LOSE) {
+                /*
+                 * At the beginning of the game, or the end of a previous one,
+                 * we should start a new game.
+                 */
+            initNewGame();
+            setMode(RUNNING);
+            update();
+            return;
+        }
+        if (mMode == PAUSE) {
+                /*
+                 * If the game is merely paused, we should just continue where
+                 * we left off.
+                 */
+            setMode(RUNNING);
+            update();
+            return;
+        }
+        if (mDirection != SOUTH) {
+            mNextDirection = NORTH;
+        }
+    }
+
+    public void moveDown() {
+        if (mDirection != NORTH) {
+            mNextDirection = SOUTH;
+        }
+    }
+
+    public void moveLeft() {
+        if (mDirection != EAST) {
+            mNextDirection = WEST;
+        }
+    }
+
+    public void moveRight() {
+        if (mDirection != WEST) {
+            mNextDirection = EAST;
+        }
     }
 
     @Override
@@ -262,16 +313,17 @@ public class SnakeView extends TitleView {
 
     /**
      * Sets the TextView that will be used to give information(such as "Game Over" to the user
+     *
      * @param newView
      */
-    public void setTextView(TextView newView){
+    public void setTextView(TextView newView) {
         mStatusText = newView;
     }
 
-    public void setMode(int newMode){
+    public void setMode(int newMode) {
         int oldMode = mMode;
         mMode = newMode;
-        if (newMode == RUNNING & oldMode != RUNNING){
+        if (newMode == RUNNING & oldMode != RUNNING) {
             mStatusText.setVisibility(View.INVISIBLE);
             update();
             return;
@@ -279,40 +331,40 @@ public class SnakeView extends TitleView {
 
         Resources res = getContext().getResources();
         CharSequence str = "";
-        if (newMode ==PAUSE){
+        if (newMode == PAUSE) {
             str = res.getText(R.string.mode_pause);
         }
-        if (newMode == READY){
+        if (newMode == READY) {
             str = res.getText(R.string.mode_ready);
         }
-        if (newMode == LOSE){
-            str = res.getText(R.string.mode_lose_prefix)+(mScore+"")+res.getText(R.string.mode_lose_suffix);
+        if (newMode == LOSE) {
+            str = res.getText(R.string.mode_lose_prefix) + (mScore + "") + res.getText(R.string.mode_lose_suffix);
         }
         mStatusText.setText(str);
         mStatusText.setVisibility(VISIBLE);
     }
 
-    private void addRandomApple(){
+    private void addRandomApple() {
         Coordinate newCoord = null;
         boolean found = false;
-        while (!found){
-            int newX = 1 +RNG.nextInt(mXTitleCount - 2);
-            int newY = 1 +RNG.nextInt(mYTitleCount - 2);
-            newCoord  = new Coordinate(newX,newY);
+        while (!found) {
+            int newX = 1 + RNG.nextInt(mXTitleCount - 2);
+            int newY = 1 + RNG.nextInt(mYTitleCount - 2);
+            newCoord = new Coordinate(newX, newY);
 
             // Make sure it's not already under the snake
             boolean collision = false;
             int snakelength = mSnakeTrail.size();
             for (int i = 0; i < snakelength; i++) {
-                if (mSnakeTrail.get(i).equals(newCoord)){
+                if (mSnakeTrail.get(i).equals(newCoord)) {
                     collision = true;
                 }
             }
             // if we're here and there's been no collision, then we have a good location for an apple. Otherwise, we'll circle back and try again.
             found = !collision;
         }
-        if (newCoord == null){
-            Logs.e(TAG,"Somehow ended up with a null newCoord!");
+        if (newCoord == null) {
+            Logs.e(TAG, "Somehow ended up with a null newCoord!");
         }
         mAppleList.add(newCoord);
     }
@@ -321,10 +373,10 @@ public class SnakeView extends TitleView {
      * Handles the basic update loop, checking to see if we are in the running
      * state, determining if a move should be made, updating the snake's location.
      */
-    public void update(){
-        if (mMode == RUNNING){
+    public void update() {
+        if (mMode == RUNNING) {
             long now = System.currentTimeMillis();
-            if (now - mlastMove > mMoveDelay){
+            if (now - mlastMove > mMoveDelay) {
                 clearTitles();
                 updateWalls();
                 updateSnake();
@@ -336,20 +388,20 @@ public class SnakeView extends TitleView {
     }
 
     // todo
-    private void updateWalls(){
+    private void updateWalls() {
         for (int i = 0; i < mXTitleCount; i++) {
             setTile(GREEN_STAR, i, 0);
             setTile(GREEN_STAR, i, mYTitleCount - 1);
         }
         for (int i = 0; i < mYTitleCount; i++) {
             setTile(GREEN_STAR, 0, i);
-            setTile(GREEN_STAR,mXTitleCount-1,i);
+            setTile(GREEN_STAR, mXTitleCount - 1, i);
         }
     }
 
-    private void updateApples(){
-        for (Coordinate c : mAppleList){
-            setTile(YELLOW_STAR,c.x,c.y);
+    private void updateApples() {
+        for (Coordinate c : mAppleList) {
+            setTile(YELLOW_STAR, c.x, c.y);
         }
     }
 
@@ -359,14 +411,14 @@ public class SnakeView extends TitleView {
      * to the front and subtract from the rear in order to simulate motion. If we
      * want to grow him, we don't subtract from the rear.
      */
-    private void updateSnake(){
+    private void updateSnake() {
         boolean growSnake = false;
 
         // grab the snake by the head
         Coordinate head = mSnakeTrail.get(0);
-        Coordinate newHead = new Coordinate(1,1);
+        Coordinate newHead = new Coordinate(1, 1);
         mDirection = mNextDirection;
-        switch (mDirection){
+        switch (mDirection) {
             case EAST:
                 newHead = new Coordinate(head.x + 1, head.y);
                 break;
@@ -434,7 +486,7 @@ public class SnakeView extends TitleView {
      * There's probably something I should use instead, but this was quick and
      * easy to build.
      */
-    private class Coordinate {
+    private static class Coordinate {
         public int x;
         public int y;
 

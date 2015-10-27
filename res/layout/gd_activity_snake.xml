@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2015.
   ~   This document is just for Bruce's personal study.
   ~   Some resources come from the Internet. Everyone can download and use it for study, but can
@@ -13,26 +12,53 @@
   ~   如果对本代码有好的建议，可以联系BurrceHurrican@foxmail.com
   -->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:app="http://schemas.android.com/apk/res/com.bruce.study.demo"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res/com.bruce.study.demo"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
     <com.bruce.study.demo.studydata.google_api_demos.snake.widgte.SnakeView
-            android:id="@+id/snake"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:tileSize="24"/>
+        android:id="@+id/snake"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:tileSize="24" />
+
     <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <Button
+            android:id="@+id/btn_snake_up"
+            android:text="上"
+            style="@style/BaseButton"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"/>
+        <Button
+            android:id="@+id/btn_snake_down"
+            android:text="下"
+            style="@style/BaseButton"
+            android:layout_toRightOf="@id/btn_snake_up"/>
+        <Button
+            android:id="@+id/btn_snake_left"
+            android:text="左"
+            style="@style/BaseButton"
+            android:layout_below="@id/btn_snake_up"/>
+        <Button
+            android:id="@+id/btn_snake_right"
+            android:text="右"
+            style="@style/BaseButton"
+            android:layout_toRightOf="@id/btn_snake_left"
+            android:layout_below="@id/btn_snake_down"/>
+
         <TextView
-                android:id="@+id/snake_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/snake_layout_text_text"
-                android:visibility="visible"
-                android:layout_centerInParent="true"
-                android:gravity="center_horizontal"
-                android:textColor="#ff8888ff"
-                android:textSize="24sp"/>
+            android:id="@+id/snake_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:text="@string/snake_layout_text_text"
+            android:textColor="#ff8888ff"
+            android:textSize="24sp"
+            android:visibility="visible"
+            tools:text="123456" />
     </RelativeLayout>
 </FrameLayout>

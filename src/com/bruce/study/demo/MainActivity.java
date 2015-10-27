@@ -60,6 +60,7 @@ import com.bruce.study.demo.studydata.demos60.surfaceview_project.SurfaceViewAct
 import com.bruce.study.demo.studydata.demos60.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
 import com.bruce.study.demo.studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity;
+import com.bruce.study.demo.studydata.google_api_demos.snake.SnakeActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
 import com.bruce.study.demo.studydata.imageviewdemo1.ImageViewDemo1Activity;
 import com.bruce.study.demo.studydata.itheima_lihuoming.popup_window.PopupWindowActivity;
@@ -116,6 +117,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
         addDemoContainer(BTDemo1Activity.class, "蓝牙练习2");
+        addDemoContainer(SnakeActivity.class, "谷歌demo之贪吃蛇");
         addDemoContainer(BlueToothChatActivity.class, "谷歌demo之BlueTooth");
         addDemoContainer(BlueTooth1Activity.class, "蓝牙练习1");
         addDemoContainer(RecyclerActivity.class, "RecyclerView 练习");

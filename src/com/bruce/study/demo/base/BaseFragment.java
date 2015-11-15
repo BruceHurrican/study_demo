@@ -14,9 +14,13 @@
 
 package com.bruce.study.demo.base;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.*;
 import android.support.v4.app.Fragment;
+import android.widget.Toast;
+import com.bruce.study.demo.R;
 import com.bruce.study.demo.log.Logs;
 
 import java.lang.ref.WeakReference;
@@ -29,6 +33,10 @@ public abstract class BaseFragment extends Fragment {
     private Context context;
     private final String TAG = getTAG();
     private String logsTag;
+    /**
+     * 加载进度等待对话框
+     */
+    private ProgressDialog pd_waiting;
 
     public abstract String getTAG();
 
@@ -58,6 +66,69 @@ public abstract class BaseFragment extends Fragment {
 
     public final void logE(String text) {
         Logs.e(logsTag, text);
+    }
+
+    public void showToastShort(final String text) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (null != context) {
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                } else {
+                    Logs.e(TAG, "打印日志出错");
+                }
+            }
+        });
+    }
+
+    public void showToastLong(final String text) {
+        ((Activity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (null != context) {
+                    Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+                } else {
+                    Logs.e(TAG, "print log error");
+                }
+            }
+        });
+    }
+
+    /**
+     * @param msg 提示信息
+     * @return
+     */
+    public ProgressDialog initProgressDialog(String msg) {
+        pd_waiting = new ProgressDialog(getActivity());
+        pd_waiting.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        pd_waiting.setTitle("提示");
+        pd_waiting.setMessage(msg);
+        pd_waiting.setIcon(R.drawable.icon_workdemo);
+        pd_waiting.setIndeterminate(false);
+        pd_waiting.setCancelable(false);
+        pd_waiting.setCanceledOnTouchOutside(false);
+        return pd_waiting;
+    }
+
+    public void showProgressDialog() {
+        if (null != pd_waiting) {
+            pd_waiting.show();
+        } else {
+            logE("显示进度框失败--pd_waiting->" + pd_waiting);
+        }
+    }
+
+    public void cancelProgressDialog() {
+        if (null != pd_waiting) {
+            getUIHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pd_waiting.cancel();
+                }
+            }, 2000);
+        } else {
+            logE("显示进度框失败--pd_waiting->" + pd_waiting);
+        }
     }
 
     /**

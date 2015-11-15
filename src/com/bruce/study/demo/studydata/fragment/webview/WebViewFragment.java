@@ -58,7 +58,7 @@ public class WebViewFragment extends BaseFragment implements View.OnClickListene
         btn_remote_3 = (Button) view.findViewById(R.id.btn_remote_3);
 
         WebSettings webSettings = webView.getSettings();
-
+        webSettings.setJavaScriptEnabled(true);
 //        webView.setWebChromeClient(new WebChromeClient(){
 //            @Override
 //            public void onProgressChanged(WebView view, int newProgress) {

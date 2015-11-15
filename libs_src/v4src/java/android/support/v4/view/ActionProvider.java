@@ -162,7 +162,7 @@ public abstract class ActionProvider {
      *
      * <li>Receiving a call to
      * {@link android.app.Activity#onOptionsItemSelected(android.view.MenuItem)}
-     * FragmentActivity.onOptionsItemSelected(MenuItem)}
+     * FragmentsActivity.onOptionsItemSelected(MenuItem)}
      * </li>
      *
      * <li>Receiving a call to

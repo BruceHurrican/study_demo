@@ -137,9 +137,9 @@ public abstract class FragmentManager {
      * 
      * <p>Note: A fragment transaction can only be created/committed prior
      * to an activity saving its state.  If you try to commit a transaction
-     * after {@link FragmentActivity#onSaveInstanceState FragmentActivity.onSaveInstanceState()}
-     * (and prior to a following {@link FragmentActivity#onStart FragmentActivity.onStart}
-     * or {@link FragmentActivity#onResume FragmentActivity.onResume()}, you will get an error.
+     * after {@link FragmentActivity#onSaveInstanceState FragmentsActivity.onSaveInstanceState()}
+     * (and prior to a following {@link FragmentActivity#onStart FragmentsActivity.onStart}
+     * or {@link FragmentActivity#onResume FragmentsActivity.onResume()}, you will get an error.
      * This is because the framework takes care of saving your current fragments
      * in the state, and if changes are made after the state is saved then they
      * will be lost.</p>

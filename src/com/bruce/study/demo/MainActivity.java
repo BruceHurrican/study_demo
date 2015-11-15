@@ -59,6 +59,7 @@ import com.bruce.study.demo.studydata.demos60.soundpool_project.SoundPoolActivit
 import com.bruce.study.demo.studydata.demos60.surfaceview_project.SurfaceViewActivity;
 import com.bruce.study.demo.studydata.demos60.switch_screen_project.SwitchScreenActivity;
 import com.bruce.study.demo.studydata.demos60.tab_project.MyTabActivity;
+import com.bruce.study.demo.studydata.fragment.FragmentsActivity;
 import com.bruce.study.demo.studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity;
 import com.bruce.study.demo.studydata.google_api_demos.snake.SnakeActivity;
 import com.bruce.study.demo.studydata.handler_thread.HandlerThreadDemoActivity;
@@ -116,6 +117,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         it = new Intent();
 
         addDemoContainer(PhoneInfoActivity.class, "工具类demo");
+        addDemoContainer(FragmentsActivity.class, "fragment 入口");
         addDemoContainer(BTDemo1Activity.class, "蓝牙练习2");
         addDemoContainer(SnakeActivity.class, "谷歌demo之贪吃蛇");
         addDemoContainer(BlueToothChatActivity.class, "谷歌demo之BlueTooth");

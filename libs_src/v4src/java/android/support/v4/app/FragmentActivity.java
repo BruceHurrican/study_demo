@@ -78,7 +78,7 @@ import java.util.List;
 public class FragmentActivity extends BaseFragmentActivityHoneycomb implements
         ActivityCompat.OnRequestPermissionsResultCallback,
         ActivityCompatApi23.RequestPermissionsRequestCodeValidator {
-    private static final String TAG = "FragmentActivity";
+    private static final String TAG = "FragmentsActivity";
 
     static final String FRAGMENTS_TAG = "android:support:fragments";
 
@@ -589,7 +589,7 @@ public class FragmentActivity extends BaseFragmentActivityHoneycomb implements
             // XXX This can only work if we can call the super-class impl. :/
             //ActivityCompatHoneycomb.dump(this, prefix, fd, writer, args);
         }
-        writer.print(prefix); writer.print("Local FragmentActivity ");
+        writer.print(prefix); writer.print("Local FragmentsActivity ");
                 writer.print(Integer.toHexString(System.identityHashCode(this)));
                 writer.println(" State:");
         String innerPrefix = prefix + "  ";

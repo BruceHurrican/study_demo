@@ -55,6 +55,9 @@
         <activity
                 android:name=".util_demo.PhoneInfoActivity"
                 android:launchMode="singleTop"/>
+        <activity
+                android:name=".studydata.fragment.FragmentsActivity"
+                android:launchMode="singleTop"/>
         <!-- github开源项目练习 -->
         <activity
                 android:name=".github.swipe_refresh_layout_demo.SwipeRefreshLayoutActivity"

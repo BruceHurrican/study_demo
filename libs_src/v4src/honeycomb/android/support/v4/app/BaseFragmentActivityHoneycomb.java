@@ -22,7 +22,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Base class for {@code FragmentActivity} to be able to use v11 APIs.
+ * Base class for {@code FragmentsActivity} to be able to use v11 APIs.
  */
 abstract class BaseFragmentActivityHoneycomb extends BaseFragmentActivityDonut {
 

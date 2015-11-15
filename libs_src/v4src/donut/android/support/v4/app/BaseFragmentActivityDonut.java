@@ -24,7 +24,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 /**
- * Base class for {@code FragmentActivity} to be able to use Donut APIs.
+ * Base class for {@code FragmentsActivity} to be able to use Donut APIs.
  */
 abstract class BaseFragmentActivityDonut extends Activity {
 

@@ -112,7 +112,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     public void onStartActivityFromFragment(Fragment fragment, Intent intent, int requestCode) {
         if (requestCode != -1) {
             throw new IllegalStateException(
-                    "Starting activity with a requestCode requires a FragmentActivity host");
+                    "Starting activity with a requestCode requires a FragmentsActivity host");
         }
         mContext.startActivity(intent);
     }

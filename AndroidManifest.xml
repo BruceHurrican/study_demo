@@ -21,6 +21,7 @@
     <uses-sdk
             android:minSdkVersion="14"
             android:targetSdkVersion="21"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
     <!-- 获取联网权限 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
@@ -205,8 +206,8 @@
                 android:launchMode="singleTop"/>
         <!-- 谷歌API demo 练习 -->
         <activity
-            android:name=".studydata.google_api_demos.snake.SnakeActivity"
-            android:launchMode="singleTop"/>
+                android:name=".studydata.google_api_demos.snake.SnakeActivity"
+                android:launchMode="singleTop"/>
         <activity
                 android:name=".studydata.google_api_demos.bluetoothchat_demo.BlueToothChatActivity"
                 android:launchMode="singleTop"

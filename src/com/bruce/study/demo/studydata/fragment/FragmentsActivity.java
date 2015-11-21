@@ -24,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragmentActivity;
+import com.bruce.study.demo.studydata.fragment.shake.ShakeFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewFragment;
 
 import java.util.ArrayList;
@@ -57,7 +58,8 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         ListView lv_demo_list = (ListView) findViewById(R.id.lv_fragment_list);
         lv_demo_list.setAdapter(new ArrayAdapter<>(this, R.layout.main_item, fragmentNamesList));
         
-        addFragment2Container(new WebViewFragment(),"WebView 练习");
+        addFragment2Container(new WebViewFragment(), "WebView 练习");
+        addFragment2Container(new ShakeFragment(),"摇一摇 练习");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载 fragment 列表完成");

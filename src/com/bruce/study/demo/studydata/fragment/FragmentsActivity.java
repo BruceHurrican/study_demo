@@ -38,6 +38,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
     private List< Fragment> fragments;
     private List<String> fragmentNamesList;
     private FragmentTransaction fragmentTransaction;
+    private FragmentManager fragmentManager;
     @Override
     public String getTAG() {
         return "FragmentsActivity->";
@@ -47,8 +48,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_activity);
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentManager = getSupportFragmentManager();
         initContainer();
     }
 
@@ -76,9 +76,21 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        fragmentTransaction = fragmentManager.beginTransaction();
         logI(String.format("你点击了第 %s 条Demo %s", position + 1, fragmentNamesList.get(position)));
         logI("当前线程为 -->" + Thread.currentThread());
         fragmentTransaction.replace(android.R.id.content,fragments.get(position));
+        fragmentTransaction.addToBackStack(fragmentNamesList.get(position));
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        // 将入栈的 fragment 按 FILO 规则依次出栈
+        if (fragmentManager.popBackStackImmediate(null,0)){
+            logD("fragment栈中最上层的 fragment 出栈");
+            return;
+        }
+        super.onBackPressed();
     }
 }

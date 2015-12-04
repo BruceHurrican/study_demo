@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragmentActivity;
 import com.bruce.study.demo.studydata.fragment.animation.AnimationFragment;
+import com.bruce.study.demo.studydata.fragment.jsondemo.JsonFragment;
 import com.bruce.study.demo.studydata.fragment.shake.ShakeFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewFragment;
 
@@ -40,9 +41,9 @@ import java.util.List;
 public class FragmentsActivity extends BaseFragmentActivity implements AdapterView.OnItemClickListener {
     private List<Fragment> fragments;
     private List<String> fragmentNamesList;
-    private FragmentTransaction fragmentTransaction;
     private FragmentManager fragmentManager;
     private RelativeLayout rl_container; // 显示 fragment 容器
+    private ListView lv_demo_list;
 
     @Override
     public String getTAG() {
@@ -61,12 +62,13 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         fragments = new ArrayList<>(5);
         fragmentNamesList = new ArrayList<>(5);
         rl_container = (RelativeLayout) findViewById(R.id.rl_container);
-        ListView lv_demo_list = (ListView) findViewById(R.id.lv_fragment_list);
+        lv_demo_list = (ListView) findViewById(R.id.lv_fragment_list);
         lv_demo_list.setAdapter(new ArrayAdapter<>(this, R.layout.main_item, fragmentNamesList));
 
         addFragment2Container(new WebViewFragment(), "WebView 练习");
         addFragment2Container(new ShakeFragment(), "摇一摇 练习");
         addFragment2Container(new AnimationFragment(), "android 自带动画练习");
+        addFragment2Container(new JsonFragment(), "json练习");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载 fragment 列表完成");
@@ -83,7 +85,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         logI(String.format("你点击了第 %s 条Demo %s", position + 1, fragmentNamesList.get(position)));
         logI("当前线程为 -->" + Thread.currentThread());
         fragmentTransaction.replace(R.id.rl_container, fragments.get(position));
@@ -91,6 +93,9 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         fragmentTransaction.commit();
         if (!rl_container.isShown()) {
             rl_container.setVisibility(View.VISIBLE);
+        }
+        if (lv_demo_list.isShown()){
+            lv_demo_list.setVisibility(View.GONE);
         }
     }
 
@@ -103,6 +108,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         }
         if (rl_container.isShown()) {
             rl_container.setVisibility(View.GONE);
+            lv_demo_list.setVisibility(View.VISIBLE);
         }
         super.onBackPressed();
     }

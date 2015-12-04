@@ -1,0 +1,15 @@
+[
+  {
+    "titleBarStyleValue1": "1",
+    "titleBarDescription1": "头部风格1-左中右",
+    "titleBar_centerText1": "首页"
+  },
+  {
+    "titleBarStyleValue2": "2",
+    "titleBarDescription2": "头部风格2"
+  },
+  {
+    "titleBarStyleValue3": "3",
+    "titleBarDescription3": "头部风格3"
+  }
+]

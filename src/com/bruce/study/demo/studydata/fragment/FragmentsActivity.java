@@ -30,6 +30,7 @@ import com.bruce.study.demo.studydata.fragment.animation.AnimationFragment;
 import com.bruce.study.demo.studydata.fragment.jsondemo.JsonFragment;
 import com.bruce.study.demo.studydata.fragment.shake.ShakeFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewFragment;
+import com.bruce.study.demo.studydata.fragment.webview.WebViewJSFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         addFragment2Container(new ShakeFragment(), "摇一摇 练习");
         addFragment2Container(new AnimationFragment(), "android 自带动画练习");
         addFragment2Container(new JsonFragment(), "json练习");
+        addFragment2Container(new WebViewJSFragment(), "测试 webview 和 js交互");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载 fragment 列表完成");

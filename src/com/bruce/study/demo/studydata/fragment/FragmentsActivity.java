@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragmentActivity;
 import com.bruce.study.demo.studydata.fragment.animation.AnimationFragment;
+import com.bruce.study.demo.studydata.fragment.crash.CrashFragment;
 import com.bruce.study.demo.studydata.fragment.jsondemo.JsonFragment;
 import com.bruce.study.demo.studydata.fragment.shake.ShakeFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewFragment;
@@ -72,6 +73,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         addFragment2Container(new AnimationFragment(), "android 自带动画练习");
         addFragment2Container(new JsonFragment(), "json练习");
         addFragment2Container(new WebViewJSFragment(), "测试 webview 和 js交互");
+        addFragment2Container(new CrashFragment(), "测试 日志工具类 ");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载 fragment 列表完成");

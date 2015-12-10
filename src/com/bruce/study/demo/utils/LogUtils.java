@@ -31,11 +31,11 @@ import java.util.Locale;
  */
 public final class LogUtils {
     private static final boolean ISDEBUG = true; // 日志开关
-    private static final String customTagPrefix = "studyDemo";
+    private static final String customTagPrefix = "bruce";
     /**
      * sd 卡根目录
      */
-    private static final String FILE_PATH_ROOT = Environment.getExternalStorageDirectory().getPath() + "/demo/";// SD卡中的根目录
+    public static final String FILE_PATH_ROOT = Environment.getExternalStorageDirectory().getPath() + "/demo/";// SD卡中的根目录
     /**
      * 日志路径
      */

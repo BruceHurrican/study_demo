@@ -16,16 +16,22 @@ package com.bruce.study.demo.studydata.fragment.crash;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.format.Formatter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import com.bruce.study.demo.base.BaseFragment;
 import com.bruce.study.demo.utils.LogUtils;
+import com.bruce.study.demo.utils.PublicUtil;
+
+import java.io.File;
 
 /**
- * 打印日志，保存日志到文件，保存应用崩溃信息到本地文件
+ * 打印日志，保存日志到文件，保存应用崩溃信息到本地文件,删除应用本地文件、缓存信息
  * Created by BruceHurrican on 2015/12/10.
  */
 public class CrashFragment extends BaseFragment {
@@ -40,6 +46,10 @@ public class CrashFragment extends BaseFragment {
         LinearLayout linearLayout = new LinearLayout(getActivity());
         linearLayout.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         linearLayout.setOrientation(LinearLayout.VERTICAL);
+        TextView textView = new TextView(getActivity());
+        textView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        textView.setText("文本内容");
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30);//设置字体大小为30sp
         Button btn1 = new Button(getActivity());
         btn1.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         btn1.setText("打印日志");
@@ -68,9 +78,57 @@ public class CrashFragment extends BaseFragment {
                 aa.length();
             }
         });
+        Button btn4 = new Button(getActivity());
+        btn4.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        btn4.setText("日志所在文件夹及目录下文件总大小");
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.i("日志所在文件夹及目录下文件总大小" + Formatter.formatFileSize(getActivity(), PublicUtil.getFolderSize(new File(LogUtils.FILE_PATH_ROOT))));
+                textView.setText("日志所在文件夹及目录下文件总大小" + Formatter.formatFileSize(getActivity(), PublicUtil.getFolderSize(new File(LogUtils.FILE_PATH_ROOT))));
+            }
+        });
+        Button btn5 = new Button(getActivity());
+        btn5.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        btn5.setText("删除日志所在文件夹及目录下文件");
+        btn5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.d("删除日志文件及所在目录");
+                PublicUtil.recursionDelFile(new File(LogUtils.FILE_PATH_ROOT));
+                textView.setText("删除成功");
+            }
+        });
+        Button btn6 = new Button(getActivity());
+        btn6.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        btn6.setText("删除缓存所在文件夹及目录下文件");
+        btn6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.d("删除缓存文件及所在目录");
+                PublicUtil.recursionDelFile(getActivity().getCacheDir());
+                textView.setText("删除成功");
+            }
+        });
+        Button btn7 = new Button(getActivity());
+        btn7.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        btn7.setText("删除webview缓存"); // data/data/程序包名
+        btn7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogUtils.d("删除程序webview缓存");
+                PublicUtil.recursionDelFile(new File(getActivity().getPackageName()+"/app_webview"));
+                textView.setText("删除成功");
+            }
+        });
         linearLayout.addView(btn1);
         linearLayout.addView(btn2);
         linearLayout.addView(btn3);
+        linearLayout.addView(btn4);
+        linearLayout.addView(btn5);
+        linearLayout.addView(btn6);
+        linearLayout.addView(btn7);
+        linearLayout.addView(textView);
         return linearLayout;
     }
 }

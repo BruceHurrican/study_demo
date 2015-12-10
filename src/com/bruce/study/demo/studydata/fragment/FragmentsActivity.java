@@ -73,7 +73,7 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         addFragment2Container(new AnimationFragment(), "android 自带动画练习");
         addFragment2Container(new JsonFragment(), "json练习");
         addFragment2Container(new WebViewJSFragment(), "测试 webview 和 js交互");
-        addFragment2Container(new CrashFragment(), "测试 日志工具类 ");
+        addFragment2Container(new CrashFragment(), "测试 日志生成删除应用缓存本地文件 ");
 
         lv_demo_list.setOnItemClickListener(this);
         logI("加载 fragment 列表完成");
@@ -109,8 +109,14 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
     @Override
     public void onBackPressed() {
         // 将入栈的 fragment 按 FILO 规则依次出栈
-        if (fragmentManager.popBackStackImmediate(null, 0)) {
+        if (fragmentManager.getBackStackEntryCount() > 0 && fragmentManager.popBackStackImmediate(null, 0)){
             logD("fragment栈中最上层的 fragment 出栈");
+            if (fragmentManager.getBackStackEntryCount() == 0){
+                if (rl_container.isShown()) {
+                    rl_container.setVisibility(View.GONE);
+                    lv_demo_list.setVisibility(View.VISIBLE);
+                }
+            }
             return;
         }
         if (rl_container.isShown()) {

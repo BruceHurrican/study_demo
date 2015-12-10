@@ -19,6 +19,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.*;
 import android.widget.Toast;
+import com.bruce.study.demo.DemoApplication;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.log.Logs;
 
@@ -32,6 +33,7 @@ public abstract class BaseActivity extends Activity {
     private Context context;
     private final String TAG = getTAG();
     private String logsTag;
+    private DemoApplication application;
     /**
      * 加载进度等待对话框
      */
@@ -43,6 +45,14 @@ public abstract class BaseActivity extends Activity {
         context = BaseActivity.this;
 //        TAG = getTAG();
         logsTag = getLocalClassName() + "-->";
+        application = (DemoApplication)getApplication();
+        application.addActivity(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        application.delActivity(this);
+        super.onDestroy();
     }
 
     public abstract String getTAG();

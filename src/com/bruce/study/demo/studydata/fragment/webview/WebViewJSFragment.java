@@ -30,6 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragment;
+import com.bruce.study.demo.utils.LogUtils;
 
 /**
  * 测试 webview 和 js交互
@@ -70,6 +71,7 @@ public class WebViewJSFragment extends BaseFragment {
             }
         });
         webview.loadUrl("file:///android_asset/jstest.html");
+//        webview.loadUrl("http://192.168.0.25:8080/JL_BT_LOCK/page/style/login.jsp");
         webview.addJavascriptInterface(this, "androiddemo");
     }
 
@@ -85,6 +87,10 @@ public class WebViewJSFragment extends BaseFragment {
 
     @OnClick(R.id.btn)
     public void onClick() {
+        LogUtils.i("当前线程是：" + Thread.currentThread());
+//        LogUtils.log2file(LogUtils.PATH_LOG_INFO, "bruce", "当前线程是：" + Thread.currentThread());
+//        webview.loadUrl("javascript:showResult('20','haha你好','ddaa123')");
+//        webview.loadUrl("javascript:ss('haha你好')");
         String aa = "网页交互测试";
         webview.loadUrl("javascript:jsmethod1()");
         webview.loadUrl(String.format("javascript:jsmethod2('%s')", aa));

@@ -31,6 +31,7 @@ import com.bruce.study.demo.studydata.fragment.jsondemo.JsonFragment;
 import com.bruce.study.demo.studydata.fragment.shake.ShakeFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewFragment;
 import com.bruce.study.demo.studydata.fragment.webview.WebViewJSFragment;
+import com.bruce.study.demo.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +91,15 @@ public class FragmentsActivity extends BaseFragmentActivity implements AdapterVi
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         logI(String.format("你点击了第 %s 条Demo %s", position + 1, fragmentNamesList.get(position)));
         logI("当前线程为 -->" + Thread.currentThread());
+        LogUtils.d(String.format("你点击了第 %s 条Demo %s", position + 1, fragmentNamesList.get(position)));
+        LogUtils.i("当前线程为 -->" + Thread.currentThread());
         fragmentTransaction.replace(R.id.rl_container, fragments.get(position));
         fragmentTransaction.addToBackStack(fragmentNamesList.get(position));
         fragmentTransaction.commit();
         if (!rl_container.isShown()) {
             rl_container.setVisibility(View.VISIBLE);
         }
-        if (lv_demo_list.isShown()){
+        if (lv_demo_list.isShown()) {
             lv_demo_list.setVisibility(View.GONE);
         }
     }

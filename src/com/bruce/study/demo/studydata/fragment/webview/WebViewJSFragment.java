@@ -87,7 +87,6 @@ public class WebViewJSFragment extends BaseFragment {
 
     @OnClick(R.id.btn)
     public void onClick() {
-        // todo 增加webview 清除缓存信息方法
         LogUtils.i("当前线程是：" + Thread.currentThread());
 //        LogUtils.log2file(LogUtils.PATH_LOG_INFO, "bruce", "当前线程是：" + Thread.currentThread());
 //        webview.loadUrl("javascript:showResult('20','haha你好','ddaa123')");

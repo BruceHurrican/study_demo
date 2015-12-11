@@ -26,5 +26,6 @@
     <orderEntry type="library" exported="" name="android-support-v7-appcompat" level="project" />
     <orderEntry type="library" exported="" name="volley" level="project" />
     <orderEntry type="library" exported="" name="recyclerview" level="project" />
+    <orderEntry type="library" exported="" name="butterknife-7.0.1" level="project" />
   </component>
 </module>

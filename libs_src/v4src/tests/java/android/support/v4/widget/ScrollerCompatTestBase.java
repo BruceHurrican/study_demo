@@ -18,12 +18,9 @@ package android.support.v4.widget;
 import android.content.Context;
 import android.test.AndroidTestCase;
 import android.util.Log;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
 /**

@@ -23,10 +23,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.os.CancellationSignal;
 
-import java.security.Signature;
-
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import java.security.Signature;
 
 /**
  * A class that coordinates access to the fingerprint hardware.

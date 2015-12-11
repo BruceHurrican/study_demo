@@ -18,7 +18,6 @@ package android.support.v4.widget;
 
 import android.content.Context;
 import android.os.Build;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.Scroller;
 

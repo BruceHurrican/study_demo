@@ -16,13 +16,7 @@
 
 package android.support.v4.app;
 
-import android.support.annotation.AnimRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
-import android.support.annotation.StyleRes;
-import android.support.v4.util.Pair;
+import android.support.annotation.*;
 import android.view.View;
 
 import java.lang.annotation.Retention;

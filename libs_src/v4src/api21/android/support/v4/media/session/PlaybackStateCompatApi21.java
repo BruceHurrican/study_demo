@@ -18,9 +18,7 @@ package android.support.v4.media.session;
 
 import android.media.session.PlaybackState;
 import android.os.Bundle;
-import android.os.SystemClock;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class PlaybackStateCompatApi21 {

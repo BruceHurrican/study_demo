@@ -31,8 +31,8 @@ import com.android.volley.toolbox.NetworkImageView;
 import com.bruce.study.demo.DemoApplication;
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseFragment;
-import com.bruce.study.demo.studydata.volley_demo.widget.MyNetWorkImageView;
 import com.bruce.study.demo.studydata.volley_demo.utils.VolleyBitmapCache;
+import com.bruce.study.demo.studydata.volley_demo.widget.MyNetWorkImageView;
 
 /**
  * 图片 Fragment

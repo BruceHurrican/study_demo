@@ -19,7 +19,6 @@ package android.support.v4.media.session;
 import android.media.session.PlaybackState;
 import android.os.Bundle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 class PlaybackStateCompatApi22 {

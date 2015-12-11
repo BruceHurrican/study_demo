@@ -17,7 +17,6 @@ package com.bruce.study.demo.studydata.google_api_demos.snake;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.base.BaseActivity;
 import com.bruce.study.demo.studydata.google_api_demos.snake.widgte.SnakeView;

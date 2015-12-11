@@ -17,11 +17,7 @@
 
 package android.support.v4.view;
 
-import android.view.MotionEvent;
-import android.view.VelocityTracker;
-import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewParent;
+import android.view.*;
 
 /**
  * This interface should be implemented by {@link android.view.View View} subclasses that wish

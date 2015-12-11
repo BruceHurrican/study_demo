@@ -16,8 +16,8 @@
 
 package android.support.v4.view.accessibility;
 
-import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.View;
+import android.view.accessibility.AccessibilityNodeInfo;
 
 /**
  * Api22-specific AccessibilityNodeInfo API implementation.

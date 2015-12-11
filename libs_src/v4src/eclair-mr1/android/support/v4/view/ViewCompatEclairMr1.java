@@ -17,12 +17,12 @@
 
 package android.support.v4.view;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 class ViewCompatEclairMr1 {
     public static final String TAG = "ViewCompat";

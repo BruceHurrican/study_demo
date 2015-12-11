@@ -18,7 +18,6 @@ package android.support.v4.content.res;
 
 import android.content.res.Resources;
 import android.content.res.Resources.NotFoundException;
-import android.content.res.Resources.Theme;
 import android.graphics.drawable.Drawable;
 
 class ResourcesCompatIcsMr1 {

@@ -17,9 +17,7 @@
 package android.support.v4.animation;
 
 import android.animation.Animator;
-import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
-import android.animation.TypeEvaluator;
 import android.animation.ValueAnimator;
 import android.view.View;
 

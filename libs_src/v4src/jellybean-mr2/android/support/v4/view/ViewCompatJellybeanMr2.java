@@ -16,8 +16,8 @@
 
 package android.support.v4.view;
 
-import android.view.View;
 import android.graphics.Rect;
+import android.view.View;
 
 /**
  * Jellybean MR2 - specific View API access.

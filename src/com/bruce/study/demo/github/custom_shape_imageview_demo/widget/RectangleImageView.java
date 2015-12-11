@@ -15,11 +15,7 @@
 package com.bruce.study.demo.github.custom_shape_imageview_demo.widget;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
+import android.graphics.*;
 import android.util.AttributeSet;
 
 /**

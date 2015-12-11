@@ -16,8 +16,8 @@
 
 package android.support.v4.app;
 
-import android.app.ActivityOptions;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;

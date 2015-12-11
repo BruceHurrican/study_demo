@@ -16,10 +16,7 @@
 
 package android.support.v4.widget;
 
-import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.widget.CompoundButton;
 
 class CompoundButtonCompatApi23 {

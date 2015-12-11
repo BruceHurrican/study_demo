@@ -20,10 +20,9 @@ import android.content.Context;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Handler;
 
-import java.security.Signature;
-
 import javax.crypto.Cipher;
 import javax.crypto.Mac;
+import java.security.Signature;
 
 /**
  * Actual FingerprintManagerCompat implementation for API level 23 and later.

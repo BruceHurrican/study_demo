@@ -24,8 +24,6 @@ import android.graphics.RectF;
 import android.os.Parcelable;
 import android.view.View;
 
-import java.lang.Override;
-import java.lang.String;
 import java.util.List;
 import java.util.Map;
 

@@ -1,8 +1,8 @@
 package android.support.v4.speech.tts;
 
 import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 import android.speech.tts.TextToSpeech.OnUtteranceCompletedListener;
+import android.speech.tts.UtteranceProgressListener;
 
 import java.util.Locale;
 import java.util.Set;

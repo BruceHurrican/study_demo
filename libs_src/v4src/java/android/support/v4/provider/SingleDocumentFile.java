@@ -18,7 +18,6 @@ package android.support.v4.provider;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.v4.provider.DocumentsContractApi19;
 
 class SingleDocumentFile extends DocumentFile {
     private Context mContext;

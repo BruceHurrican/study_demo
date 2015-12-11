@@ -16,7 +16,6 @@ package com.bruce.study.demo.github.custom_shape_imageview_demo.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 public class CustomShapeSquareImageView extends CustomShapeImageView {
 

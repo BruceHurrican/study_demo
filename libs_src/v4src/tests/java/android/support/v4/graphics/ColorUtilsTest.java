@@ -17,7 +17,6 @@
 package android.support.v4.graphics;
 
 import android.graphics.Color;
-import android.support.v4.graphics.ColorUtils;
 import android.test.AndroidTestCase;
 
 import java.util.ArrayList;

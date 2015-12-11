@@ -15,7 +15,6 @@
  */
 package android.support.v4.media.session;
 
-import android.graphics.Bitmap;
 import android.media.MediaMetadataEditor;
 import android.media.MediaMetadataRetriever;
 import android.media.Rating;

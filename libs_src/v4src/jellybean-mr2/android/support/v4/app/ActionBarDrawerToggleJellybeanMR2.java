@@ -23,7 +23,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 class ActionBarDrawerToggleJellybeanMR2 {
     private static final String TAG = "ActionBarDrawerToggleImplJellybeanMR2";

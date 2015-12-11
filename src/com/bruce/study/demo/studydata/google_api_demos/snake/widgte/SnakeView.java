@@ -23,7 +23,6 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.TextView;
-
 import com.bruce.study.demo.R;
 import com.bruce.study.demo.log.Logs;
 

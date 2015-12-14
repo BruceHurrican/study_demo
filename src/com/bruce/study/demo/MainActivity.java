@@ -17,6 +17,7 @@ package com.bruce.study.demo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -71,6 +72,7 @@ import com.bruce.study.demo.studydata.recyclerview_demo.RecyclerActivity;
 import com.bruce.study.demo.studydata.viewpage.ViewPagerActivity;
 import com.bruce.study.demo.studydata.volley_demo.VolleyActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
+import com.bruce.study.demo.utils.DialogUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -192,5 +194,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         logI(String.format("你点击了第 %s 条Demo %s", position + 1, demoNamesList.get(position)));
         logI("当前线程为 -->" + Thread.currentThread());
         startActivity(it);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU){
+            DialogUtils.showTxtDialog(this);
+        }
+        return true;
     }
 }

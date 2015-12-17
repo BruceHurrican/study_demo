@@ -200,7 +200,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_MENU){
             DialogUtils.showTxtDialog(this);
+            return true;
         }
-        return true;
+        return super.onKeyDown(keyCode,event);
     }
 }

@@ -20,7 +20,10 @@ import android.view.KeyEvent;
 
 interface TransportMediatorCallback {
     public void handleKey(KeyEvent key);
+
     public void handleAudioFocusChange(int focusChange);
+
     public long getPlaybackPosition();
+
     public void playbackPositionUpdate(long newPositionMs);
 }

@@ -28,6 +28,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 class NotificationCompatKitKat {
+    public static Bundle getExtras(Notification notif) {
+        return notif.extras;
+    }
+
+    public static int getActionCount(Notification notif) {
+        return notif.actions != null ? notif.actions.length : 0;
+    }
+
+    public static NotificationCompatBase.Action getAction(Notification notif,
+                                                          int actionIndex, NotificationCompatBase.Action.Factory factory,
+                                                          RemoteInputCompatBase.RemoteInput.Factory remoteInputFactory) {
+        Notification.Action action = notif.actions[actionIndex];
+        Bundle actionExtras = null;
+        SparseArray<Bundle> actionExtrasMap = notif.extras.getSparseParcelableArray(
+                NotificationCompatJellybean.EXTRA_ACTION_EXTRAS);
+        if (actionExtrasMap != null) {
+            actionExtras = actionExtrasMap.get(actionIndex);
+        }
+        return NotificationCompatJellybean.readAction(factory, remoteInputFactory,
+                action.icon, action.title, action.actionIntent, actionExtras);
+    }
+
+    public static boolean getLocalOnly(Notification notif) {
+        return notif.extras.getBoolean(NotificationCompatJellybean.EXTRA_LOCAL_ONLY);
+    }
+
+    public static String getGroup(Notification notif) {
+        return notif.extras.getString(NotificationCompatJellybean.EXTRA_GROUP_KEY);
+    }
+
+    public static boolean isGroupSummary(Notification notif) {
+        return notif.extras.getBoolean(NotificationCompatJellybean.EXTRA_GROUP_SUMMARY);
+    }
+
+    public static String getSortKey(Notification notif) {
+        return notif.extras.getString(NotificationCompatJellybean.EXTRA_SORT_KEY);
+    }
+
     public static class Builder implements NotificationBuilderWithBuilderAccessor,
             NotificationBuilderWithActions {
         private Notification.Builder b;
@@ -35,39 +73,39 @@ class NotificationCompatKitKat {
         private List<Bundle> mActionExtrasList = new ArrayList<Bundle>();
 
         public Builder(Context context, Notification n,
-                CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
-                RemoteViews tickerView, int number,
-                PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-                int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
-                boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
-                ArrayList<String> people, Bundle extras, String groupKey, boolean groupSummary,
-                String sortKey) {
+                       CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
+                       RemoteViews tickerView, int number,
+                       PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
+                       int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
+                       boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
+                       ArrayList<String> people, Bundle extras, String groupKey, boolean groupSummary,
+                       String sortKey) {
             b = new Notification.Builder(context)
-                .setWhen(n.when)
-                .setShowWhen(showWhen)
-                .setSmallIcon(n.icon, n.iconLevel)
-                .setContent(n.contentView)
-                .setTicker(n.tickerText, tickerView)
-                .setSound(n.sound, n.audioStreamType)
-                .setVibrate(n.vibrate)
-                .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
-                .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
-                .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
-                .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
-                .setDefaults(n.defaults)
-                .setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setSubText(subText)
-                .setContentInfo(contentInfo)
-                .setContentIntent(contentIntent)
-                .setDeleteIntent(n.deleteIntent)
-                .setFullScreenIntent(fullScreenIntent,
-                        (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
-                .setLargeIcon(largeIcon)
-                .setNumber(number)
-                .setUsesChronometer(useChronometer)
-                .setPriority(priority)
-                .setProgress(progressMax, progress, progressIndeterminate);
+                    .setWhen(n.when)
+                    .setShowWhen(showWhen)
+                    .setSmallIcon(n.icon, n.iconLevel)
+                    .setContent(n.contentView)
+                    .setTicker(n.tickerText, tickerView)
+                    .setSound(n.sound, n.audioStreamType)
+                    .setVibrate(n.vibrate)
+                    .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
+                    .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
+                    .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
+                    .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
+                    .setDefaults(n.defaults)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText)
+                    .setSubText(subText)
+                    .setContentInfo(contentInfo)
+                    .setContentIntent(contentIntent)
+                    .setDeleteIntent(n.deleteIntent)
+                    .setFullScreenIntent(fullScreenIntent,
+                            (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
+                    .setLargeIcon(largeIcon)
+                    .setNumber(number)
+                    .setUsesChronometer(useChronometer)
+                    .setPriority(priority)
+                    .setProgress(progressMax, progress, progressIndeterminate);
             mExtras = new Bundle();
             if (extras != null) {
                 mExtras.putAll(extras);
@@ -114,43 +152,5 @@ class NotificationCompatKitKat {
             b.setExtras(mExtras);
             return b.build();
         }
-    }
-
-    public static Bundle getExtras(Notification notif) {
-        return notif.extras;
-    }
-
-    public static int getActionCount(Notification notif) {
-        return notif.actions != null ? notif.actions.length : 0;
-    }
-
-    public static NotificationCompatBase.Action getAction(Notification notif,
-            int actionIndex, NotificationCompatBase.Action.Factory factory,
-            RemoteInputCompatBase.RemoteInput.Factory remoteInputFactory) {
-        Notification.Action action = notif.actions[actionIndex];
-        Bundle actionExtras = null;
-        SparseArray<Bundle> actionExtrasMap = notif.extras.getSparseParcelableArray(
-                NotificationCompatJellybean.EXTRA_ACTION_EXTRAS);
-        if (actionExtrasMap != null) {
-            actionExtras = actionExtrasMap.get(actionIndex);
-        }
-        return NotificationCompatJellybean.readAction(factory, remoteInputFactory,
-                action.icon, action.title, action.actionIntent, actionExtras);
-    }
-
-    public static boolean getLocalOnly(Notification notif) {
-        return notif.extras.getBoolean(NotificationCompatJellybean.EXTRA_LOCAL_ONLY);
-    }
-
-    public static String getGroup(Notification notif) {
-        return notif.extras.getString(NotificationCompatJellybean.EXTRA_GROUP_KEY);
-    }
-
-    public static boolean isGroupSummary(Notification notif) {
-        return notif.extras.getBoolean(NotificationCompatJellybean.EXTRA_GROUP_SUMMARY);
-    }
-
-    public static String getSortKey(Notification notif) {
-        return notif.extras.getString(NotificationCompatJellybean.EXTRA_SORT_KEY);
     }
 }

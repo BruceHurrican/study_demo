@@ -39,36 +39,8 @@ import java.util.Map;
 public class ActivityCompat extends ContextCompat {
 
     /**
-     * This interface is the contract for receiving the results for permission requests.
-     */
-    public interface OnRequestPermissionsResultCallback {
-
-        /**
-         * Callback for the result from requesting permissions. This method
-         * is invoked for every call on {@link #requestPermissions(android.app.Activity,
-         * String[], int)}.
-         * <p>
-         * <strong>Note:</strong> It is possible that the permissions request interaction
-         * with the user is interrupted. In this case you will receive empty permissions
-         * and results arrays which should be treated as a cancellation.
-         * </p>
-         *
-         * @param requestCode The request code passed in {@link #requestPermissions(
-         * android.app.Activity, String[], int)}
-         * @param permissions The requested permissions. Never null.
-         * @param grantResults The grant results for the corresponding permissions
-         *     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
-         *     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
-         *
-         * @see #requestPermissions(android.app.Activity, String[], int)
-         */
-        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                @NonNull int[] grantResults);
-    }
-
-    /**
      * Invalidate the activity's options menu, if able.
-     *
+     * <p>
      * <p>Before API level 11 (Android 3.0/Honeycomb) the lifecycle of the
      * options menu was controlled primarily by the user's operation of
      * the hardware menu key. When the user presses down on the menu key
@@ -79,7 +51,7 @@ public class ActivityCompat extends ContextCompat {
      * Menu itself and called {@link Activity#onPrepareOptionsMenu(android.view.Menu)}
      * to give the activity an opportunity to contextually alter the menu
      * before the menu panel was shown.</p>
-     *
+     * <p>
      * <p>In Android 3.0+ the Action Bar forces the options menu to be built early
      * so that items chosen to show as actions may be displayed when the activity
      * first becomes visible. The Activity method invalidateOptionsMenu forces
@@ -87,7 +59,7 @@ public class ActivityCompat extends ContextCompat {
      * {@link Activity#onCreateOptionsMenu(android.view.Menu)}, offering a similar
      * though heavier-weight opportunity to change the menu's contents. Normally
      * this functionality is used to support a changing configuration of Fragments.</p>
-     *
+     * <p>
      * <p>Applications may use this support helper to signal a significant change in
      * activity state that should cause the options menu to be rebuilt. If the app
      * is running on an older platform version that does not support menu invalidation
@@ -108,7 +80,7 @@ public class ActivityCompat extends ContextCompat {
 
     /**
      * Start an activity with additional launch information, if able.
-     *
+     * <p>
      * <p>In Android 4.1+ additional options were introduced to allow for more
      * control on activity launch animations. Applications can use this method
      * along with {@link ActivityOptionsCompat} to use these animations when
@@ -116,12 +88,12 @@ public class ActivityCompat extends ContextCompat {
      * not exist the activity will be launched normally.</p>
      *
      * @param activity Context to launch activity from.
-     * @param intent The description of the activity to start.
-     * @param options Additional options for how the Activity should be started.
-     *                May be null if there are no options. See
-     *                {@link ActivityOptionsCompat} for how to build the Bundle
-     *                supplied here; there are no supported definitions for
-     *                building it manually.
+     * @param intent   The description of the activity to start.
+     * @param options  Additional options for how the Activity should be started.
+     *                 May be null if there are no options. See
+     *                 {@link ActivityOptionsCompat} for how to build the Bundle
+     *                 supplied here; there are no supported definitions for
+     *                 building it manually.
      */
     public static void startActivity(Activity activity, Intent intent, @Nullable Bundle options) {
         if (Build.VERSION.SDK_INT >= 16) {
@@ -134,25 +106,25 @@ public class ActivityCompat extends ContextCompat {
     /**
      * Start new activity with options, if able, for which you would like a
      * result when it finished.
-     *
+     * <p>
      * <p>In Android 4.1+ additional options were introduced to allow for more
      * control on activity launch animations. Applications can use this method
      * along with {@link ActivityOptionsCompat} to use these animations when
      * available. When run on versions of the platform where this feature does
      * not exist the activity will be launched normally.</p>
      *
-     * @param activity Origin activity to launch from.
-     * @param intent The description of the activity to start.
+     * @param activity    Origin activity to launch from.
+     * @param intent      The description of the activity to start.
      * @param requestCode If >= 0, this code will be returned in
-     *                   onActivityResult() when the activity exits.
-     * @param options Additional options for how the Activity should be started.
-     *                May be null if there are no options. See
-     *                {@link ActivityOptionsCompat} for how to build the Bundle
-     *                supplied here; there are no supported definitions for
-     *                building it manually.
+     *                    onActivityResult() when the activity exits.
+     * @param options     Additional options for how the Activity should be started.
+     *                    May be null if there are no options. See
+     *                    {@link ActivityOptionsCompat} for how to build the Bundle
+     *                    supplied here; there are no supported definitions for
+     *                    building it manually.
      */
     public static void startActivityForResult(Activity activity, Intent intent, int requestCode,
-            @Nullable Bundle options) {
+                                              @Nullable Bundle options) {
         if (Build.VERSION.SDK_INT >= 16) {
             ActivityCompatJB.startActivityForResult(activity, intent, requestCode, options);
         } else {
@@ -163,7 +135,7 @@ public class ActivityCompat extends ContextCompat {
     /**
      * Finish this activity, and tries to finish all activities immediately below it
      * in the current task that have the same affinity.
-     *
+     * <p>
      * <p>On Android 4.1+ calling this method will call through to the native version of this
      * method. For other platforms {@link Activity#finish()} will be called instead.</p>
      */
@@ -180,7 +152,7 @@ public class ActivityCompat extends ContextCompat {
      * to reverse its exit Transition. When the exit Transition completes,
      * {@link Activity#finish()} is called. If no entry Transition was used, finish() is called
      * immediately and the Activity exit Transition is run.
-     *
+     * <p>
      * <p>On Android 4.4 or lower, this method only finishes the Activity with no
      * special exit transition.</p>
      */
@@ -193,27 +165,6 @@ public class ActivityCompat extends ContextCompat {
     }
 
     /**
-     * Backwards compatible implementation of {@link android.app.Activity#getReferrer()
-     * Activity.getReferrer}.  Uses the platform's implementation if available, otherwise
-     * only falls back to digging any explicitly specified referrer from the activity's intent.
-     */
-    public Uri getReferrer(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 22) {
-            return ActivityCompat22.getReferrer(activity);
-        }
-        Intent intent = activity.getIntent();
-        Uri referrer = intent.getParcelableExtra("android.intent.extra.REFERRER");
-        if (referrer != null) {
-            return referrer;
-        }
-        String referrerName = intent.getStringExtra("android.intent.extra.REFERRER_NAME");
-        if (referrerName != null) {
-            return Uri.parse(referrerName);
-        }
-        return null;
-    }
-
-    /**
      * When {@link android.app.ActivityOptions#makeSceneTransitionAnimation(Activity,
      * android.view.View, String)} was used to start an Activity, <var>callback</var>
      * will be called to handle shared elements on the <i>launched</i> Activity. This requires
@@ -222,7 +173,7 @@ public class ActivityCompat extends ContextCompat {
      * @param callback Used to manipulate shared element transitions on the launched Activity.
      */
     public static void setEnterSharedElementCallback(Activity activity,
-            SharedElementCallback callback) {
+                                                     SharedElementCallback callback) {
         if (Build.VERSION.SDK_INT >= 21) {
             ActivityCompat21.setEnterSharedElementCallback(activity, createCallback(callback));
         }
@@ -238,7 +189,7 @@ public class ActivityCompat extends ContextCompat {
      * @param callback Used to manipulate shared element transitions on the launching Activity.
      */
     public static void setExitSharedElementCallback(Activity activity,
-            SharedElementCallback callback) {
+                                                    SharedElementCallback callback) {
         if (Build.VERSION.SDK_INT >= 21) {
             ActivityCompat21.setExitSharedElementCallback(activity, createCallback(callback));
         }
@@ -277,7 +228,7 @@ public class ActivityCompat extends ContextCompat {
      * android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback}
      * and the results of permission requests will be delivered to its {@link
      * android.support.v4.app.ActivityCompat.OnRequestPermissionsResultCallback#onRequestPermissionsResult(
-     * int, String[], int[])} method.
+     *int, String[], int[])} method.
      * </p>
      * <p>
      * Note that requesting a permission does not guarantee it will be granted and
@@ -296,17 +247,16 @@ public class ActivityCompat extends ContextCompat {
      * #checkSelfPermission(android.content.Context, String)}.
      * </p>
      *
-     * @param activity The target activity.
+     * @param activity    The target activity.
      * @param permissions The requested permissions.
      * @param requestCode Application specific request code to match with a result
-     *    reported to {@link OnRequestPermissionsResultCallback#onRequestPermissionsResult(
-     *    int, String[], int[])}.
-     *
+     *                    reported to {@link OnRequestPermissionsResultCallback#onRequestPermissionsResult(
+     *int, String[], int[])}.
      * @see #checkSelfPermission(android.content.Context, String)
      * @see #shouldShowRequestPermissionRationale(android.app.Activity, String)
      */
     public static void requestPermissions(final @NonNull Activity activity,
-            final @NonNull String[] permissions, final int requestCode) {
+                                          final @NonNull String[] permissions, final int requestCode) {
         if (Build.VERSION.SDK_INT >= 23) {
             ActivityCompatApi23.requestPermissions(activity, permissions, requestCode);
         } else if (activity instanceof OnRequestPermissionsResultCallback) {
@@ -345,15 +295,14 @@ public class ActivityCompat extends ContextCompat {
      * you may choose to show UI with rationale of requesting this permission.
      * </p>
      *
-     * @param activity The target activity.
+     * @param activity   The target activity.
      * @param permission A permission your app wants to request.
      * @return Whether you can show permission rationale UI.
-     *
      * @see #checkSelfPermission(android.content.Context, String)
      * @see #requestPermissions(android.app.Activity, String[], int)
      */
     public static boolean shouldShowRequestPermissionRationale(@NonNull Activity activity,
-            @NonNull String permission) {
+                                                               @NonNull String permission) {
         if (Build.VERSION.SDK_INT >= 23) {
             return ActivityCompatApi23.shouldShowRequestPermissionRationale(activity, permission);
         }
@@ -369,6 +318,54 @@ public class ActivityCompat extends ContextCompat {
         return newCallback;
     }
 
+    /**
+     * Backwards compatible implementation of {@link android.app.Activity#getReferrer()
+     * Activity.getReferrer}.  Uses the platform's implementation if available, otherwise
+     * only falls back to digging any explicitly specified referrer from the activity's intent.
+     */
+    public Uri getReferrer(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 22) {
+            return ActivityCompat22.getReferrer(activity);
+        }
+        Intent intent = activity.getIntent();
+        Uri referrer = intent.getParcelableExtra("android.intent.extra.REFERRER");
+        if (referrer != null) {
+            return referrer;
+        }
+        String referrerName = intent.getStringExtra("android.intent.extra.REFERRER_NAME");
+        if (referrerName != null) {
+            return Uri.parse(referrerName);
+        }
+        return null;
+    }
+
+    /**
+     * This interface is the contract for receiving the results for permission requests.
+     */
+    public interface OnRequestPermissionsResultCallback {
+
+        /**
+         * Callback for the result from requesting permissions. This method
+         * is invoked for every call on {@link #requestPermissions(android.app.Activity,
+         * String[], int)}.
+         * <p>
+         * <strong>Note:</strong> It is possible that the permissions request interaction
+         * with the user is interrupted. In this case you will receive empty permissions
+         * and results arrays which should be treated as a cancellation.
+         * </p>
+         *
+         * @param requestCode  The request code passed in {@link #requestPermissions(
+         *android.app.Activity, String[], int)}
+         * @param permissions  The requested permissions. Never null.
+         * @param grantResults The grant results for the corresponding permissions
+         *                     which is either {@link android.content.pm.PackageManager#PERMISSION_GRANTED}
+         *                     or {@link android.content.pm.PackageManager#PERMISSION_DENIED}. Never null.
+         * @see #requestPermissions(android.app.Activity, String[], int)
+         */
+        public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                               @NonNull int[] grantResults);
+    }
+
     private static class SharedElementCallback21Impl
             extends ActivityCompat21.SharedElementCallback21 {
 
@@ -380,14 +377,14 @@ public class ActivityCompat extends ContextCompat {
 
         @Override
         public void onSharedElementStart(List<String> sharedElementNames,
-                List<View> sharedElements, List<View> sharedElementSnapshots) {
+                                         List<View> sharedElements, List<View> sharedElementSnapshots) {
             mCallback.onSharedElementStart(sharedElementNames, sharedElements,
                     sharedElementSnapshots);
         }
 
         @Override
         public void onSharedElementEnd(List<String> sharedElementNames, List<View> sharedElements,
-                List<View> sharedElementSnapshots) {
+                                       List<View> sharedElementSnapshots) {
             mCallback.onSharedElementEnd(sharedElementNames, sharedElements,
                     sharedElementSnapshots);
         }
@@ -404,7 +401,7 @@ public class ActivityCompat extends ContextCompat {
 
         @Override
         public Parcelable onCaptureSharedElementSnapshot(View sharedElement,
-                Matrix viewToGlobalMatrix, RectF screenBounds) {
+                                                         Matrix viewToGlobalMatrix, RectF screenBounds) {
             return mCallback.onCaptureSharedElementSnapshot(sharedElement, viewToGlobalMatrix,
                     screenBounds);
         }

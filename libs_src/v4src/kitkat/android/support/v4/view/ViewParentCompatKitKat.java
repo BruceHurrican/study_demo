@@ -21,7 +21,7 @@ import android.view.ViewParent;
 
 class ViewParentCompatKitKat {
     public static void notifySubtreeAccessibilityStateChanged(ViewParent parent, View child,
-            View source, int changeType) {
+                                                              View source, int changeType) {
         parent.notifySubtreeAccessibilityStateChanged(child, source, changeType);
     }
 }

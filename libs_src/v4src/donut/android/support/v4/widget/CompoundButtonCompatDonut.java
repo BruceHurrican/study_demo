@@ -39,7 +39,7 @@ class CompoundButtonCompatDonut {
 
     static ColorStateList getButtonTintList(CompoundButton button) {
         if (button instanceof TintableCompoundButton) {
-             return((TintableCompoundButton) button).getSupportButtonTintList();
+            return ((TintableCompoundButton) button).getSupportButtonTintList();
         }
         return null;
     }

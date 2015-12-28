@@ -26,10 +26,14 @@ import android.os.Bundle;
 import android.os.ResultReceiver;
 
 public class MediaSessionCompatApi14 {
-    /***** RemoteControlClient States, we only need none as the others were public *******/
+    /**
+     * ** RemoteControlClient States, we only need none as the others were public ******
+     */
     final static int RCC_PLAYSTATE_NONE = 0;
 
-    /***** MediaSession States *******/
+    /**
+     * ** MediaSession States ******
+     */
     final static int STATE_NONE = 0;
     final static int STATE_STOPPED = 1;
     final static int STATE_PAUSED = 2;
@@ -43,7 +47,9 @@ public class MediaSessionCompatApi14 {
     final static int STATE_SKIPPING_TO_NEXT = 10;
     final static int STATE_SKIPPING_TO_QUEUE_ITEM = 11;
 
-    /***** PlaybackState actions *****/
+    /**
+     * ** PlaybackState actions ****
+     */
     private static final long ACTION_STOP = 1 << 0;
     private static final long ACTION_PAUSE = 1 << 1;
     private static final long ACTION_PLAY = 1 << 2;
@@ -53,7 +59,9 @@ public class MediaSessionCompatApi14 {
     private static final long ACTION_FAST_FORWARD = 1 << 6;
     private static final long ACTION_PLAY_PAUSE = 1 << 9;
 
-    /***** MediaMetadata keys ********/
+    /**
+     * ** MediaMetadata keys *******
+     */
     private static final String METADATA_KEY_ART = "android.media.metadata.ART";
     private static final String METADATA_KEY_ALBUM_ART = "android.media.metadata.ALBUM_ART";
     private static final String METADATA_KEY_TITLE = "android.media.metadata.TITLE";

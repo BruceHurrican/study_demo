@@ -31,14 +31,13 @@ public interface LayoutInflaterFactory {
      * You can use this to customize the tag names available in your XML
      * layout files.
      *
-     * @param parent The parent that the created view will be placed
-     * in; <em>note that this may be null</em>.
-     * @param name Tag name to be inflated.
+     * @param parent  The parent that the created view will be placed
+     *                in; <em>note that this may be null</em>.
+     * @param name    Tag name to be inflated.
      * @param context The context the view is being created in.
-     * @param attrs Inflation attributes as specified in XML file.
-     *
+     * @param attrs   Inflation attributes as specified in XML file.
      * @return View Newly created view. Return null for the default
-     *         behavior.
+     * behavior.
      */
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs);
 

@@ -30,20 +30,6 @@ class LayoutInflaterCompatHC {
     private static Field sLayoutInflaterFactory2Field;
     private static boolean sCheckedField;
 
-    static class FactoryWrapperHC extends LayoutInflaterCompatBase.FactoryWrapper
-            implements LayoutInflater.Factory2 {
-
-        FactoryWrapperHC(LayoutInflaterFactory delegateFactory) {
-            super(delegateFactory);
-        }
-
-        @Override
-        public View onCreateView(View parent, String name, Context context,
-                AttributeSet attributeSet) {
-            return mDelegateFactory.onCreateView(parent, name, context, attributeSet);
-        }
-    }
-
     static void setFactory(LayoutInflater inflater, LayoutInflaterFactory factory) {
         final LayoutInflater.Factory2 factory2 = factory != null
                 ? new FactoryWrapperHC(factory) : null;
@@ -85,6 +71,20 @@ class LayoutInflaterCompatHC {
                 Log.e(TAG, "forceSetFactory2 could not set the Factory2 on LayoutInflater "
                         + inflater + "; inflation may have unexpected results.", e);
             }
+        }
+    }
+
+    static class FactoryWrapperHC extends LayoutInflaterCompatBase.FactoryWrapper
+            implements LayoutInflater.Factory2 {
+
+        FactoryWrapperHC(LayoutInflaterFactory delegateFactory) {
+            super(delegateFactory);
+        }
+
+        @Override
+        public View onCreateView(View parent, String name, Context context,
+                                 AttributeSet attributeSet) {
+            return mDelegateFactory.onCreateView(parent, name, context, attributeSet);
         }
     }
 }

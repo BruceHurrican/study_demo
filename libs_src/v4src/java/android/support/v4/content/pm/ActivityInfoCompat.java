@@ -22,14 +22,14 @@ package android.support.v4.content.pm;
  */
 public class ActivityInfoCompat {
 
-    private ActivityInfoCompat() {
-        /* Hide constructor */
-    }
-
     /**
      * Bit in ActivityInfo#configChanges that indicates that the
      * activity can itself handle the ui mode. Set from the
      * {@link android.R.attr#configChanges} attribute.
      */
     public static final int CONFIG_UI_MODE = 0x0200;
+
+    private ActivityInfoCompat() {
+        /* Hide constructor */
+    }
 }

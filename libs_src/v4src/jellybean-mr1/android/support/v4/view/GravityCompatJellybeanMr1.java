@@ -27,12 +27,12 @@ class GravityCompatJellybeanMr1 {
     }
 
     public static void apply(int gravity, int w, int h, Rect container, Rect outRect,
-            int layoutDirection) {
+                             int layoutDirection) {
         Gravity.apply(gravity, w, h, container, outRect, layoutDirection);
     }
 
     public static void apply(int gravity, int w, int h, Rect container, int xAdj, int yAdj,
-            Rect outRect, int layoutDirection) {
+                             Rect outRect, int layoutDirection) {
         Gravity.apply(gravity, w, h, container, xAdj, yAdj, outRect, layoutDirection);
     }
 

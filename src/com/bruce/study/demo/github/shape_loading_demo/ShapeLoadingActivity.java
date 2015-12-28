@@ -24,7 +24,7 @@ import com.bruce.study.demo.R;
  * 58同城加载等待组件
  * Created by BruceHurrican on 2015/6/7.
  */
-public class ShapeLoadingActivity extends Activity{
+public class ShapeLoadingActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +45,7 @@ public class ShapeLoadingActivity extends Activity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         // no inspection Simplifiable Statement
-        if (id == R.id.action_settings){
+        if (id == R.id.action_settings) {
             return true;
         }
         return super.onOptionsItemSelected(item);

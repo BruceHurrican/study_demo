@@ -28,50 +28,8 @@ import android.support.v4.os.OperationCanceledException;
  * introduced after API level 4 in a backwards compatible fashion.
  */
 public class ContentResolverCompat {
-    interface ContentResolverCompatImpl {
-        Cursor query(ContentResolver resolver,
-                Uri uri, String[] projection, String selection, String[] selectionArgs,
-                String sortOrder, CancellationSignal cancellationSignal);
-    }
-
-    static class ContentResolverCompatImplBase implements ContentResolverCompatImpl {
-        @Override
-        public Cursor query(ContentResolver resolver, Uri uri, String[] projection,
-                String selection, String[] selectionArgs, String sortOrder,
-                CancellationSignal cancellationSignal) {
-            // Note that the cancellation signal cannot cancel the query in progress
-            // prior to Jellybean so we cancel it preemptively here if needed.
-            if (cancellationSignal != null) {
-                cancellationSignal.throwIfCanceled();
-            }
-            return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
-        }
-    }
-
-    static class ContentResolverCompatImplJB extends ContentResolverCompatImplBase {
-        @Override
-        public Cursor query(ContentResolver resolver, Uri uri, String[] projection,
-                String selection, String[] selectionArgs, String sortOrder,
-                CancellationSignal cancellationSignal) {
-            try {
-                return ContentResolverCompatJellybean.query(resolver,
-                        uri, projection, selection, selectionArgs, sortOrder,
-                        cancellationSignal != null ?
-                                cancellationSignal.getCancellationSignalObject() : null);
-            } catch (Exception e) {
-                if (ContentResolverCompatJellybean.isFrameworkOperationCanceledException(e)) {
-                    // query() can throw a framework OperationCanceledException if it has been
-                    // canceled. We catch that and throw the support version instead.
-                    throw new OperationCanceledException();
-                } else {
-                    // If it's not a framework OperationCanceledException, re-throw the exception
-                    throw e;
-                }
-            }
-        }
-    }
-
     private static final ContentResolverCompatImpl IMPL;
+
     static {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 16) {
@@ -100,29 +58,72 @@ public class ContentResolverCompat {
      * </ul>
      * </p>
      *
-     * @param uri The URI, using the content:// scheme, for the content to
-     *         retrieve.
-     * @param projection A list of which columns to return. Passing null will
-     *         return all columns, which is inefficient.
-     * @param selection A filter declaring which rows to return, formatted as an
-     *         SQL WHERE clause (excluding the WHERE itself). Passing null will
-     *         return all rows for the given URI.
-     * @param selectionArgs You may include ?s in selection, which will be
-     *         replaced by the values from selectionArgs, in the order that they
-     *         appear in the selection. The values will be bound as Strings.
-     * @param sortOrder How to order the rows, formatted as an SQL ORDER BY
-     *         clause (excluding the ORDER BY itself). Passing null will use the
-     *         default sort order, which may be unordered.
+     * @param uri                The URI, using the content:// scheme, for the content to
+     *                           retrieve.
+     * @param projection         A list of which columns to return. Passing null will
+     *                           return all columns, which is inefficient.
+     * @param selection          A filter declaring which rows to return, formatted as an
+     *                           SQL WHERE clause (excluding the WHERE itself). Passing null will
+     *                           return all rows for the given URI.
+     * @param selectionArgs      You may include ?s in selection, which will be
+     *                           replaced by the values from selectionArgs, in the order that they
+     *                           appear in the selection. The values will be bound as Strings.
+     * @param sortOrder          How to order the rows, formatted as an SQL ORDER BY
+     *                           clause (excluding the ORDER BY itself). Passing null will use the
+     *                           default sort order, which may be unordered.
      * @param cancellationSignal A signal to cancel the operation in progress, or null if none.
-     * If the operation is canceled, then {@link OperationCanceledException} will be thrown
-     * when the query is executed.
+     *                           If the operation is canceled, then {@link OperationCanceledException} will be thrown
+     *                           when the query is executed.
      * @return A Cursor object, which is positioned before the first entry, or null
      * @see Cursor
      */
     public static Cursor query(ContentResolver resolver,
-            Uri uri, String[] projection, String selection, String[] selectionArgs,
-            String sortOrder, CancellationSignal cancellationSignal) {
+                               Uri uri, String[] projection, String selection, String[] selectionArgs,
+                               String sortOrder, CancellationSignal cancellationSignal) {
         return IMPL.query(resolver, uri, projection, selection, selectionArgs,
                 sortOrder, cancellationSignal);
+    }
+
+    interface ContentResolverCompatImpl {
+        Cursor query(ContentResolver resolver,
+                     Uri uri, String[] projection, String selection, String[] selectionArgs,
+                     String sortOrder, CancellationSignal cancellationSignal);
+    }
+
+    static class ContentResolverCompatImplBase implements ContentResolverCompatImpl {
+        @Override
+        public Cursor query(ContentResolver resolver, Uri uri, String[] projection,
+                            String selection, String[] selectionArgs, String sortOrder,
+                            CancellationSignal cancellationSignal) {
+            // Note that the cancellation signal cannot cancel the query in progress
+            // prior to Jellybean so we cancel it preemptively here if needed.
+            if (cancellationSignal != null) {
+                cancellationSignal.throwIfCanceled();
+            }
+            return resolver.query(uri, projection, selection, selectionArgs, sortOrder);
+        }
+    }
+
+    static class ContentResolverCompatImplJB extends ContentResolverCompatImplBase {
+        @Override
+        public Cursor query(ContentResolver resolver, Uri uri, String[] projection,
+                            String selection, String[] selectionArgs, String sortOrder,
+                            CancellationSignal cancellationSignal) {
+            try {
+                return ContentResolverCompatJellybean.query(resolver,
+                        uri, projection, selection, selectionArgs, sortOrder,
+                        cancellationSignal != null ?
+                                cancellationSignal.getCancellationSignalObject() : null);
+            } catch (Exception e) {
+                if (ContentResolverCompatJellybean.isFrameworkOperationCanceledException(e)) {
+                    // query() can throw a framework OperationCanceledException if it has been
+                    // canceled. We catch that and throw the support version instead.
+                    throw new OperationCanceledException();
+                } else {
+                    // If it's not a framework OperationCanceledException, re-throw the exception
+                    throw e;
+                }
+            }
+        }
     }
 }

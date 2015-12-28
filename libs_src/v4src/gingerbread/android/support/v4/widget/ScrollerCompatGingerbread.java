@@ -48,17 +48,17 @@ class ScrollerCompatGingerbread {
     }
 
     public static void startScroll(Object scroller, int startX, int startY, int dx, int dy,
-            int duration) {
+                                   int duration) {
         ((OverScroller) scroller).startScroll(startX, startY, dx, dy, duration);
     }
 
     public static void fling(Object scroller, int startX, int startY, int velX, int velY,
-            int minX, int maxX, int minY, int maxY) {
+                             int minX, int maxX, int minY, int maxY) {
         ((OverScroller) scroller).fling(startX, startY, velX, velY, minX, maxX, minY, maxY);
     }
 
     public static void fling(Object scroller, int startX, int startY, int velX, int velY,
-            int minX, int maxX, int minY, int maxY, int overX, int overY) {
+                             int minX, int maxX, int minY, int maxY, int overX, int overY) {
         ((OverScroller) scroller).fling(startX, startY, velX, velY,
                 minX, maxX, minY, maxY, overX, overY);
     }
@@ -68,7 +68,7 @@ class ScrollerCompatGingerbread {
     }
 
     public static void notifyHorizontalEdgeReached(Object scroller, int startX, int finalX,
-            int overX) {
+                                                   int overX) {
         ((OverScroller) scroller).notifyHorizontalEdgeReached(startX, finalX, overX);
     }
 

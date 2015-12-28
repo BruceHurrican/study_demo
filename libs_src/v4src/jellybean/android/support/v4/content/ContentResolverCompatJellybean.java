@@ -24,10 +24,10 @@ import android.os.OperationCanceledException;
 class ContentResolverCompatJellybean {
 
     public static Cursor query(ContentResolver resolver, Uri uri, String[] projection,
-            String selection, String[] selectionArgs, String sortOrder,
-            Object cancellationSignalObj) {
+                               String selection, String[] selectionArgs, String sortOrder,
+                               Object cancellationSignalObj) {
         return resolver.query(uri, projection, selection, selectionArgs, sortOrder,
-                (android.os.CancellationSignal)cancellationSignalObj);
+                (android.os.CancellationSignal) cancellationSignalObj);
     }
 
     static boolean isFrameworkOperationCanceledException(Exception e) {

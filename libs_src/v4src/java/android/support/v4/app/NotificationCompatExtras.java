@@ -66,5 +66,6 @@ public final class NotificationCompatExtras {
     public static final String EXTRA_REMOTE_INPUTS =
             NotificationCompatJellybean.EXTRA_REMOTE_INPUTS;
 
-    private NotificationCompatExtras() {}
+    private NotificationCompatExtras() {
+    }
 }

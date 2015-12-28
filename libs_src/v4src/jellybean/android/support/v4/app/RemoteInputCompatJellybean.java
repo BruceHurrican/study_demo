@@ -22,10 +22,14 @@ import android.content.Intent;
 import android.os.Bundle;
 
 class RemoteInputCompatJellybean {
-    /** Label used to denote the clip data type used for remote input transport */
+    /**
+     * Label used to denote the clip data type used for remote input transport
+     */
     public static final String RESULTS_CLIP_LABEL = "android.remoteinput.results";
 
-    /** Extra added to a clip data intent object to hold the results bundle. */
+    /**
+     * Extra added to a clip data intent object to hold the results bundle.
+     */
     public static final String EXTRA_RESULTS_DATA = "android.remoteinput.resultsData";
 
     private static final String KEY_RESULT_KEY = "resultKey";
@@ -35,7 +39,7 @@ class RemoteInputCompatJellybean {
     private static final String KEY_EXTRAS = "extras";
 
     static RemoteInputCompatBase.RemoteInput fromBundle(Bundle data,
-            RemoteInputCompatBase.RemoteInput.Factory factory) {
+                                                        RemoteInputCompatBase.RemoteInput.Factory factory) {
         return factory.build(data.getString(KEY_RESULT_KEY),
                 data.getCharSequence(KEY_LABEL),
                 data.getCharSequenceArray(KEY_CHOICES),
@@ -54,7 +58,7 @@ class RemoteInputCompatJellybean {
     }
 
     static RemoteInputCompatBase.RemoteInput[] fromBundleArray(Bundle[] bundles,
-            RemoteInputCompatBase.RemoteInput.Factory factory) {
+                                                               RemoteInputCompatBase.RemoteInput.Factory factory) {
         if (bundles == null) {
             return null;
         }
@@ -92,7 +96,7 @@ class RemoteInputCompatJellybean {
     }
 
     static void addResultsToIntent(RemoteInputCompatBase.RemoteInput[] remoteInputs, Intent intent,
-            Bundle results) {
+                                   Bundle results) {
         Bundle resultsBundle = new Bundle();
         for (RemoteInputCompatBase.RemoteInput remoteInput : remoteInputs) {
             Object result = results.get(remoteInput.getResultKey());

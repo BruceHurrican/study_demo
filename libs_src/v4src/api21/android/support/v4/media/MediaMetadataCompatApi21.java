@@ -24,19 +24,19 @@ import java.util.Set;
 
 class MediaMetadataCompatApi21 {
     public static Set<String> keySet(Object metadataObj) {
-        return ((MediaMetadata)metadataObj).keySet();
+        return ((MediaMetadata) metadataObj).keySet();
     }
 
     public static Bitmap getBitmap(Object metadataObj, String key) {
-        return ((MediaMetadata)metadataObj).getBitmap(key);
+        return ((MediaMetadata) metadataObj).getBitmap(key);
     }
 
     public static long getLong(Object metadataObj, String key) {
-        return ((MediaMetadata)metadataObj).getLong(key);
+        return ((MediaMetadata) metadataObj).getLong(key);
     }
 
     public static Object getRating(Object metadataObj, String key) {
-        return ((MediaMetadata)metadataObj).getRating(key);
+        return ((MediaMetadata) metadataObj).getRating(key);
     }
 
     public static CharSequence getText(Object metadataObj, String key) {
@@ -49,15 +49,15 @@ class MediaMetadataCompatApi21 {
         }
 
         public static void putBitmap(Object builderObj, String key, Bitmap value) {
-            ((MediaMetadata.Builder)builderObj).putBitmap(key, value);
+            ((MediaMetadata.Builder) builderObj).putBitmap(key, value);
         }
 
         public static void putLong(Object builderObj, String key, long value) {
-            ((MediaMetadata.Builder)builderObj).putLong(key, value);
+            ((MediaMetadata.Builder) builderObj).putLong(key, value);
         }
 
         public static void putRating(Object builderObj, String key, Object ratingObj) {
-            ((MediaMetadata.Builder)builderObj).putRating(key, (Rating)ratingObj);
+            ((MediaMetadata.Builder) builderObj).putRating(key, (Rating) ratingObj);
         }
 
         public static void putText(Object builderObj, String key, CharSequence value) {
@@ -69,7 +69,7 @@ class MediaMetadataCompatApi21 {
         }
 
         public static Object build(Object builderObj) {
-            return ((MediaMetadata.Builder)builderObj).build();
+            return ((MediaMetadata.Builder) builderObj).build();
         }
     }
 }

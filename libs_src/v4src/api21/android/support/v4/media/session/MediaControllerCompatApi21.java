@@ -44,7 +44,7 @@ class MediaControllerCompatApi21 {
 
     public static void registerCallback(Object controllerObj, Object callbackObj, Handler handler) {
         ((MediaController) controllerObj).registerCallback(
-                (MediaController.Callback)callbackObj, handler);
+                (MediaController.Callback) callbackObj, handler);
     }
 
     public static void unregisterCallback(Object controllerObj, Object callbackObj) {
@@ -53,15 +53,15 @@ class MediaControllerCompatApi21 {
     }
 
     public static Object getTransportControls(Object controllerObj) {
-        return ((MediaController)controllerObj).getTransportControls();
+        return ((MediaController) controllerObj).getTransportControls();
     }
 
     public static Object getPlaybackState(Object controllerObj) {
-        return ((MediaController)controllerObj).getPlaybackState();
+        return ((MediaController) controllerObj).getPlaybackState();
     }
 
     public static Object getMetadata(Object controllerObj) {
-        return ((MediaController)controllerObj).getMetadata();
+        return ((MediaController) controllerObj).getMetadata();
     }
 
     public static List<Object> getQueue(Object controllerObj) {
@@ -110,7 +110,7 @@ class MediaControllerCompatApi21 {
     }
 
     public static void sendCommand(Object controllerObj,
-            String command, Bundle params, ResultReceiver cb) {
+                                   String command, Bundle params, ResultReceiver cb) {
         ((MediaController) controllerObj).sendCommand(command, params, cb);
     }
 
@@ -118,41 +118,51 @@ class MediaControllerCompatApi21 {
         return ((MediaController) controllerObj).getPackageName();
     }
 
+    public static interface Callback {
+        public void onSessionDestroyed();
+
+        public void onSessionEvent(String event, Bundle extras);
+
+        public void onPlaybackStateChanged(Object stateObj);
+
+        public void onMetadataChanged(Object metadataObj);
+    }
+
     public static class TransportControls {
         public static void play(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).play();
+            ((MediaController.TransportControls) controlsObj).play();
         }
 
         public static void pause(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).pause();
+            ((MediaController.TransportControls) controlsObj).pause();
         }
 
         public static void stop(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).stop();
+            ((MediaController.TransportControls) controlsObj).stop();
         }
 
         public static void seekTo(Object controlsObj, long pos) {
-            ((MediaController.TransportControls)controlsObj).seekTo(pos);
+            ((MediaController.TransportControls) controlsObj).seekTo(pos);
         }
 
         public static void fastForward(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).fastForward();
+            ((MediaController.TransportControls) controlsObj).fastForward();
         }
 
         public static void rewind(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).rewind();
+            ((MediaController.TransportControls) controlsObj).rewind();
         }
 
         public static void skipToNext(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).skipToNext();
+            ((MediaController.TransportControls) controlsObj).skipToNext();
         }
 
         public static void skipToPrevious(Object controlsObj) {
-            ((MediaController.TransportControls)controlsObj).skipToPrevious();
+            ((MediaController.TransportControls) controlsObj).skipToPrevious();
         }
 
         public static void setRating(Object controlsObj, Object ratingObj) {
-            ((MediaController.TransportControls)controlsObj).setRating((Rating)ratingObj);
+            ((MediaController.TransportControls) controlsObj).setRating((Rating) ratingObj);
         }
 
         public static void playFromMediaId(Object controlsObj, String mediaId, Bundle extras) {
@@ -173,8 +183,15 @@ class MediaControllerCompatApi21 {
     }
 
     public static class PlaybackInfo {
+        // This is copied from AudioAttributes.toLegacyStreamType. TODO This
+        // either needs to be kept in sync with that one or toLegacyStreamType
+        // needs to be made public so it can be used by the support lib.
+        private static final int FLAG_SCO = 0x1 << 2;
+        private static final int STREAM_BLUETOOTH_SCO = 6;
+        private static final int STREAM_SYSTEM_ENFORCED = 7;
+
         public static int getPlaybackType(Object volumeInfoObj) {
-            return ((MediaController.PlaybackInfo)volumeInfoObj).getPlaybackType();
+            return ((MediaController.PlaybackInfo) volumeInfoObj).getPlaybackType();
         }
 
         public static AudioAttributes getAudioAttributes(Object volumeInfoObj) {
@@ -187,23 +204,17 @@ class MediaControllerCompatApi21 {
         }
 
         public static int getVolumeControl(Object volumeInfoObj) {
-            return ((MediaController.PlaybackInfo)volumeInfoObj).getVolumeControl();
+            return ((MediaController.PlaybackInfo) volumeInfoObj).getVolumeControl();
         }
 
         public static int getMaxVolume(Object volumeInfoObj) {
-            return ((MediaController.PlaybackInfo)volumeInfoObj).getMaxVolume();
+            return ((MediaController.PlaybackInfo) volumeInfoObj).getMaxVolume();
         }
 
         public static int getCurrentVolume(Object volumeInfoObj) {
-            return ((MediaController.PlaybackInfo)volumeInfoObj).getCurrentVolume();
+            return ((MediaController.PlaybackInfo) volumeInfoObj).getCurrentVolume();
         }
 
-        // This is copied from AudioAttributes.toLegacyStreamType. TODO This
-        // either needs to be kept in sync with that one or toLegacyStreamType
-        // needs to be made public so it can be used by the support lib.
-        private static final int FLAG_SCO = 0x1 << 2;
-        private static final int STREAM_BLUETOOTH_SCO = 6;
-        private static final int STREAM_SYSTEM_ENFORCED = 7;
         private static int toLegacyStreamType(AudioAttributes aa) {
             // flags to stream type mapping
             if ((aa.getFlags() & AudioAttributes.FLAG_AUDIBILITY_ENFORCED)
@@ -242,13 +253,6 @@ class MediaControllerCompatApi21 {
                     return AudioManager.STREAM_MUSIC;
             }
         }
-    }
-
-    public static interface Callback {
-        public void onSessionDestroyed();
-        public void onSessionEvent(String event, Bundle extras);
-        public void onPlaybackStateChanged(Object stateObj);
-        public void onMetadataChanged(Object metadataObj);
     }
 
     static class CallbackProxy<T extends Callback> extends MediaController.Callback {

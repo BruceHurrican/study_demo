@@ -31,10 +31,9 @@ import java.util.Random;
  * Created by BruceHurrican on 2015/7/26.
  */
 public class BezierView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
+    public int screenWidth, screenHeight;
     private SurfaceHolder surfaceHolder;
     private boolean flag;
-
-    public int screenWidth, screenHeight;
     // 贝塞尔曲线成员变量（起始点,控制，终止点，3点坐标）
     private int startX, startY, controlX, controlY, endX, endY;
     // Path
@@ -142,7 +141,7 @@ public class BezierView extends SurfaceView implements SurfaceHolder.Callback, R
                     Thread.sleep(50 - (end - start));
                 }
             } catch (InterruptedException e) {
-                Logs.e("InterruptedException",e.toString());
+                Logs.e("InterruptedException", e.toString());
             }
         }
     }

@@ -18,12 +18,12 @@ package android.support.v4.internal.view;
 
 /**
  * Interface for managing the items in a menu.
- *
+ * <p>
  * This version extends the one available in the framework to ensures that any necessary
  * elements added in later versions of the framework, are available for all platforms.
  *
- * @see android.view.Menu
  * @hide
+ * @see android.view.Menu
  */
 public interface SupportMenu extends android.view.Menu {
 

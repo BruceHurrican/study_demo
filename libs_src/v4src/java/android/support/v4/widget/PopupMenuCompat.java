@@ -24,36 +24,10 @@ import android.view.View.OnTouchListener;
  */
 public class PopupMenuCompat {
     /**
-     * Interface for the full API.
-     */
-    interface PopupMenuImpl {
-        public OnTouchListener getDragToOpenListener(Object popupMenu);
-    }
-
-    /**
-     * Interface implementation that doesn't use anything above v4 APIs.
-     */
-    static class BasePopupMenuImpl implements PopupMenuImpl {
-        @Override
-        public OnTouchListener getDragToOpenListener(Object popupMenu) {
-            return null;
-        }
-    }
-
-    /**
-     * Interface implementation for devices with at least KitKat APIs.
-     */
-    static class KitKatPopupMenuImpl extends BasePopupMenuImpl {
-        @Override
-        public OnTouchListener getDragToOpenListener(Object popupMenu) {
-            return PopupMenuCompatKitKat.getDragToOpenListener(popupMenu);
-        }
-    }
-
-    /**
      * Select the correct implementation to use for the current platform.
      */
     static final PopupMenuImpl IMPL;
+
     static {
         final int version = android.os.Build.VERSION.SDK_INT;
         if (version >= 19) {
@@ -84,9 +58,36 @@ public class PopupMenuCompat {
      *
      * @param popupMenu the PopupMenu against which to invoke the method
      * @return a touch listener that controls drag-to-open behavior, or null on
-     *         unsupported APIs
+     * unsupported APIs
      */
     public static OnTouchListener getDragToOpenListener(Object popupMenu) {
         return IMPL.getDragToOpenListener(popupMenu);
+    }
+
+    /**
+     * Interface for the full API.
+     */
+    interface PopupMenuImpl {
+        public OnTouchListener getDragToOpenListener(Object popupMenu);
+    }
+
+    /**
+     * Interface implementation that doesn't use anything above v4 APIs.
+     */
+    static class BasePopupMenuImpl implements PopupMenuImpl {
+        @Override
+        public OnTouchListener getDragToOpenListener(Object popupMenu) {
+            return null;
+        }
+    }
+
+    /**
+     * Interface implementation for devices with at least KitKat APIs.
+     */
+    static class KitKatPopupMenuImpl extends BasePopupMenuImpl {
+        @Override
+        public OnTouchListener getDragToOpenListener(Object popupMenu) {
+            return PopupMenuCompatKitKat.getDragToOpenListener(popupMenu);
+        }
     }
 }

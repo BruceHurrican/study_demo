@@ -35,17 +35,69 @@ import java.util.ArrayList;
  * is represented by a single {@link TransportPerformer} that must be supplied to
  * this class.  On-screen controls that want to control and show the state of the
  * player should do this through calls to the {@link TransportController} interface.
- *
+ * <p>
  * <p>Here is a simple but fairly complete sample of a video player that is built
  * around this class.  Note that the MediaController class used here is not the one
  * included in the standard Android framework, but a custom implementation.  Real
  * applications often implement their own transport controls, or you can copy the
  * implementation here out of Support4Demos.</p>
- *
+ * <p>
  * {@sample development/samples/Support4Demos/src/com/example/android/supportv4/media/TransportControllerActivity.java
- *      complete}
+ * complete}
  */
 public class TransportMediator extends TransportController {
+    /**
+     * Synonym for {@link KeyEvent#KEYCODE_MEDIA_PLAY KeyEvent.KEYCODE_MEDIA_PLAY}
+     */
+    public static final int KEYCODE_MEDIA_PLAY = 126;
+    /**
+     * Synonym for {@link KeyEvent#KEYCODE_MEDIA_PAUSE KeyEvent.KEYCODE_MEDIA_PAUSE}
+     */
+    public static final int KEYCODE_MEDIA_PAUSE = 127;
+    /**
+     * Synonym for {@link KeyEvent#KEYCODE_MEDIA_RECORD KeyEvent.KEYCODE_MEDIA_RECORD}
+     */
+    public static final int KEYCODE_MEDIA_RECORD = 130;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PREVIOUS
+     * RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS
+     */
+    public final static int FLAG_KEY_MEDIA_PREVIOUS = 1 << 0;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_REWIND
+     * RemoteControlClient.FLAG_KEY_MEDIA_REWIND
+     */
+    public final static int FLAG_KEY_MEDIA_REWIND = 1 << 1;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PLAY
+     * RemoteControlClient.FLAG_KEY_MEDIA_PLAY
+     */
+    public final static int FLAG_KEY_MEDIA_PLAY = 1 << 2;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PLAY_PAUSE
+     * RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE
+     */
+    public final static int FLAG_KEY_MEDIA_PLAY_PAUSE = 1 << 3;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PAUSE
+     * RemoteControlClient.FLAG_KEY_MEDIA_PAUSE
+     */
+    public final static int FLAG_KEY_MEDIA_PAUSE = 1 << 4;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_STOP
+     * RemoteControlClient.FLAG_KEY_MEDIA_STOP
+     */
+    public final static int FLAG_KEY_MEDIA_STOP = 1 << 5;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_FAST_FORWARD
+     * RemoteControlClient.FLAG_KEY_MEDIA_FAST_FORWARD
+     */
+    public final static int FLAG_KEY_MEDIA_FAST_FORWARD = 1 << 6;
+    /**
+     * Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_NEXT
+     * RemoteControlClient.FLAG_KEY_MEDIA_NEXT
+     */
+    public final static int FLAG_KEY_MEDIA_NEXT = 1 << 7;
     final Context mContext;
     final TransportPerformer mCallbacks;
     final AudioManager mAudioManager;
@@ -54,79 +106,6 @@ public class TransportMediator extends TransportController {
     final TransportMediatorJellybeanMR2 mController;
     final ArrayList<TransportStateListener> mListeners
             = new ArrayList<TransportStateListener>();
-    final TransportMediatorCallback mTransportKeyCallback
-            = new TransportMediatorCallback() {
-        @Override
-        public void handleKey(KeyEvent key) {
-            key.dispatch(mKeyEventCallback);
-        }
-        @Override
-        public void handleAudioFocusChange(int focusChange) {
-            mCallbacks.onAudioFocusChange(focusChange);
-        }
-
-        @Override
-        public long getPlaybackPosition() {
-            return mCallbacks.onGetCurrentPosition();
-        }
-
-        @Override
-        public void playbackPositionUpdate(long newPositionMs) {
-            mCallbacks.onSeekTo(newPositionMs);
-        }
-    };
-
-    /** Synonym for {@link KeyEvent#KEYCODE_MEDIA_PLAY KeyEvent.KEYCODE_MEDIA_PLAY} */
-    public static final int KEYCODE_MEDIA_PLAY = 126;
-    /** Synonym for {@link KeyEvent#KEYCODE_MEDIA_PAUSE KeyEvent.KEYCODE_MEDIA_PAUSE} */
-    public static final int KEYCODE_MEDIA_PAUSE = 127;
-    /** Synonym for {@link KeyEvent#KEYCODE_MEDIA_RECORD KeyEvent.KEYCODE_MEDIA_RECORD} */
-    public static final int KEYCODE_MEDIA_RECORD = 130;
-
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PREVIOUS
-     * RemoteControlClient.FLAG_KEY_MEDIA_PREVIOUS */
-    public final static int FLAG_KEY_MEDIA_PREVIOUS = 1 << 0;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_REWIND
-     * RemoteControlClient.FLAG_KEY_MEDIA_REWIND */
-    public final static int FLAG_KEY_MEDIA_REWIND = 1 << 1;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PLAY
-     * RemoteControlClient.FLAG_KEY_MEDIA_PLAY */
-    public final static int FLAG_KEY_MEDIA_PLAY = 1 << 2;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PLAY_PAUSE
-     * RemoteControlClient.FLAG_KEY_MEDIA_PLAY_PAUSE */
-    public final static int FLAG_KEY_MEDIA_PLAY_PAUSE = 1 << 3;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_PAUSE
-     * RemoteControlClient.FLAG_KEY_MEDIA_PAUSE */
-    public final static int FLAG_KEY_MEDIA_PAUSE = 1 << 4;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_STOP
-     * RemoteControlClient.FLAG_KEY_MEDIA_STOP */
-    public final static int FLAG_KEY_MEDIA_STOP = 1 << 5;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_FAST_FORWARD
-     * RemoteControlClient.FLAG_KEY_MEDIA_FAST_FORWARD */
-    public final static int FLAG_KEY_MEDIA_FAST_FORWARD = 1 << 6;
-    /** Synonym for {@link android.media.RemoteControlClient#FLAG_KEY_MEDIA_NEXT
-     * RemoteControlClient.FLAG_KEY_MEDIA_NEXT */
-    public final static int FLAG_KEY_MEDIA_NEXT = 1 << 7;
-
-    static boolean isMediaKey(int keyCode) {
-        switch (keyCode) {
-            case KEYCODE_MEDIA_PLAY:
-            case KEYCODE_MEDIA_PAUSE:
-            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
-            case KeyEvent.KEYCODE_MUTE:
-            case KeyEvent.KEYCODE_HEADSETHOOK:
-            case KeyEvent.KEYCODE_MEDIA_STOP:
-            case KeyEvent.KEYCODE_MEDIA_NEXT:
-            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
-            case KeyEvent.KEYCODE_MEDIA_REWIND:
-            case KEYCODE_MEDIA_RECORD:
-            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: {
-                return true;
-            }
-        }
-        return false;
-    }
-
     final KeyEvent.Callback mKeyEventCallback = new KeyEvent.Callback() {
         @Override
         public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -147,6 +126,28 @@ public class TransportMediator extends TransportController {
             return false;
         }
     };
+    final TransportMediatorCallback mTransportKeyCallback
+            = new TransportMediatorCallback() {
+        @Override
+        public void handleKey(KeyEvent key) {
+            key.dispatch(mKeyEventCallback);
+        }
+
+        @Override
+        public void handleAudioFocusChange(int focusChange) {
+            mCallbacks.onAudioFocusChange(focusChange);
+        }
+
+        @Override
+        public long getPlaybackPosition() {
+            return mCallbacks.onGetCurrentPosition();
+        }
+
+        @Override
+        public void playbackPositionUpdate(long newPositionMs) {
+            mCallbacks.onSeekTo(newPositionMs);
+        }
+    };
 
     public TransportMediator(Activity activity, TransportPerformer callbacks) {
         this(activity, null, callbacks);
@@ -159,7 +160,7 @@ public class TransportMediator extends TransportController {
     private TransportMediator(Activity activity, View view, TransportPerformer callbacks) {
         mContext = activity != null ? activity : view.getContext();
         mCallbacks = callbacks;
-        mAudioManager = (AudioManager)mContext.getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         mView = activity != null ? activity.getWindow().getDecorView() : view;
         mDispatcherState = KeyEventCompat.getKeyDispatcherState(mView);
         if (Build.VERSION.SDK_INT >= 18) { // JellyBean MR2
@@ -170,6 +171,25 @@ public class TransportMediator extends TransportController {
         }
     }
 
+    static boolean isMediaKey(int keyCode) {
+        switch (keyCode) {
+            case KEYCODE_MEDIA_PLAY:
+            case KEYCODE_MEDIA_PAUSE:
+            case KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE:
+            case KeyEvent.KEYCODE_MUTE:
+            case KeyEvent.KEYCODE_HEADSETHOOK:
+            case KeyEvent.KEYCODE_MEDIA_STOP:
+            case KeyEvent.KEYCODE_MEDIA_NEXT:
+            case KeyEvent.KEYCODE_MEDIA_PREVIOUS:
+            case KeyEvent.KEYCODE_MEDIA_REWIND:
+            case KEYCODE_MEDIA_RECORD:
+            case KeyEvent.KEYCODE_MEDIA_FAST_FORWARD: {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Return the {@link android.media.RemoteControlClient} associated with this transport.
      * This returns a generic Object since the RemoteControlClient is not availble before
@@ -178,7 +198,7 @@ public class TransportMediator extends TransportController {
      * {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2}.  You should always check for
      * null here and not do anything with the RemoteControlClient if none is given; this
      * way you don't need to worry about the current platform API version.
-     *
+     * <p>
      * <p>Note that this class takes possession of the
      * {@link android.media.RemoteControlClient.OnGetPlaybackPositionListener} and
      * {@link android.media.RemoteControlClient.OnPlaybackPositionUpdateListener} callbacks;
@@ -194,6 +214,7 @@ public class TransportMediator extends TransportController {
      * Must call from {@link Activity#dispatchKeyEvent Activity.dispatchKeyEvent} to give
      * the transport an opportunity to intercept media keys.  Any such keys will show up
      * in {@link TransportPerformer}.
+     *
      * @param event
      */
     public boolean dispatchKeyEvent(KeyEvent event) {
@@ -319,14 +340,14 @@ public class TransportMediator extends TransportController {
     /**
      * Retrieves the flags for the media transport control buttons that this transport supports.
      * Result is a combination of the following flags:
-     *      {@link #FLAG_KEY_MEDIA_PREVIOUS},
-     *      {@link #FLAG_KEY_MEDIA_REWIND},
-     *      {@link #FLAG_KEY_MEDIA_PLAY},
-     *      {@link #FLAG_KEY_MEDIA_PLAY_PAUSE},
-     *      {@link #FLAG_KEY_MEDIA_PAUSE},
-     *      {@link #FLAG_KEY_MEDIA_STOP},
-     *      {@link #FLAG_KEY_MEDIA_FAST_FORWARD},
-     *      {@link #FLAG_KEY_MEDIA_NEXT}
+     * {@link #FLAG_KEY_MEDIA_PREVIOUS},
+     * {@link #FLAG_KEY_MEDIA_REWIND},
+     * {@link #FLAG_KEY_MEDIA_PLAY},
+     * {@link #FLAG_KEY_MEDIA_PLAY_PAUSE},
+     * {@link #FLAG_KEY_MEDIA_PAUSE},
+     * {@link #FLAG_KEY_MEDIA_STOP},
+     * {@link #FLAG_KEY_MEDIA_FAST_FORWARD},
+     * {@link #FLAG_KEY_MEDIA_NEXT}
      */
     public int getTransportControlFlags() {
         return mCallbacks.onGetTransportControlFlags();

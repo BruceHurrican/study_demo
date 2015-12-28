@@ -31,85 +31,110 @@ import java.lang.annotation.RetentionPolicy;
  */
 public abstract class FragmentTransaction {
     /**
+     * Bit mask that is set for all enter transitions.
+     */
+    public static final int TRANSIT_ENTER_MASK = 0x1000;
+    /**
+     * Bit mask that is set for all exit transitions.
+     */
+    public static final int TRANSIT_EXIT_MASK = 0x2000;
+    /**
+     * Not set up for a transition.
+     */
+    public static final int TRANSIT_UNSET = -1;
+    /**
+     * No animation for transition.
+     */
+    public static final int TRANSIT_NONE = 0;
+    /**
+     * Fragment is being added onto the stack
+     */
+    public static final int TRANSIT_FRAGMENT_OPEN = 1 | TRANSIT_ENTER_MASK;
+    /**
+     * Fragment is being removed from the stack
+     */
+    public static final int TRANSIT_FRAGMENT_CLOSE = 2 | TRANSIT_EXIT_MASK;
+    /**
+     * Fragment should simply fade in or out; that is, no strong navigation associated
+     * with it except that it is appearing or disappearing for some reason.
+     */
+    public static final int TRANSIT_FRAGMENT_FADE = 3 | TRANSIT_ENTER_MASK;
+
+    /**
      * Calls {@link #add(int, Fragment, String)} with a 0 containerViewId.
      */
     public abstract FragmentTransaction add(Fragment fragment, String tag);
-    
+
     /**
      * Calls {@link #add(int, Fragment, String)} with a null tag.
      */
     public abstract FragmentTransaction add(@IdRes int containerViewId, Fragment fragment);
-    
+
     /**
      * Add a fragment to the activity state.  This fragment may optionally
      * also have its view (if {@link Fragment#onCreateView Fragment.onCreateView}
      * returns non-null) into a container view of the activity.
-     * 
+     *
      * @param containerViewId Optional identifier of the container this fragment is
-     * to be placed in.  If 0, it will not be placed in a container.
-     * @param fragment The fragment to be added.  This fragment must not already
-     * be added to the activity.
-     * @param tag Optional tag name for the fragment, to later retrieve the
-     * fragment with {@link FragmentManager#findFragmentByTag(String)
-     * FragmentManager.findFragmentByTag(String)}.
-     * 
+     *                        to be placed in.  If 0, it will not be placed in a container.
+     * @param fragment        The fragment to be added.  This fragment must not already
+     *                        be added to the activity.
+     * @param tag             Optional tag name for the fragment, to later retrieve the
+     *                        fragment with {@link FragmentManager#findFragmentByTag(String)
+     *                        FragmentManager.findFragmentByTag(String)}.
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction add(@IdRes int containerViewId, Fragment fragment,
-            @Nullable String tag);
-    
+                                            @Nullable String tag);
+
     /**
      * Calls {@link #replace(int, Fragment, String)} with a null tag.
      */
     public abstract FragmentTransaction replace(@IdRes int containerViewId, Fragment fragment);
-    
+
     /**
      * Replace an existing fragment that was added to a container.  This is
      * essentially the same as calling {@link #remove(Fragment)} for all
      * currently added fragments that were added with the same containerViewId
      * and then {@link #add(int, Fragment, String)} with the same arguments
      * given here.
-     * 
+     *
      * @param containerViewId Identifier of the container whose fragment(s) are
-     * to be replaced.
-     * @param fragment The new fragment to place in the container.
-     * @param tag Optional tag name for the fragment, to later retrieve the
-     * fragment with {@link FragmentManager#findFragmentByTag(String)
-     * FragmentManager.findFragmentByTag(String)}.
-     * 
+     *                        to be replaced.
+     * @param fragment        The new fragment to place in the container.
+     * @param tag             Optional tag name for the fragment, to later retrieve the
+     *                        fragment with {@link FragmentManager#findFragmentByTag(String)
+     *                        FragmentManager.findFragmentByTag(String)}.
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction replace(@IdRes int containerViewId, Fragment fragment,
-            @Nullable String tag);
-    
+                                                @Nullable String tag);
+
     /**
      * Remove an existing fragment.  If it was added to a container, its view
      * is also removed from that container.
-     * 
+     *
      * @param fragment The fragment to be removed.
-     * 
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction remove(Fragment fragment);
-    
+
     /**
      * Hides an existing fragment.  This is only relevant for fragments whose
      * views have been added to a container, as this will cause the view to
      * be hidden.
-     * 
+     *
      * @param fragment The fragment to be hidden.
-     * 
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction hide(Fragment fragment);
-    
+
     /**
      * Shows a previously hidden fragment.  This is only relevant for fragments whose
      * views have been added to a container, as this will cause the view to
      * be shown.
-     * 
+     *
      * @param fragment The fragment to be shown.
-     * 
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction show(Fragment fragment);
@@ -122,7 +147,6 @@ public abstract class FragmentTransaction {
      * is destroyed.
      *
      * @param fragment The fragment to be detached.
-     *
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction detach(Fragment fragment);
@@ -134,7 +158,6 @@ public abstract class FragmentTransaction {
      * and displayed.
      *
      * @param fragment The fragment to be attached.
-     *
      * @return Returns the same FragmentTransaction instance.
      */
     public abstract FragmentTransaction attach(Fragment fragment);
@@ -144,33 +167,6 @@ public abstract class FragmentTransaction {
      * <code>false</code> otherwise.
      */
     public abstract boolean isEmpty();
-    
-    /**
-     * Bit mask that is set for all enter transitions.
-     */
-    public static final int TRANSIT_ENTER_MASK = 0x1000;
-    
-    /**
-     * Bit mask that is set for all exit transitions.
-     */
-    public static final int TRANSIT_EXIT_MASK = 0x2000;
-
-    /** @hide */
-    @IntDef({TRANSIT_NONE, TRANSIT_FRAGMENT_OPEN, TRANSIT_FRAGMENT_CLOSE})
-    @Retention(RetentionPolicy.SOURCE)
-    private @interface Transit {}
-
-    /** Not set up for a transition. */
-    public static final int TRANSIT_UNSET = -1;
-    /** No animation for transition. */
-    public static final int TRANSIT_NONE = 0;
-    /** Fragment is being added onto the stack */
-    public static final int TRANSIT_FRAGMENT_OPEN = 1 | TRANSIT_ENTER_MASK;
-    /** Fragment is being removed from the stack */
-    public static final int TRANSIT_FRAGMENT_CLOSE = 2 | TRANSIT_EXIT_MASK;
-    /** Fragment should simply fade in or out; that is, no strong navigation associated
-     * with it except that it is appearing or disappearing for some reason. */
-    public static final int TRANSIT_FRAGMENT_FADE = 3 | TRANSIT_ENTER_MASK;
 
     /**
      * Set specific animation resources to run for the fragments that are
@@ -178,7 +174,7 @@ public abstract class FragmentTransaction {
      * played when popping the back stack.
      */
     public abstract FragmentTransaction setCustomAnimations(@AnimRes int enter,
-            @AnimRes int exit);
+                                                            @AnimRes int exit);
 
     /**
      * Set specific animation resources to run for the fragments that are
@@ -187,7 +183,7 @@ public abstract class FragmentTransaction {
      * operations specifically when popping the back stack.
      */
     public abstract FragmentTransaction setCustomAnimations(@AnimRes int enter,
-            @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit);
+                                                            @AnimRes int exit, @AnimRes int popEnter, @AnimRes int popExit);
 
     /**
      * Used with custom Transitions to map a View from a removed or hidden
@@ -196,8 +192,8 @@ public abstract class FragmentTransaction {
      *
      * @param sharedElement A View in a disappearing Fragment to match with a View in an
      *                      appearing Fragment.
-     * @param name The transitionName for a View in an appearing Fragment to match to the shared
-     *             element.
+     * @param name          The transitionName for a View in an appearing Fragment to match to the shared
+     *                      element.
      * @see Fragment#setSharedElementReturnTransition(Object)
      * @see Fragment#setSharedElementEnterTransition(Object)
      */
@@ -215,7 +211,7 @@ public abstract class FragmentTransaction {
      * animations.
      */
     public abstract FragmentTransaction setTransitionStyle(@StyleRes int styleRes);
-    
+
     /**
      * Add this transaction to the back stack.  This means that the transaction
      * will be remembered after it is committed, and will reverse its operation
@@ -275,14 +271,14 @@ public abstract class FragmentTransaction {
      * Schedules a commit of this transaction.  The commit does
      * not happen immediately; it will be scheduled as work on the main thread
      * to be done the next time that thread is ready.
-     *
+     * <p>
      * <p class="note">A transaction can only be committed with this method
      * prior to its containing activity saving its state.  If the commit is
      * attempted after that point, an exception will be thrown.  This is
      * because the state after the commit can be lost if the activity needs to
      * be restored from its state.  See {@link #commitAllowingStateLoss()} for
      * situations where it may be okay to lose the commit.</p>
-     * 
+     *
      * @return Returns the identifier of this transaction's back stack entry,
      * if {@link #addToBackStack(String)} had been called.  Otherwise, returns
      * a negative number.
@@ -297,4 +293,12 @@ public abstract class FragmentTransaction {
      * to change unexpectedly on the user.
      */
     public abstract int commitAllowingStateLoss();
+
+    /**
+     * @hide
+     */
+    @IntDef({TRANSIT_NONE, TRANSIT_FRAGMENT_OPEN, TRANSIT_FRAGMENT_CLOSE})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface Transit {
+    }
 }

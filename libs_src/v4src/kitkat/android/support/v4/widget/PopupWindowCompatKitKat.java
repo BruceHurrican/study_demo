@@ -24,7 +24,7 @@ import android.widget.PopupWindow;
  */
 class PopupWindowCompatKitKat {
     public static void showAsDropDown(PopupWindow popup, View anchor, int xoff, int yoff,
-            int gravity) {
+                                      int gravity) {
         popup.showAsDropDown(anchor, xoff, yoff, gravity);
     }
 }

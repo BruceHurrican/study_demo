@@ -26,15 +26,19 @@ class ActivityOptionsCompat21 {
 
     private final ActivityOptions mActivityOptions;
 
+    private ActivityOptionsCompat21(ActivityOptions activityOptions) {
+        mActivityOptions = activityOptions;
+    }
+
     public static ActivityOptionsCompat21 makeSceneTransitionAnimation(Activity activity,
-            View sharedElement, String sharedElementName) {
+                                                                       View sharedElement, String sharedElementName) {
         return new ActivityOptionsCompat21(
                 ActivityOptions.makeSceneTransitionAnimation(activity, sharedElement,
                         sharedElementName));
     }
 
     public static ActivityOptionsCompat21 makeSceneTransitionAnimation(Activity activity,
-            View[] sharedElements, String[] sharedElementNames) {
+                                                                       View[] sharedElements, String[] sharedElementNames) {
         Pair[] pairs = null;
         if (sharedElements != null) {
             pairs = new Pair[sharedElements.length];
@@ -44,10 +48,6 @@ class ActivityOptionsCompat21 {
         }
         return new ActivityOptionsCompat21(
                 ActivityOptions.makeSceneTransitionAnimation(activity, pairs));
-    }
-
-    private ActivityOptionsCompat21(ActivityOptions activityOptions) {
-        mActivityOptions = activityOptions;
     }
 
     public Bundle toBundle() {

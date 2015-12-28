@@ -26,19 +26,28 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/6/7.
  */
 public class ShapeLoadingView extends View {
+    public boolean mIsLoading = false;
     private double genhao3 = 1.7320508075689;
     private Shape mShape = Shape.SHAPE_CIRCLE;
-
     /**
      * 用贝赛尔曲线画圆
      */
     private double mMagicNumber = 0.55228475f;
+    private Paint mPaint;
+    private double mControlX = 0;
 
+   /* @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public ShapeLoadingView(Context context, AttributeSet attrs, int defStyleAttr,int defStyleRes) {
+        super(context, attrs, defStyleAttr,defStyleAttr);
+        init();
+    }*/
+    private double mControlY = 0;
+    private double mAnimPercent;
+    private double triangle2Circle = 0.25555555f;
     public ShapeLoadingView(Context context) {
         super(context);
         init();
     }
-
     public ShapeLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -49,18 +58,6 @@ public class ShapeLoadingView extends View {
         init();
     }
 
-   /* @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ShapeLoadingView(Context context, AttributeSet attrs, int defStyleAttr,int defStyleRes) {
-        super(context, attrs, defStyleAttr,defStyleAttr);
-        init();
-    }*/
-
-    private Paint mPaint;
-    private double mControlX = 0;
-    private double mControlY = 0;
-    private double mAnimPercent;
-    private double triangle2Circle = 0.25555555f;
-
     private void init() {
         mPaint = new Paint();
         mPaint.setColor(getResources().getColor(R.color.triangle));
@@ -68,8 +65,6 @@ public class ShapeLoadingView extends View {
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         setBackgroundColor(getResources().getColor(R.color.view_bg));
     }
-
-    public boolean mIsLoading = false;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -208,11 +203,11 @@ public class ShapeLoadingView extends View {
         invalidate();
     }
 
-    public enum Shape {
-        SHAPE_TRIANGLE, SHAPE_RECT, SHAPE_CIRCLE
-    }
-
     public Shape getShape() {
         return mShape;
+    }
+
+    public enum Shape {
+        SHAPE_TRIANGLE, SHAPE_RECT, SHAPE_CIRCLE
     }
 }

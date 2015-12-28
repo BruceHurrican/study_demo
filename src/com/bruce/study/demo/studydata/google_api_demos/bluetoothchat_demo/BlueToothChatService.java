@@ -34,18 +34,20 @@ import java.util.UUID;
  * Created by BruceHurrican on 2015/10/7.
  */
 public class BlueToothChatService {
+    // Constants that indicate the current connection state
+    public static final int STATE_NONE = 0; // we're doing nothing
+    public static final int STATE_LISTEN = 1; // now listening for incoming connections
+    public static final int STATE_CONNECTING = 2; //  now listening an outgoing connection
+    public static final int STATE_CONNECTED = 3; // now connected to a remote device
     // Debugging
     private static final String TAG = "BlueToothChatService->";
     private static final boolean D = true;
-
     // Name for the SDP record when creating server socket
     private static final String NAME_SECURE = "BluetoothChatSecure";
     private static final String NAME_INSECURE = "BluetoothChatInsecure";
-
     // Unique UUID for this application
     private static final UUID MY_UUID_SECURE = UUID.fromString("fa87c0d0-afac-11de-8a39-0800200c9a66");
     private static final UUID MY_UUID_INSECURE = UUID.fromString("8ce255c0-200a-11e0-ac64-0800200c9a66");
-
     // Member fields
     private final BluetoothAdapter mAdapter;
     private final Handler mHandler;
@@ -54,16 +56,19 @@ public class BlueToothChatService {
     private ConnectedThread mConnectedThread;
     private int mState;
 
-    // Constants that indicate the current connection state
-    public static final int STATE_NONE = 0; // we're doing nothing
-    public static final int STATE_LISTEN = 1; // now listening for incoming connections
-    public static final int STATE_CONNECTING = 2; //  now listening an outgoing connection
-    public static final int STATE_CONNECTED = 3; // now connected to a remote device
-
     public BlueToothChatService(Context context, Handler mHandler) {
         mAdapter = BluetoothAdapter.getDefaultAdapter();
         mState = STATE_NONE;
         this.mHandler = mHandler;
+    }
+
+    /**
+     * 获取当前连接状态
+     *
+     * @return
+     */
+    public synchronized int getState() {
+        return mState;
     }
 
     /**
@@ -78,15 +83,6 @@ public class BlueToothChatService {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
         mHandler.obtainMessage(BlueToothChatActivity.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-    }
-
-    /**
-     * 获取当前连接状态
-     *
-     * @return
-     */
-    public synchronized int getState() {
-        return mState;
     }
 
     /**

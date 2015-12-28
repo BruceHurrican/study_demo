@@ -25,17 +25,75 @@ import android.view.View;
  */
 public class KeyEventCompat {
     /**
+     * Select the correct implementation to use for the current platform.
+     */
+    static final KeyEventVersionImpl IMPL;
+
+    static {
+        if (android.os.Build.VERSION.SDK_INT >= 11) {
+            IMPL = new HoneycombKeyEventVersionImpl();
+        } else {
+            IMPL = new BaseKeyEventVersionImpl();
+        }
+    }
+
+    public static int normalizeMetaState(int metaState) {
+        return IMPL.normalizeMetaState(metaState);
+    }
+
+    public static boolean metaStateHasModifiers(int metaState, int modifiers) {
+        return IMPL.metaStateHasModifiers(metaState, modifiers);
+    }
+
+    public static boolean metaStateHasNoModifiers(int metaState) {
+        return IMPL.metaStateHasNoModifiers(metaState);
+    }
+
+    public static boolean hasModifiers(KeyEvent event, int modifiers) {
+        return IMPL.metaStateHasModifiers(event.getMetaState(), modifiers);
+    }
+
+    // -------------------------------------------------------------------
+
+    public static boolean hasNoModifiers(KeyEvent event) {
+        return IMPL.metaStateHasNoModifiers(event.getMetaState());
+    }
+
+    public static void startTracking(KeyEvent event) {
+        IMPL.startTracking(event);
+    }
+
+    public static boolean isTracking(KeyEvent event) {
+        return IMPL.isTracking(event);
+    }
+
+    public static Object getKeyDispatcherState(View view) {
+        return IMPL.getKeyDispatcherState(view);
+    }
+
+    public static boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
+                                   Object target) {
+        return IMPL.dispatch(event, receiver, state, target);
+    }
+
+    /**
      * Interface for the full API.
      */
     interface KeyEventVersionImpl {
         public int normalizeMetaState(int metaState);
+
         public boolean metaStateHasModifiers(int metaState, int modifiers);
+
         public boolean metaStateHasNoModifiers(int metaState);
+
         public void startTracking(KeyEvent event);
+
         public boolean isTracking(KeyEvent event);
+
         public Object getKeyDispatcherState(View view);
+
         public boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
-                    Object target);
+                                Object target);
     }
 
     /**
@@ -44,14 +102,14 @@ public class KeyEventCompat {
     static class BaseKeyEventVersionImpl implements KeyEventVersionImpl {
         private static final int META_MODIFIER_MASK =
                 KeyEvent.META_SHIFT_ON | KeyEvent.META_SHIFT_LEFT_ON | KeyEvent.META_SHIFT_RIGHT_ON
-                | KeyEvent.META_ALT_ON | KeyEvent.META_ALT_LEFT_ON | KeyEvent.META_ALT_RIGHT_ON
-                | KeyEvent.META_SYM_ON;
+                        | KeyEvent.META_ALT_ON | KeyEvent.META_ALT_LEFT_ON | KeyEvent.META_ALT_RIGHT_ON
+                        | KeyEvent.META_SYM_ON;
 
         // Mask of all lock key meta states.
         private static final int META_ALL_MASK = META_MODIFIER_MASK;
 
         private static int metaStateFilterDirectionalModifiers(int metaState,
-                int modifiers, int basic, int left, int right) {
+                                                               int modifiers, int basic, int left, int right) {
             final boolean wantBasic = (modifiers & basic) != 0;
             final int directional = left | right;
             final boolean wantLeftOrRight = (modifiers & directional) != 0;
@@ -78,7 +136,7 @@ public class KeyEventCompat {
             }
             return metaState & META_ALL_MASK;
         }
- 
+
         @Override
         public boolean metaStateHasModifiers(int metaState, int modifiers) {
             metaState = normalizeMetaState(metaState) & META_MODIFIER_MASK;
@@ -110,7 +168,7 @@ public class KeyEventCompat {
 
         @Override
         public boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
-                    Object target) {
+                                Object target) {
             return event.dispatch(receiver);
         }
     }
@@ -133,7 +191,7 @@ public class KeyEventCompat {
 
         @Override
         public boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
-                    Object target) {
+                                Object target) {
             return KeyEventCompatEclair.dispatch(event, receiver, state, target);
         }
     }
@@ -146,7 +204,7 @@ public class KeyEventCompat {
         public int normalizeMetaState(int metaState) {
             return KeyEventCompatHoneycomb.normalizeMetaState(metaState);
         }
-        
+
         @Override
         public boolean metaStateHasModifiers(int metaState, int modifiers) {
             return KeyEventCompatHoneycomb.metaStateHasModifiers(metaState, modifiers);
@@ -156,56 +214,5 @@ public class KeyEventCompat {
         public boolean metaStateHasNoModifiers(int metaState) {
             return KeyEventCompatHoneycomb.metaStateHasNoModifiers(metaState);
         }
-    }
-
-    /**
-     * Select the correct implementation to use for the current platform.
-     */
-    static final KeyEventVersionImpl IMPL;
-    static {
-        if (android.os.Build.VERSION.SDK_INT >= 11) {
-            IMPL = new HoneycombKeyEventVersionImpl();
-        } else {
-            IMPL = new BaseKeyEventVersionImpl();
-        }
-    }
-
-    // -------------------------------------------------------------------
-
-    public static int normalizeMetaState(int metaState) {
-        return IMPL.normalizeMetaState(metaState);
-    }
-
-    public static boolean metaStateHasModifiers(int metaState, int modifiers) {
-        return IMPL.metaStateHasModifiers(metaState, modifiers);
-    }
-
-    public static boolean metaStateHasNoModifiers(int metaState) {
-        return IMPL.metaStateHasNoModifiers(metaState);
-    }
-
-    public static boolean hasModifiers(KeyEvent event, int modifiers) {
-        return IMPL.metaStateHasModifiers(event.getMetaState(), modifiers);
-    }
-
-    public static boolean hasNoModifiers(KeyEvent event) {
-        return IMPL.metaStateHasNoModifiers(event.getMetaState());
-    }
-
-    public static void startTracking(KeyEvent event) {
-        IMPL.startTracking(event);
-    }
-
-    public static boolean isTracking(KeyEvent event) {
-        return IMPL.isTracking(event);
-    }
-
-    public static Object getKeyDispatcherState(View view) {
-        return IMPL.getKeyDispatcherState(view);
-    }
-
-    public static boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
-                Object target) {
-        return IMPL.dispatch(event, receiver, state, target);
     }
 }

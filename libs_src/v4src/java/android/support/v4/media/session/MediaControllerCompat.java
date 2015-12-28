@@ -220,10 +220,10 @@ public final class MediaControllerCompat {
      * {@link VolumeProviderCompat#VOLUME_CONTROL_ABSOLUTE}. The flags in
      * {@link AudioManager} may be used to affect the handling.
      *
-     * @see #getPlaybackInfo()
      * @param value The value to set it to, between 0 and the reported max.
      * @param flags Flags from {@link AudioManager} to include with the volume
-     *            request.
+     *              request.
+     * @see #getPlaybackInfo()
      */
     public void setVolumeTo(int value, int flags) {
         mImpl.setVolumeTo(value, flags);
@@ -238,9 +238,9 @@ public final class MediaControllerCompat {
      * {@link VolumeProviderCompat#VOLUME_CONTROL_ABSOLUTE}. The flags in
      * {@link AudioManager} may be used to affect the handling.
      *
-     * @see #getPlaybackInfo()
      * @param direction The direction to adjust the volume in.
-     * @param flags Any flags to pass with the command.
+     * @param flags     Any flags to pass with the command.
+     * @see #getPlaybackInfo()
      */
     public void adjustVolume(int direction, int flags) {
         mImpl.adjustVolume(direction, flags);
@@ -261,8 +261,8 @@ public final class MediaControllerCompat {
      * posted on the specified handler's thread.
      *
      * @param callback The callback object, must not be null.
-     * @param handler The handler to post updates on. If null the callers thread
-     *            will be used.
+     * @param handler  The handler to post updates on. If null the callers thread
+     *                 will be used.
      */
     public void registerCallback(Callback callback, Handler handler) {
         if (callback == null) {
@@ -293,8 +293,8 @@ public final class MediaControllerCompat {
      * commands should only be sent to sessions that the controller owns.
      *
      * @param command The command to send
-     * @param params Any parameters to include with the command
-     * @param cb The callback to receive the result on
+     * @param params  Any parameters to include with the command
+     * @param cb      The callback to receive the result on
      */
     public void sendCommand(String command, Bundle params, ResultReceiver cb) {
         if (TextUtils.isEmpty(command)) {
@@ -320,10 +320,48 @@ public final class MediaControllerCompat {
      * </p>
      *
      * @return The underlying {@link android.media.session.MediaController}
-     *         object, or null if none.
+     * object, or null if none.
      */
     public Object getMediaController() {
         return mImpl.getMediaController();
+    }
+
+    interface MediaControllerImpl {
+        void registerCallback(Callback callback, Handler handler);
+
+        void unregisterCallback(Callback callback);
+
+        boolean dispatchMediaButtonEvent(KeyEvent keyEvent);
+
+        TransportControls getTransportControls();
+
+        PlaybackStateCompat getPlaybackState();
+
+        MediaMetadataCompat getMetadata();
+
+        List<MediaSessionCompat.QueueItem> getQueue();
+
+        CharSequence getQueueTitle();
+
+        Bundle getExtras();
+
+        int getRatingType();
+
+        long getFlags();
+
+        PlaybackInfo getPlaybackInfo();
+
+        PendingIntent getSessionActivity();
+
+        void setVolumeTo(int value, int flags);
+
+        void adjustVolume(int direction, int flags);
+
+        void sendCommand(String command, Bundle params, ResultReceiver cb);
+
+        String getPackageName();
+
+        Object getMediaController();
     }
 
     /**
@@ -356,7 +394,7 @@ public final class MediaControllerCompat {
          * specified interface. Controllers should only handle these for
          * sessions they own.
          *
-         * @param event The event from the session.
+         * @param event  The event from the session.
          * @param extras Optional parameters for the event.
          */
         public void onSessionEvent(String event, Bundle extras) {
@@ -382,10 +420,10 @@ public final class MediaControllerCompat {
         /**
          * Override to handle changes to items in the queue.
          *
-         * @see MediaSessionCompat.QueueItem
          * @param queue A list of items in the current play queue. It should
-         *            include the currently playing item as well as previous and
-         *            upcoming items if applicable.
+         *              include the currently playing item as well as previous and
+         *              upcoming items if applicable.
+         * @see MediaSessionCompat.QueueItem
          */
         public void onQueueChanged(List<MediaSessionCompat.QueueItem> queue) {
         }
@@ -394,8 +432,8 @@ public final class MediaControllerCompat {
          * Override to handle changes to the queue title.
          *
          * @param title The title that should be displayed along with the play
-         *            queue such as "Now Playing". May be null if there is no
-         *            such title.
+         *              queue such as "Now Playing". May be null if there is no
+         *              such title.
          */
         public void onQueueTitleChanged(CharSequence title) {
         }
@@ -404,7 +442,7 @@ public final class MediaControllerCompat {
          * Override to handle chagnes to the {@link MediaSessionCompat} extras.
          *
          * @param extras The extras that can include other information
-         *            associated with the {@link MediaSessionCompat}.
+         *               associated with the {@link MediaSessionCompat}.
          */
         public void onExtrasChanged(Bundle extras) {
         }
@@ -571,8 +609,8 @@ public final class MediaControllerCompat {
          * Request that the player start playback for a specific {@link Uri}.
          *
          * @param mediaId The uri of the requested media.
-         * @param extras Optional extras that can include extra information
-         *            about the media item to be played.
+         * @param extras  Optional extras that can include extra information
+         *                about the media item to be played.
          */
         public abstract void playFromMediaId(String mediaId, Bundle extras);
 
@@ -581,9 +619,9 @@ public final class MediaControllerCompat {
          * An empty or null query should be treated as a request to play any
          * music.
          *
-         * @param query The search query.
+         * @param query  The search query.
          * @param extras Optional extras that can include extra information
-         *            about the query.
+         *               about the query.
          */
         public abstract void playFromSearch(String query, Bundle extras);
 
@@ -593,7 +631,7 @@ public final class MediaControllerCompat {
          * This method is not supported on API 21-22.
          * </p>
          *
-         * @param uri  The URI of the requested media.
+         * @param uri    The URI of the requested media.
          * @param extras Optional extras that can include extra information about the media item
          *               to be played.
          */
@@ -659,23 +697,23 @@ public final class MediaControllerCompat {
          * Send a custom action for the {@link MediaSessionCompat} to perform.
          *
          * @param customAction The action to perform.
-         * @param args Optional arguments to supply to the
-         *            {@link MediaSessionCompat} for this custom action.
+         * @param args         Optional arguments to supply to the
+         *                     {@link MediaSessionCompat} for this custom action.
          */
         public abstract void sendCustomAction(PlaybackStateCompat.CustomAction customAction,
-                Bundle args);
+                                              Bundle args);
 
         /**
          * Send the id and args from a custom action for the
          * {@link MediaSessionCompat} to perform.
          *
-         * @see #sendCustomAction(PlaybackStateCompat.CustomAction action,
-         *      Bundle args)
          * @param action The action identifier of the
-         *            {@link PlaybackStateCompat.CustomAction} as specified by
-         *            the {@link MediaSessionCompat}.
-         * @param args Optional arguments to supply to the
-         *            {@link MediaSessionCompat} for this custom action.
+         *               {@link PlaybackStateCompat.CustomAction} as specified by
+         *               the {@link MediaSessionCompat}.
+         * @param args   Optional arguments to supply to the
+         *               {@link MediaSessionCompat} for this custom action.
+         * @see #sendCustomAction(PlaybackStateCompat.CustomAction action,
+         * Bundle args)
          */
         public abstract void sendCustomAction(String action, Bundle args);
     }
@@ -742,7 +780,7 @@ public final class MediaControllerCompat {
          * </ul>
          *
          * @return The type of volume control that may be used with this
-         *         session.
+         * session.
          */
         public int getVolumeControl() {
             return mVolumeControl;
@@ -765,31 +803,6 @@ public final class MediaControllerCompat {
         public int getCurrentVolume() {
             return mCurrentVolume;
         }
-    }
-
-    interface MediaControllerImpl {
-        void registerCallback(Callback callback, Handler handler);
-
-        void unregisterCallback(Callback callback);
-        boolean dispatchMediaButtonEvent(KeyEvent keyEvent);
-        TransportControls getTransportControls();
-        PlaybackStateCompat getPlaybackState();
-        MediaMetadataCompat getMetadata();
-
-        List<MediaSessionCompat.QueueItem> getQueue();
-        CharSequence getQueueTitle();
-        Bundle getExtras();
-        int getRatingType();
-        long getFlags();
-        PlaybackInfo getPlaybackInfo();
-        PendingIntent getSessionActivity();
-
-        void setVolumeTo(int value, int flags);
-        void adjustVolume(int direction, int flags);
-        void sendCommand(String command, Bundle params, ResultReceiver cb);
-
-        String getPackageName();
-        Object getMediaController();
     }
 
     static class MediaControllerImplBase implements MediaControllerImpl {

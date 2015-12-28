@@ -24,9 +24,9 @@ import android.widget.RemoteViews;
 
 class NotificationCompatHoneycomb {
     static Notification add(Context context, Notification n,
-            CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
-            RemoteViews tickerView, int number,
-            PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon) {
+                            CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
+                            RemoteViews tickerView, int number,
+                            PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon) {
         Notification.Builder b = new Notification.Builder(context)
                 .setWhen(n.when)
                 .setSmallIcon(n.icon, n.iconLevel)

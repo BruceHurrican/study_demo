@@ -30,7 +30,7 @@ public interface ParcelableCompatCreatorCallbacks<T> {
      * {@link Parcelable#writeToParcel Parcelable.writeToParcel()} and
      * using the given ClassLoader.
      *
-     * @param in The Parcel to read the object's data from.
+     * @param in     The Parcel to read the object's data from.
      * @param loader The ClassLoader that this object is being created in.
      * @return Returns a new instance of the Parcelable class.
      */
@@ -41,7 +41,7 @@ public interface ParcelableCompatCreatorCallbacks<T> {
      *
      * @param size Size of the array.
      * @return Returns an array of the Parcelable class, with every entry
-     *         initialized to null.
+     * initialized to null.
      */
     public T[] newArray(int size);
 }

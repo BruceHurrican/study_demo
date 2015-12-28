@@ -36,11 +36,40 @@ import java.util.Map;
  * Transition behavior.
  */
 public abstract class SharedElementCallback {
-    private Matrix mTempMatrix;
-    private static int MAX_IMAGE_SIZE = (1024 * 1024);
     private static final String BUNDLE_SNAPSHOT_BITMAP = "sharedElement:snapshot:bitmap";
     private static final String BUNDLE_SNAPSHOT_IMAGE_SCALETYPE = "sharedElement:snapshot:imageScaleType";
     private static final String BUNDLE_SNAPSHOT_IMAGE_MATRIX = "sharedElement:snapshot:imageMatrix";
+    private static int MAX_IMAGE_SIZE = (1024 * 1024);
+    private Matrix mTempMatrix;
+
+    /**
+     * Get a copy of bitmap of given drawable.
+     */
+    private static Bitmap createDrawableBitmap(Drawable drawable) {
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
+        if (width <= 0 || height <= 0) {
+            return null;
+        }
+        float scale = Math.min(1f, ((float) MAX_IMAGE_SIZE) / (width * height));
+        if (drawable instanceof BitmapDrawable && scale == 1f) {
+            // return same bitmap if scale down not needed
+            return ((BitmapDrawable) drawable).getBitmap();
+        }
+        int bitmapWidth = (int) (width * scale);
+        int bitmapHeight = (int) (height * scale);
+        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        Rect existingBounds = drawable.getBounds();
+        int left = existingBounds.left;
+        int top = existingBounds.top;
+        int right = existingBounds.right;
+        int bottom = existingBounds.bottom;
+        drawable.setBounds(0, 0, bitmapWidth, bitmapHeight);
+        drawable.draw(canvas);
+        drawable.setBounds(left, top, right, bottom);
+        return bitmap;
+    }
 
     /**
      * In Activity Transitions, onSharedElementStart is called immediately before
@@ -61,9 +90,9 @@ public abstract class SharedElementCallback {
      * if changed in {@link #onSharedElementEnd(List, List, List)}, it will also have to be reset
      * in onSharedElementStart again to correct the end state.
      *
-     * @param sharedElementNames The names of the shared elements that were accepted into
-     *                           the View hierarchy.
-     * @param sharedElements The shared elements that are part of the View hierarchy.
+     * @param sharedElementNames     The names of the shared elements that were accepted into
+     *                               the View hierarchy.
+     * @param sharedElements         The shared elements that are part of the View hierarchy.
      * @param sharedElementSnapshots The Views containing snap shots of the shared element
      *                               from the launching Window. These elements will not
      *                               be part of the scene, but will be positioned relative
@@ -71,7 +100,8 @@ public abstract class SharedElementCallback {
      *                               Transitions.
      */
     public void onSharedElementStart(List<String> sharedElementNames,
-            List<View> sharedElements, List<View> sharedElementSnapshots) {}
+                                     List<View> sharedElements, List<View> sharedElementSnapshots) {
+    }
 
     /**
      * In Activity Transitions, onSharedElementEnd is called immediately before
@@ -92,9 +122,9 @@ public abstract class SharedElementCallback {
      * {@link #onSharedElementStart(List, List, List)}, it will also have to be reset in
      * onSharedElementEnd again to correct the end state.
      *
-     * @param sharedElementNames The names of the shared elements that were accepted into
-     *                           the View hierarchy.
-     * @param sharedElements The shared elements that are part of the View hierarchy.
+     * @param sharedElementNames     The names of the shared elements that were accepted into
+     *                               the View hierarchy.
+     * @param sharedElements         The shared elements that are part of the View hierarchy.
      * @param sharedElementSnapshots The Views containing snap shots of the shared element
      *                               from the launching Window. These elements will not
      *                               be part of the scene, but will be positioned relative
@@ -102,7 +132,8 @@ public abstract class SharedElementCallback {
      *                               Fragment Transitions.
      */
     public void onSharedElementEnd(List<String> sharedElementNames,
-            List<View> sharedElements, List<View> sharedElementSnapshots) {}
+                                   List<View> sharedElements, List<View> sharedElementSnapshots) {
+    }
 
     /**
      * Called after {@link #onMapSharedElements(java.util.List, java.util.Map)} when
@@ -126,19 +157,20 @@ public abstract class SharedElementCallback {
      *                               View removed from this list will not be transitioned
      *                               automatically.
      */
-    public void onRejectSharedElements(List<View> rejectedSharedElements) {}
+    public void onRejectSharedElements(List<View> rejectedSharedElements) {
+    }
 
     /**
      * Lets the SharedElementCallback adjust the mapping of shared element names to
      * Views.
      *
-     * @param names The names of all shared elements transferred from the calling Activity
-     *              or Fragment in the order they were provided.
+     * @param names          The names of all shared elements transferred from the calling Activity
+     *                       or Fragment in the order they were provided.
      * @param sharedElements The mapping of shared element names to Views. The best guess
      *                       will be filled into sharedElements based on the transitionNames.
      */
-    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {}
-
+    public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
+    }
 
     /**
      * Creates a snapshot of a shared element to be used by the remote Activity and reconstituted
@@ -146,21 +178,21 @@ public abstract class SharedElementCallback {
      * null return value will mean that the remote Activity will have a null snapshot View in
      * {@link #onSharedElementStart(java.util.List, java.util.List, java.util.List)} and
      * {@link #onSharedElementEnd(java.util.List, java.util.List, java.util.List)}.
-     *
+     * <p>
      * <p>This is not called for Fragment Transitions.</p>
      *
-     * @param sharedElement The shared element View to create a snapshot for.
+     * @param sharedElement      The shared element View to create a snapshot for.
      * @param viewToGlobalMatrix A matrix containing a transform from the view to the screen
      *                           coordinates.
-     * @param screenBounds The bounds of shared element in screen coordinate space. This is
-     *                     the bounds of the view with the viewToGlobalMatrix applied.
+     * @param screenBounds       The bounds of shared element in screen coordinate space. This is
+     *                           the bounds of the view with the viewToGlobalMatrix applied.
      * @return A snapshot to send to the remote Activity to be reconstituted with
      * {@link #onCreateSnapshotView(android.content.Context, android.os.Parcelable)} and passed
      * into {@link #onSharedElementStart(java.util.List, java.util.List, java.util.List)} and
      * {@link #onSharedElementEnd(java.util.List, java.util.List, java.util.List)}.
      */
     public Parcelable onCaptureSharedElementSnapshot(View sharedElement, Matrix viewToGlobalMatrix,
-            RectF screenBounds) {
+                                                     RectF screenBounds) {
         if (sharedElement instanceof ImageView) {
             ImageView imageView = ((ImageView) sharedElement);
             Drawable d = imageView.getDrawable();
@@ -186,7 +218,7 @@ public abstract class SharedElementCallback {
         int bitmapHeight = Math.round(screenBounds.height());
         Bitmap bitmap = null;
         if (bitmapWidth > 0 && bitmapHeight > 0) {
-            float scale = Math.min(1f, ((float)MAX_IMAGE_SIZE) / (bitmapWidth * bitmapHeight));
+            float scale = Math.min(1f, ((float) MAX_IMAGE_SIZE) / (bitmapWidth * bitmapHeight));
             bitmapWidth *= scale;
             bitmapHeight *= scale;
             if (mTempMatrix == null) {
@@ -204,47 +236,18 @@ public abstract class SharedElementCallback {
     }
 
     /**
-     * Get a copy of bitmap of given drawable.
-     */
-    private static Bitmap createDrawableBitmap(Drawable drawable) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        if (width <= 0 || height <= 0) {
-            return null;
-        }
-        float scale = Math.min(1f, ((float)MAX_IMAGE_SIZE) / (width * height));
-        if (drawable instanceof BitmapDrawable && scale == 1f) {
-            // return same bitmap if scale down not needed
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-        int bitmapWidth = (int) (width * scale);
-        int bitmapHeight = (int) (height * scale);
-        Bitmap bitmap = Bitmap.createBitmap(bitmapWidth, bitmapHeight, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        Rect existingBounds = drawable.getBounds();
-        int left = existingBounds.left;
-        int top = existingBounds.top;
-        int right = existingBounds.right;
-        int bottom = existingBounds.bottom;
-        drawable.setBounds(0, 0, bitmapWidth, bitmapHeight);
-        drawable.draw(canvas);
-        drawable.setBounds(left, top, right, bottom);
-        return bitmap;
-    }
-
-    /**
      * Reconstitutes a snapshot View from a Parcelable returned in
      * {@link #onCaptureSharedElementSnapshot(android.view.View, android.graphics.Matrix,
      * android.graphics.RectF)} to be used in {@link #onSharedElementStart(java.util.List,
      * java.util.List, java.util.List)} and {@link #onSharedElementEnd(java.util.List,
      * java.util.List, java.util.List)}. The returned View will be sized and positioned after
      * this call so that it is ready to be added to the decor View's overlay.
-     *
+     * <p>
      * <p>This is not called for Fragment Transitions.</p>
      *
-     * @param context The Context used to create the snapshot View.
+     * @param context  The Context used to create the snapshot View.
      * @param snapshot The Parcelable returned by {@link #onCaptureSharedElementSnapshot(
-     * android.view.View, android.graphics.Matrix, android.graphics.RectF)}.
+     *android.view.View, android.graphics.Matrix, android.graphics.RectF)}.
      * @return A View to be sent in {@link #onSharedElementStart(java.util.List, java.util.List,
      * java.util.List)} and {@link #onSharedElementEnd(java.util.List, java.util.List,
      * java.util.List)}. A null value will produce a null snapshot value for those two methods.

@@ -51,90 +51,72 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     static final float MAX_SCROLL_FACTOR = 0.5f;
 
     private static final String TAG = "NestedScrollView";
-
-    private long mLastScroll;
-
+    /**
+     * Sentinel value for no current active pointer.
+     * Used by {@link #mActivePointerId}.
+     */
+    private static final int INVALID_POINTER = -1;
+    private static final AccessibilityDelegate ACCESSIBILITY_DELEGATE = new AccessibilityDelegate();
+    private static final int[] SCROLLVIEW_STYLEABLE = new int[]{
+            android.R.attr.fillViewport
+    };
     private final Rect mTempRect = new Rect();
+    /**
+     * Used during scrolling to retrieve the new offset within the window.
+     */
+    private final int[] mScrollOffset = new int[2];
+    private final int[] mScrollConsumed = new int[2];
+    private final NestedScrollingParentHelper mParentHelper;
+    private final NestedScrollingChildHelper mChildHelper;
+    private long mLastScroll;
     private ScrollerCompat mScroller;
     private EdgeEffectCompat mEdgeGlowTop;
     private EdgeEffectCompat mEdgeGlowBottom;
-
     /**
      * Position of the last motion event.
      */
     private int mLastMotionY;
-
     /**
      * True when the layout has changed but the traversal has not come through yet.
      * Ideally the view hierarchy would keep track of this for us.
      */
     private boolean mIsLayoutDirty = true;
     private boolean mIsLaidOut = false;
-
     /**
      * The child to give focus to in the event that a child has requested focus while the
      * layout is dirty. This prevents the scroll from being wrong if the child has not been
      * laid out before requesting focus.
      */
     private View mChildToScrollTo = null;
-
     /**
      * True if the user is currently dragging this ScrollView around. This is
      * not the same as 'is being flinged', which can be checked by
      * mScroller.isFinished() (flinging begins when the user lifts his finger).
      */
     private boolean mIsBeingDragged = false;
-
     /**
      * Determines speed during touch scrolling
      */
     private VelocityTracker mVelocityTracker;
-
     /**
      * When set to true, the scroll view measure its child to make it fill the currently
      * visible area.
      */
     private boolean mFillViewport;
-
     /**
      * Whether arrow scrolling is animated.
      */
     private boolean mSmoothScrollingEnabled = true;
-
     private int mTouchSlop;
     private int mMinimumVelocity;
     private int mMaximumVelocity;
-
     /**
      * ID of the active pointer. This is used to retain consistency during
      * drags/flings if multiple pointers are used.
      */
     private int mActivePointerId = INVALID_POINTER;
-
-    /**
-     * Used during scrolling to retrieve the new offset within the window.
-     */
-    private final int[] mScrollOffset = new int[2];
-    private final int[] mScrollConsumed = new int[2];
     private int mNestedYOffset;
-
-    /**
-     * Sentinel value for no current active pointer.
-     * Used by {@link #mActivePointerId}.
-     */
-    private static final int INVALID_POINTER = -1;
-
     private SavedState mSavedState;
-
-    private static final AccessibilityDelegate ACCESSIBILITY_DELEGATE = new AccessibilityDelegate();
-
-    private static final int[] SCROLLVIEW_STYLEABLE = new int[] {
-            android.R.attr.fillViewport
-    };
-
-    private final NestedScrollingParentHelper mParentHelper;
-    private final NestedScrollingChildHelper mChildHelper;
-
     private float mVerticalScrollFactor;
 
     public NestedScrollView(Context context) {
@@ -167,14 +149,56 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     // NestedScrollingChild
 
-    @Override
-    public void setNestedScrollingEnabled(boolean enabled) {
-        mChildHelper.setNestedScrollingEnabled(enabled);
+    /**
+     * Return true if child is a descendant of parent, (or equal to the parent).
+     */
+    private static boolean isViewDescendantOf(View child, View parent) {
+        if (child == parent) {
+            return true;
+        }
+
+        final ViewParent theParent = child.getParent();
+        return (theParent instanceof ViewGroup) && isViewDescendantOf((View) theParent, parent);
+    }
+
+    private static int clamp(int n, int my, int child) {
+        if (my >= child || n < 0) {
+            /* my >= child is this case:
+             *                    |--------------- me ---------------|
+             *     |------ child ------|
+             * or
+             *     |--------------- me ---------------|
+             *            |------ child ------|
+             * or
+             *     |--------------- me ---------------|
+             *                                  |------ child ------|
+             *
+             * n < 0 is this case:
+             *     |------ me ------|
+             *                    |-------- child --------|
+             *     |-- mScrollX --|
+             */
+            return 0;
+        }
+        if ((my + n) > child) {
+            /* this case:
+             *                    |------ me ------|
+             *     |------ child ------|
+             *     |-- mScrollX --|
+             */
+            return child - my;
+        }
+        return n;
     }
 
     @Override
     public boolean isNestedScrollingEnabled() {
         return mChildHelper.isNestedScrollingEnabled();
+    }
+
+    @Override
+    public void setNestedScrollingEnabled(boolean enabled) {
+        mChildHelper.setNestedScrollingEnabled(enabled);
     }
 
     @Override
@@ -194,7 +218,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     @Override
     public boolean dispatchNestedScroll(int dxConsumed, int dyConsumed, int dxUnconsumed,
-            int dyUnconsumed, int[] offsetInWindow) {
+                                        int dyUnconsumed, int[] offsetInWindow) {
         return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
                 offsetInWindow);
     }
@@ -203,6 +227,8 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public boolean dispatchNestedPreScroll(int dx, int dy, int[] consumed, int[] offsetInWindow) {
         return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
     }
+
+    // NestedScrollingParent
 
     @Override
     public boolean dispatchNestedFling(float velocityX, float velocityY, boolean consumed) {
@@ -213,8 +239,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public boolean dispatchNestedPreFling(float velocityX, float velocityY) {
         return mChildHelper.dispatchNestedPreFling(velocityX, velocityY);
     }
-
-    // NestedScrollingParent
 
     @Override
     public boolean onStartNestedScroll(View child, View target, int nestedScrollAxes) {
@@ -234,7 +258,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     @Override
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed, int dxUnconsumed,
-            int dyUnconsumed) {
+                               int dyUnconsumed) {
         final int oldScrollY = getScrollY();
         scrollBy(0, dyUnconsumed);
         final int myConsumed = getScrollY() - oldScrollY;
@@ -256,6 +280,8 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         return false;
     }
 
+    // ScrollView import
+
     @Override
     public boolean onNestedPreFling(View target, float velocityX, float velocityY) {
         // Do nothing
@@ -266,8 +292,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     public int getNestedScrollAxes() {
         return mParentHelper.getNestedScrollAxes();
     }
-
-    // ScrollView import
 
     public boolean shouldDelayChildPressedState() {
         return true;
@@ -306,7 +330,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     /**
      * @return The maximum amount this scroll view will scroll in response to
-     *   an arrow event.
+     * an arrow event.
      */
     public int getMaxScrollAmount() {
         return (int) (MAX_SCROLL_FACTOR * getHeight());
@@ -375,7 +399,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
      * Indicates whether this ScrollView's content is stretched to fill the viewport.
      *
      * @return True if the content fills the viewport, false otherwise.
-     *
      * @attr ref android.R.styleable#ScrollView_fillViewport
      */
     public boolean isFillViewport() {
@@ -387,8 +410,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
      * the viewport or not.
      *
      * @param fillViewport True to stretch the content's height to the viewport's
-     *        boundaries, false otherwise.
-     *
+     *                     boundaries, false otherwise.
      * @attr ref android.R.styleable#ScrollView_fillViewport
      */
     public void setFillViewport(boolean fillViewport) {
@@ -407,6 +429,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     /**
      * Set whether arrow scrolling will animate its transition.
+     *
      * @param smoothScrollingEnabled whether arrow scrolling will animate its transition
      */
     public void setSmoothScrollingEnabled(boolean smoothScrollingEnabled) {
@@ -540,7 +563,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         }
         super.requestDisallowInterceptTouchEvent(disallowIntercept);
     }
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -873,15 +895,15 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     }
 
     protected void onOverScrolled(int scrollX, int scrollY,
-            boolean clampedX, boolean clampedY) {
+                                  boolean clampedX, boolean clampedY) {
         super.scrollTo(scrollX, scrollY);
     }
 
     boolean overScrollByCompat(int deltaX, int deltaY,
-            int scrollX, int scrollY,
-            int scrollRangeX, int scrollRangeY,
-            int maxOverScrollX, int maxOverScrollY,
-            boolean isTouchEvent) {
+                               int scrollX, int scrollY,
+                               int scrollRangeX, int scrollRangeY,
+                               int maxOverScrollX, int maxOverScrollY,
+                               boolean isTouchEvent) {
         final int overScrollMode = ViewCompat.getOverScrollMode(this);
         final boolean canScrollHorizontal =
                 computeHorizontalScrollRange() > computeHorizontalScrollExtent();
@@ -954,7 +976,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
      * @param bottom   the bottom offset of the bounds in which a focusable must
      *                 be found
      * @return the next focusable component in the bounds or null if none can
-     *         be found
+     * be found
      */
     private View findFocusableViewInBounds(boolean topFocus, int top, int bottom) {
 
@@ -1188,7 +1210,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     /**
      * @return whether the descendant of this scroll view is scrolled off
-     *  screen.
+     * screen.
      */
     private boolean isOffScreen(View descendant) {
         return !isWithinDeltaOfScreen(descendant, 0, getHeight());
@@ -1196,7 +1218,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     /**
      * @return whether the descendant of this scroll view is within delta
-     *  pixels of being on the screen.
+     * pixels of being on the screen.
      */
     private boolean isWithinDeltaOfScreen(View descendant, int delta, int height) {
         descendant.getDrawingRect(mTempRect);
@@ -1307,7 +1329,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     @Override
     protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed,
-            int parentHeightMeasureSpec, int heightUsed) {
+                                           int parentHeightMeasureSpec, int heightUsed) {
         final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
 
         final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,
@@ -1464,17 +1486,16 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         super.requestChildFocus(child, focused);
     }
 
-
     /**
      * When looking for focus in children of a scroll view, need to be a little
      * more careful not to give focus to something that is scrolled off screen.
-     *
+     * <p>
      * This is more expensive than the default {@link android.view.ViewGroup}
      * implementation, otherwise this behavior might have been made the default.
      */
     @Override
     protected boolean onRequestFocusInDescendants(int direction,
-            Rect previouslyFocusedRect) {
+                                                  Rect previouslyFocusedRect) {
 
         // convert from forward / backward notation to up / down / left / right
         // (ugh).
@@ -1502,7 +1523,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     @Override
     public boolean requestChildRectangleOnScreen(View child, Rect rectangle,
-            boolean immediate) {
+                                                 boolean immediate) {
         // offset into coordinate space of this scroll view
         rectangle.offset(child.getLeft() - child.getScrollX(),
                 child.getTop() - child.getScrollY());
@@ -1574,18 +1595,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     }
 
     /**
-     * Return true if child is a descendant of parent, (or equal to the parent).
-     */
-    private static boolean isViewDescendantOf(View child, View parent) {
-        if (child == parent) {
-            return true;
-        }
-
-        final ViewParent theParent = child.getParent();
-        return (theParent instanceof ViewGroup) && isViewDescendantOf((View) theParent, parent);
-    }
-
-    /**
      * Fling the scroll view
      *
      * @param velocityY The initial velocity in the Y direction. Positive
@@ -1598,7 +1607,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
             int bottom = getChildAt(0).getHeight();
 
             mScroller.fling(getScrollX(), getScrollY(), 0, velocityY, 0, 0, 0,
-                    Math.max(0, bottom - height), 0, height/2);
+                    Math.max(0, bottom - height), 0, height / 2);
 
             ViewCompat.postInvalidateOnAnimation(this);
         }
@@ -1630,7 +1639,7 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This version also clamps the scrolling to the bounds of our child.
      */
     @Override
@@ -1692,36 +1701,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
         }
     }
 
-    private static int clamp(int n, int my, int child) {
-        if (my >= child || n < 0) {
-            /* my >= child is this case:
-             *                    |--------------- me ---------------|
-             *     |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *            |------ child ------|
-             * or
-             *     |--------------- me ---------------|
-             *                                  |------ child ------|
-             *
-             * n < 0 is this case:
-             *     |------ me ------|
-             *                    |-------- child --------|
-             *     |-- mScrollX --|
-             */
-            return 0;
-        }
-        if ((my+n) > child) {
-            /* this case:
-             *                    |------ me ------|
-             *     |------ child ------|
-             *     |-- mScrollX --|
-             */
-            return child-my;
-        }
-        return n;
-    }
-
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
@@ -1739,6 +1718,16 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
     }
 
     static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
         public int scrollPosition;
 
         SavedState(Parcelable superState) {
@@ -1762,17 +1751,6 @@ public class NestedScrollView extends FrameLayout implements NestedScrollingPare
                     + Integer.toHexString(System.identityHashCode(this))
                     + " scrollPosition=" + scrollPosition + "}";
         }
-
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
     }
 
     static class AccessibilityDelegate extends AccessibilityDelegateCompat {

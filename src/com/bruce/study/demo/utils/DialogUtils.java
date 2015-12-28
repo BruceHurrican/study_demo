@@ -23,7 +23,7 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/12/14.
  */
 public class DialogUtils {
-    public static void showTxtDialog(Context context){
+    public static void showTxtDialog(Context context) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(R.drawable.ic_launcher);
         builder.setTitle("title");

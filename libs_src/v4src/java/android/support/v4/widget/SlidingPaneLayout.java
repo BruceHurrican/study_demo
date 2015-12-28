@@ -42,44 +42,44 @@ import java.util.ArrayList;
  * SlidingPaneLayout provides a horizontal, multi-pane layout for use at the top level
  * of a UI. A left (or first) pane is treated as a content list or browser, subordinate to a
  * primary detail view for displaying content.
- *
+ * <p>
  * <p>Child views may overlap if their combined width exceeds the available width
  * in the SlidingPaneLayout. When this occurs the user may slide the topmost view out of the way
  * by dragging it, or by navigating in the direction of the overlapped view using a keyboard.
  * If the content of the dragged child view is itself horizontally scrollable, the user may
  * grab it by the very edge.</p>
- *
+ * <p>
  * <p>Thanks to this sliding behavior, SlidingPaneLayout may be suitable for creating layouts
  * that can smoothly adapt across many different screen sizes, expanding out fully on larger
  * screens and collapsing on smaller screens.</p>
- *
+ * <p>
  * <p>SlidingPaneLayout is distinct from a navigation drawer as described in the design
  * guide and should not be used in the same scenarios. SlidingPaneLayout should be thought
  * of only as a way to allow a two-pane layout normally used on larger screens to adapt to smaller
  * screens in a natural way. The interaction patterns expressed by SlidingPaneLayout imply
  * a physicality and direct information hierarchy between panes that does not necessarily exist
  * in a scenario where a navigation drawer should be used instead.</p>
- *
+ * <p>
  * <p>Appropriate uses of SlidingPaneLayout include pairings of panes such as a contact list and
  * subordinate interactions with those contacts, or an email thread list with the content pane
  * displaying the contents of the selected thread. Inappropriate uses of SlidingPaneLayout include
  * switching between disparate functions of your app, such as jumping from a social stream view
  * to a view of your personal profile - cases such as this should use the navigation drawer
  * pattern instead. ({@link DrawerLayout DrawerLayout} implements this pattern.)</p>
- *
+ * <p>
  * <p>Like {@link android.widget.LinearLayout LinearLayout}, SlidingPaneLayout supports
  * the use of the layout parameter <code>layout_weight</code> on child views to determine
  * how to divide leftover space after measurement is complete. It is only relevant for width.
  * When views do not overlap weight behaves as it does in a LinearLayout.</p>
- *
+ * <p>
  * <p>When views do overlap, weight on a slideable pane indicates that the pane should be
  * sized to fill all available space in the closed state. Weight on a pane that becomes covered
  * indicates that the pane should be sized to fill all available space except a small minimum strip
  * that the user may use to grab the slideable view and pull it back over into a closed state.</p>
  */
 public class SlidingPaneLayout extends ViewGroup {
+    static final SlidingPanelLayoutImpl IMPL;
     private static final String TAG = "SlidingPaneLayout";
-
     /**
      * Default size of the overhang for a pane in the open state.
      * At least this much of a sliding pane will remain visible.
@@ -87,103 +87,14 @@ public class SlidingPaneLayout extends ViewGroup {
      * a "physical" edge to grab to pull it closed.
      */
     private static final int DEFAULT_OVERHANG_SIZE = 32; // dp;
-
     /**
      * If no fade color is given by default it will fade to 80% gray.
      */
     private static final int DEFAULT_FADE_COLOR = 0xcccccccc;
-
-    /**
-     * The fade color used for the sliding panel. 0 = no fading.
-     */
-    private int mSliderFadeColor = DEFAULT_FADE_COLOR;
-
     /**
      * Minimum velocity that will be detected as a fling
      */
     private static final int MIN_FLING_VELOCITY = 400; // dips per second
-
-    /**
-     * The fade color used for the panel covered by the slider. 0 = no fading.
-     */
-    private int mCoveredFadeColor;
-
-    /**
-     * Drawable used to draw the shadow between panes by default.
-     */
-    private Drawable mShadowDrawableLeft;
-
-    /**
-     * Drawable used to draw the shadow between panes to support RTL (right to left language).
-     */
-    private Drawable mShadowDrawableRight;
-
-    /**
-     * The size of the overhang in pixels.
-     * This is the minimum section of the sliding panel that will
-     * be visible in the open state to allow for a closing drag.
-     */
-    private final int mOverhangSize;
-
-    /**
-     * True if a panel can slide with the current measurements
-     */
-    private boolean mCanSlide;
-
-    /**
-     * The child view that can slide, if any.
-     */
-    private View mSlideableView;
-
-    /**
-     * How far the panel is offset from its closed position.
-     * range [0, 1] where 0 = closed, 1 = open.
-     */
-    private float mSlideOffset;
-
-    /**
-     * How far the non-sliding panel is parallaxed from its usual position when open.
-     * range [0, 1]
-     */
-    private float mParallaxOffset;
-
-    /**
-     * How far in pixels the slideable panel may move.
-     */
-    private int mSlideRange;
-
-    /**
-     * A panel view is locked into internal scrolling or another condition that
-     * is preventing a drag.
-     */
-    private boolean mIsUnableToDrag;
-
-    /**
-     * Distance in pixels to parallax the fixed pane by when fully closed
-     */
-    private int mParallaxBy;
-
-    private float mInitialMotionX;
-    private float mInitialMotionY;
-
-    private PanelSlideListener mPanelSlideListener;
-
-    private final ViewDragHelper mDragHelper;
-
-    /**
-     * Stores whether or not the pane was open the last time it was slideable.
-     * If open/close operations are invoked this state is modified. Used by
-     * instance state save/restore.
-     */
-    private boolean mPreservedOpenState;
-    private boolean mFirstLayout = true;
-
-    private final Rect mTmpRect = new Rect();
-
-    private final ArrayList<DisableLayerRunnable> mPostedRunnables =
-            new ArrayList<DisableLayerRunnable>();
-
-    static final SlidingPanelLayoutImpl IMPL;
 
     static {
         final int deviceVersion = Build.VERSION.SDK_INT;
@@ -197,45 +108,72 @@ public class SlidingPaneLayout extends ViewGroup {
     }
 
     /**
-     * Listener for monitoring events about sliding panes.
+     * The size of the overhang in pixels.
+     * This is the minimum section of the sliding panel that will
+     * be visible in the open state to allow for a closing drag.
      */
-    public interface PanelSlideListener {
-        /**
-         * Called when a sliding pane's position changes.
-         * @param panel The child view that was moved
-         * @param slideOffset The new offset of this sliding pane within its range, from 0-1
-         */
-        public void onPanelSlide(View panel, float slideOffset);
-        /**
-         * Called when a sliding pane becomes slid completely open. The pane may or may not
-         * be interactive at this point depending on how much of the pane is visible.
-         * @param panel The child view that was slid to an open position, revealing other panes
-         */
-        public void onPanelOpened(View panel);
-
-        /**
-         * Called when a sliding pane becomes slid completely closed. The pane is now guaranteed
-         * to be interactive. It may now obscure other views in the layout.
-         * @param panel The child view that was slid to a closed position
-         */
-        public void onPanelClosed(View panel);
-    }
-
+    private final int mOverhangSize;
+    private final ViewDragHelper mDragHelper;
+    private final Rect mTmpRect = new Rect();
+    private final ArrayList<DisableLayerRunnable> mPostedRunnables =
+            new ArrayList<DisableLayerRunnable>();
     /**
-     * No-op stubs for {@link PanelSlideListener}. If you only want to implement a subset
-     * of the listener methods you can extend this instead of implement the full interface.
+     * The fade color used for the sliding panel. 0 = no fading.
      */
-    public static class SimplePanelSlideListener implements PanelSlideListener {
-        @Override
-        public void onPanelSlide(View panel, float slideOffset) {
-        }
-        @Override
-        public void onPanelOpened(View panel) {
-        }
-        @Override
-        public void onPanelClosed(View panel) {
-        }
-    }
+    private int mSliderFadeColor = DEFAULT_FADE_COLOR;
+    /**
+     * The fade color used for the panel covered by the slider. 0 = no fading.
+     */
+    private int mCoveredFadeColor;
+    /**
+     * Drawable used to draw the shadow between panes by default.
+     */
+    private Drawable mShadowDrawableLeft;
+    /**
+     * Drawable used to draw the shadow between panes to support RTL (right to left language).
+     */
+    private Drawable mShadowDrawableRight;
+    /**
+     * True if a panel can slide with the current measurements
+     */
+    private boolean mCanSlide;
+    /**
+     * The child view that can slide, if any.
+     */
+    private View mSlideableView;
+    /**
+     * How far the panel is offset from its closed position.
+     * range [0, 1] where 0 = closed, 1 = open.
+     */
+    private float mSlideOffset;
+    /**
+     * How far the non-sliding panel is parallaxed from its usual position when open.
+     * range [0, 1]
+     */
+    private float mParallaxOffset;
+    /**
+     * How far in pixels the slideable panel may move.
+     */
+    private int mSlideRange;
+    /**
+     * A panel view is locked into internal scrolling or another condition that
+     * is preventing a drag.
+     */
+    private boolean mIsUnableToDrag;
+    /**
+     * Distance in pixels to parallax the fixed pane by when fully closed
+     */
+    private int mParallaxBy;
+    private float mInitialMotionX;
+    private float mInitialMotionY;
+    private PanelSlideListener mPanelSlideListener;
+    /**
+     * Stores whether or not the pane was open the last time it was slideable.
+     * If open/close operations are invoked this state is modified. Used by
+     * instance state save/restore.
+     */
+    private boolean mPreservedOpenState;
+    private boolean mFirstLayout = true;
 
     public SlidingPaneLayout(Context context) {
         this(context, null);
@@ -262,6 +200,29 @@ public class SlidingPaneLayout extends ViewGroup {
         mDragHelper.setMinVelocity(MIN_FLING_VELOCITY * density);
     }
 
+    private static boolean viewIsOpaque(View v) {
+        if (ViewCompat.isOpaque(v)) return true;
+
+        // View#isOpaque didn't take all valid opaque scrollbar modes into account
+        // before API 18 (JB-MR2). On newer devices rely solely on isOpaque above and return false
+        // here. On older devices, check the view's background drawable directly as a fallback.
+        if (Build.VERSION.SDK_INT >= 18) return false;
+
+        final Drawable bg = v.getBackground();
+        if (bg != null) {
+            return bg.getOpacity() == PixelFormat.OPAQUE;
+        }
+        return false;
+    }
+
+    /**
+     * @return The distance the lower pane will parallax by when the upper pane is fully closed.
+     * @see #setParallaxDistance(int)
+     */
+    public int getParallaxDistance() {
+        return mParallaxBy;
+    }
+
     /**
      * Set a distance to parallax the lower pane by when the upper pane is in its
      * fully closed state. The lower pane will scroll between this position and
@@ -275,12 +236,11 @@ public class SlidingPaneLayout extends ViewGroup {
     }
 
     /**
-     * @return The distance the lower pane will parallax by when the upper pane is fully closed.
-     *
-     * @see #setParallaxDistance(int)
+     * @return The ARGB-packed color value used to fade the sliding pane
      */
-    public int getParallaxDistance() {
-        return mParallaxBy;
+    @ColorInt
+    public int getSliderFadeColor() {
+        return mSliderFadeColor;
     }
 
     /**
@@ -293,11 +253,11 @@ public class SlidingPaneLayout extends ViewGroup {
     }
 
     /**
-     * @return The ARGB-packed color value used to fade the sliding pane
+     * @return The ARGB-packed color value used to fade the fixed pane
      */
     @ColorInt
-    public int getSliderFadeColor() {
-        return mSliderFadeColor;
+    public int getCoveredFadeColor() {
+        return mCoveredFadeColor;
     }
 
     /**
@@ -308,14 +268,6 @@ public class SlidingPaneLayout extends ViewGroup {
      */
     public void setCoveredFadeColor(@ColorInt int color) {
         mCoveredFadeColor = color;
-    }
-
-    /**
-     * @return The ARGB-packed color value used to fade the fixed pane
-     */
-    @ColorInt
-    public int getCoveredFadeColor() {
-        return mCoveredFadeColor;
     }
 
     public void setPanelSlideListener(PanelSlideListener listener) {
@@ -345,9 +297,9 @@ public class SlidingPaneLayout extends ViewGroup {
     void updateObscuredViewsVisibility(View panel) {
         final boolean isLayoutRtl = isLayoutRtlSupport();
         final int startBound = isLayoutRtl ? (getWidth() - getPaddingRight()) :
-            getPaddingLeft();
+                getPaddingLeft();
         final int endBound = isLayoutRtl ? getPaddingLeft() :
-            (getWidth() - getPaddingRight());
+                (getWidth() - getPaddingRight());
         final int topBound = getPaddingTop();
         final int bottomBound = getHeight() - getPaddingBottom();
         final int left;
@@ -372,10 +324,10 @@ public class SlidingPaneLayout extends ViewGroup {
             }
 
             final int clampedChildLeft = Math.max((isLayoutRtl ? endBound :
-                startBound), child.getLeft());
+                    startBound), child.getLeft());
             final int clampedChildTop = Math.max(topBound, child.getTop());
             final int clampedChildRight = Math.min((isLayoutRtl ? startBound :
-                endBound), child.getRight());
+                    endBound), child.getRight());
             final int clampedChildBottom = Math.min(bottomBound, child.getBottom());
             final int vis;
             if (clampedChildLeft >= left && clampedChildTop >= top &&
@@ -395,21 +347,6 @@ public class SlidingPaneLayout extends ViewGroup {
                 child.setVisibility(VISIBLE);
             }
         }
-    }
-
-    private static boolean viewIsOpaque(View v) {
-        if (ViewCompat.isOpaque(v)) return true;
-
-        // View#isOpaque didn't take all valid opaque scrollbar modes into account
-        // before API 18 (JB-MR2). On newer devices rely solely on isOpaque above and return false
-        // here. On older devices, check the view's background drawable directly as a fallback.
-        if (Build.VERSION.SDK_INT >= 18) return false;
-
-        final Drawable bg = v.getBackground();
-        if (bg != null) {
-            return bg.getOpacity() == PixelFormat.OPAQUE;
-        }
-        return false;
     }
 
     @Override
@@ -1035,7 +972,7 @@ public class SlidingPaneLayout extends ViewGroup {
      * Smoothly animate mDraggingPane to the target X position within its range.
      *
      * @param slideOffset position to animate to
-     * @param velocity initial velocity in case of fling, or 0.
+     * @param velocity    initial velocity in case of fling, or 0.
      */
     boolean smoothSlideTo(float slideOffset, int velocity) {
         if (!mCanSlide) {
@@ -1077,11 +1014,10 @@ public class SlidingPaneLayout extends ViewGroup {
     }
 
     /**
+     * @param d drawable to use as a shadow
      * @deprecated Renamed to {@link #setShadowDrawableLeft(Drawable d)} to support LTR (left to
      * right language) and {@link #setShadowDrawableRight(Drawable d)} to support RTL (right to left
      * language) during opening/closing.
-     *
-     * @param d drawable to use as a shadow
      */
     @Deprecated
     public void setShadowDrawable(Drawable d) {
@@ -1139,7 +1075,6 @@ public class SlidingPaneLayout extends ViewGroup {
         setShadowDrawableRight(getResources().getDrawable(resId));
     }
 
-
     @Override
     public void draw(Canvas c) {
         super.draw(c);
@@ -1194,7 +1129,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
             if (dimViews) {
                 dimChildView(v, isLayoutRtl ? mParallaxOffset - 1 :
-                    1 - mParallaxOffset, mCoveredFadeColor);
+                        1 - mParallaxOffset, mCoveredFadeColor);
             }
         }
     }
@@ -1202,12 +1137,12 @@ public class SlidingPaneLayout extends ViewGroup {
     /**
      * Tests scrollability within child views of v given a delta of dx.
      *
-     * @param v View to test for horizontal scrollability
+     * @param v      View to test for horizontal scrollability
      * @param checkV Whether the view v passed should itself be checked for scrollability (true),
      *               or just its children (false).
-     * @param dx Delta scrolled in pixels
-     * @param x X coordinate of the active touch point
-     * @param y Y coordinate of the active touch point
+     * @param dx     Delta scrolled in pixels
+     * @param x      X coordinate of the active touch point
+     * @param y      Y coordinate of the active touch point
      * @return true if child views of v can be scrolled by delta of dx.
      */
     protected boolean canScroll(View v, boolean checkV, int dx, int x, int y) {
@@ -1286,104 +1221,64 @@ public class SlidingPaneLayout extends ViewGroup {
         mPreservedOpenState = ss.isOpen;
     }
 
-    private class DragHelperCallback extends ViewDragHelper.Callback {
+    private boolean isLayoutRtlSupport() {
+        return ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
+    }
 
+    /**
+     * Listener for monitoring events about sliding panes.
+     */
+    public interface PanelSlideListener {
+        /**
+         * Called when a sliding pane's position changes.
+         *
+         * @param panel       The child view that was moved
+         * @param slideOffset The new offset of this sliding pane within its range, from 0-1
+         */
+        public void onPanelSlide(View panel, float slideOffset);
+
+        /**
+         * Called when a sliding pane becomes slid completely open. The pane may or may not
+         * be interactive at this point depending on how much of the pane is visible.
+         *
+         * @param panel The child view that was slid to an open position, revealing other panes
+         */
+        public void onPanelOpened(View panel);
+
+        /**
+         * Called when a sliding pane becomes slid completely closed. The pane is now guaranteed
+         * to be interactive. It may now obscure other views in the layout.
+         *
+         * @param panel The child view that was slid to a closed position
+         */
+        public void onPanelClosed(View panel);
+    }
+
+    interface SlidingPanelLayoutImpl {
+        void invalidateChildRegion(SlidingPaneLayout parent, View child);
+    }
+
+    /**
+     * No-op stubs for {@link PanelSlideListener}. If you only want to implement a subset
+     * of the listener methods you can extend this instead of implement the full interface.
+     */
+    public static class SimplePanelSlideListener implements PanelSlideListener {
         @Override
-        public boolean tryCaptureView(View child, int pointerId) {
-            if (mIsUnableToDrag) {
-                return false;
-            }
-
-            return ((LayoutParams) child.getLayoutParams()).slideable;
+        public void onPanelSlide(View panel, float slideOffset) {
         }
 
         @Override
-        public void onViewDragStateChanged(int state) {
-            if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
-                if (mSlideOffset == 0) {
-                    updateObscuredViewsVisibility(mSlideableView);
-                    dispatchOnPanelClosed(mSlideableView);
-                    mPreservedOpenState = false;
-                } else {
-                    dispatchOnPanelOpened(mSlideableView);
-                    mPreservedOpenState = true;
-                }
-            }
+        public void onPanelOpened(View panel) {
         }
 
         @Override
-        public void onViewCaptured(View capturedChild, int activePointerId) {
-            // Make all child views visible in preparation for sliding things around
-            setAllChildrenVisible();
-        }
-
-        @Override
-        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
-            onPanelDragged(left);
-            invalidate();
-        }
-
-        @Override
-        public void onViewReleased(View releasedChild, float xvel, float yvel) {
-            final LayoutParams lp = (LayoutParams) releasedChild.getLayoutParams();
-
-            int left;
-            if (isLayoutRtlSupport()) {
-                int startToRight =  getPaddingRight() + lp.rightMargin;
-                if (xvel < 0 || (xvel == 0 && mSlideOffset > 0.5f)) {
-                    startToRight += mSlideRange;
-                }
-                int childWidth = mSlideableView.getWidth();
-                left = getWidth() - startToRight - childWidth;
-            } else {
-                left = getPaddingLeft() + lp.leftMargin;
-                if (xvel > 0 || (xvel == 0 && mSlideOffset > 0.5f)) {
-                    left += mSlideRange;
-                }
-            }
-            mDragHelper.settleCapturedViewAt(left, releasedChild.getTop());
-            invalidate();
-        }
-
-        @Override
-        public int getViewHorizontalDragRange(View child) {
-            return mSlideRange;
-        }
-
-        @Override
-        public int clampViewPositionHorizontal(View child, int left, int dx) {
-            final LayoutParams lp = (LayoutParams) mSlideableView.getLayoutParams();
-
-            final int newLeft;
-            if (isLayoutRtlSupport()) {
-                int startBound = getWidth() -
-                        (getPaddingRight() + lp.rightMargin + mSlideableView.getWidth());
-                int endBound =  startBound - mSlideRange;
-                newLeft = Math.max(Math.min(left, startBound), endBound);
-            } else {
-                int startBound = getPaddingLeft() + lp.leftMargin;
-                int endBound = startBound + mSlideRange;
-                newLeft = Math.min(Math.max(left, startBound), endBound);
-            }
-            return newLeft;
-        }
-
-        @Override
-        public int clampViewPositionVertical(View child, int top, int dy) {
-            // Make sure we never move views vertically.
-            // This could happen if the child has less height than its parent.
-            return child.getTop();
-        }
-
-        @Override
-        public void onEdgeDragStarted(int edgeFlags, int pointerId) {
-            mDragHelper.captureChildView(mSlideableView, pointerId);
+        public void onPanelClosed(View panel) {
         }
     }
 
     public static class LayoutParams extends ViewGroup.MarginLayoutParams {
-        private static final int[] ATTRS = new int[] {
-            android.R.attr.layout_weight
+        private static final int[] ATTRS = new int[]{
+                android.R.attr.layout_weight
         };
 
         /**
@@ -1437,6 +1332,16 @@ public class SlidingPaneLayout extends ViewGroup {
     }
 
     static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR =
+                new Parcelable.Creator<SavedState>() {
+                    public SavedState createFromParcel(Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    public SavedState[] newArray(int size) {
+                        return new SavedState[size];
+                    }
+                };
         boolean isOpen;
 
         SavedState(Parcelable superState) {
@@ -1453,21 +1358,6 @@ public class SlidingPaneLayout extends ViewGroup {
             super.writeToParcel(out, flags);
             out.writeInt(isOpen ? 1 : 0);
         }
-
-        public static final Parcelable.Creator<SavedState> CREATOR =
-                new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-    }
-
-    interface SlidingPanelLayoutImpl {
-        void invalidateChildRegion(SlidingPaneLayout parent, View child);
     }
 
     static class SlidingPanelLayoutImplBase implements SlidingPanelLayoutImpl {
@@ -1528,6 +1418,101 @@ public class SlidingPaneLayout extends ViewGroup {
         }
     }
 
+    private class DragHelperCallback extends ViewDragHelper.Callback {
+
+        @Override
+        public boolean tryCaptureView(View child, int pointerId) {
+            if (mIsUnableToDrag) {
+                return false;
+            }
+
+            return ((LayoutParams) child.getLayoutParams()).slideable;
+        }
+
+        @Override
+        public void onViewDragStateChanged(int state) {
+            if (mDragHelper.getViewDragState() == ViewDragHelper.STATE_IDLE) {
+                if (mSlideOffset == 0) {
+                    updateObscuredViewsVisibility(mSlideableView);
+                    dispatchOnPanelClosed(mSlideableView);
+                    mPreservedOpenState = false;
+                } else {
+                    dispatchOnPanelOpened(mSlideableView);
+                    mPreservedOpenState = true;
+                }
+            }
+        }
+
+        @Override
+        public void onViewCaptured(View capturedChild, int activePointerId) {
+            // Make all child views visible in preparation for sliding things around
+            setAllChildrenVisible();
+        }
+
+        @Override
+        public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
+            onPanelDragged(left);
+            invalidate();
+        }
+
+        @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            final LayoutParams lp = (LayoutParams) releasedChild.getLayoutParams();
+
+            int left;
+            if (isLayoutRtlSupport()) {
+                int startToRight = getPaddingRight() + lp.rightMargin;
+                if (xvel < 0 || (xvel == 0 && mSlideOffset > 0.5f)) {
+                    startToRight += mSlideRange;
+                }
+                int childWidth = mSlideableView.getWidth();
+                left = getWidth() - startToRight - childWidth;
+            } else {
+                left = getPaddingLeft() + lp.leftMargin;
+                if (xvel > 0 || (xvel == 0 && mSlideOffset > 0.5f)) {
+                    left += mSlideRange;
+                }
+            }
+            mDragHelper.settleCapturedViewAt(left, releasedChild.getTop());
+            invalidate();
+        }
+
+        @Override
+        public int getViewHorizontalDragRange(View child) {
+            return mSlideRange;
+        }
+
+        @Override
+        public int clampViewPositionHorizontal(View child, int left, int dx) {
+            final LayoutParams lp = (LayoutParams) mSlideableView.getLayoutParams();
+
+            final int newLeft;
+            if (isLayoutRtlSupport()) {
+                int startBound = getWidth() -
+                        (getPaddingRight() + lp.rightMargin + mSlideableView.getWidth());
+                int endBound = startBound - mSlideRange;
+                newLeft = Math.max(Math.min(left, startBound), endBound);
+            } else {
+                int startBound = getPaddingLeft() + lp.leftMargin;
+                int endBound = startBound + mSlideRange;
+                newLeft = Math.min(Math.max(left, startBound), endBound);
+            }
+            return newLeft;
+        }
+
+        @Override
+        public int clampViewPositionVertical(View child, int top, int dy) {
+            // Make sure we never move views vertically.
+            // This could happen if the child has less height than its parent.
+            return child.getTop();
+        }
+
+        @Override
+        public void onEdgeDragStarted(int edgeFlags, int pointerId) {
+            mDragHelper.captureChildView(mSlideableView, pointerId);
+        }
+    }
+
     class AccessibilityDelegate extends AccessibilityDelegateCompat {
         private final Rect mTmpRect = new Rect();
 
@@ -1569,7 +1554,7 @@ public class SlidingPaneLayout extends ViewGroup {
 
         @Override
         public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child,
-                AccessibilityEvent event) {
+                                                       AccessibilityEvent event) {
             if (!filter(child)) {
                 return super.onRequestSendAccessibilityEvent(host, child, event);
             }
@@ -1586,7 +1571,7 @@ public class SlidingPaneLayout extends ViewGroup {
          * Leave it private here as it's not general-purpose useful.
          */
         private void copyNodeInfoNoChildren(AccessibilityNodeInfoCompat dest,
-                AccessibilityNodeInfoCompat src) {
+                                            AccessibilityNodeInfoCompat src) {
             final Rect rect = mTmpRect;
 
             src.getBoundsInParent(rect);
@@ -1629,9 +1614,5 @@ public class SlidingPaneLayout extends ViewGroup {
             }
             mPostedRunnables.remove(this);
         }
-    }
-
-    private boolean isLayoutRtlSupport() {
-        return ViewCompat.getLayoutDirection(this) == ViewCompat.LAYOUT_DIRECTION_RTL;
     }
 }

@@ -38,30 +38,11 @@ class TransportMediatorJellybeanMR2
     final String mReceiverAction;
     final IntentFilter mReceiverFilter;
     final Intent mIntent;
-    final ViewTreeObserver.OnWindowAttachListener mWindowAttachListener =
-            new ViewTreeObserver.OnWindowAttachListener() {
-                @Override
-                public void onWindowAttached() {
-                    windowAttached();
-                }
-                @Override
-                public void onWindowDetached() {
-                    windowDetached();
-                }
-            };
-    final ViewTreeObserver.OnWindowFocusChangeListener mWindowFocusListener =
-            new ViewTreeObserver.OnWindowFocusChangeListener() {
-                @Override
-                public void onWindowFocusChanged(boolean hasFocus) {
-                    if (hasFocus) gainFocus();
-                    else loseFocus();
-                }
-            };
     final BroadcastReceiver mMediaButtonReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                KeyEvent event = (KeyEvent)intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
+                KeyEvent event = (KeyEvent) intent.getParcelableExtra(Intent.EXTRA_KEY_EVENT);
                 mTransportCallback.handleKey(event);
             } catch (ClassCastException e) {
                 Log.w("TransportController", e);
@@ -75,15 +56,34 @@ class TransportMediatorJellybeanMR2
             mTransportCallback.handleAudioFocusChange(focusChange);
         }
     };
-
     PendingIntent mPendingIntent;
     RemoteControlClient mRemoteControl;
     boolean mFocused;
     int mPlayState = 0;
     boolean mAudioFocused;
+    final ViewTreeObserver.OnWindowAttachListener mWindowAttachListener =
+            new ViewTreeObserver.OnWindowAttachListener() {
+                @Override
+                public void onWindowAttached() {
+                    windowAttached();
+                }
+
+                @Override
+                public void onWindowDetached() {
+                    windowDetached();
+                }
+            };
+    final ViewTreeObserver.OnWindowFocusChangeListener mWindowFocusListener =
+            new ViewTreeObserver.OnWindowFocusChangeListener() {
+                @Override
+                public void onWindowFocusChanged(boolean hasFocus) {
+                    if (hasFocus) gainFocus();
+                    else loseFocus();
+                }
+            };
 
     public TransportMediatorJellybeanMR2(Context context, AudioManager audioManager,
-            View view, TransportMediatorCallback transportCallback) {
+                                         View view, TransportMediatorCallback transportCallback) {
         mContext = context;
         mAudioManager = audioManager;
         mTargetView = view;

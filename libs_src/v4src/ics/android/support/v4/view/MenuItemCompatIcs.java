@@ -33,7 +33,7 @@ class MenuItemCompatIcs {
     }
 
     public static MenuItem setOnActionExpandListener(MenuItem item,
-            SupportActionExpandProxy listener) {
+                                                     SupportActionExpandProxy listener) {
         return item.setOnActionExpandListener(new OnActionExpandListenerWrapper(listener));
     }
 
@@ -44,6 +44,7 @@ class MenuItemCompatIcs {
      */
     interface SupportActionExpandProxy {
         boolean onMenuItemActionExpand(MenuItem item);
+
         boolean onMenuItemActionCollapse(MenuItem item);
     }
 

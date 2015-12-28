@@ -30,14 +30,17 @@ import java.lang.ref.WeakReference;
  * Created by BruceHurrican on 2015/7/5.
  */
 public abstract class BaseActivity extends Activity {
-    private Context context;
     private final String TAG = getTAG();
+    private Context context;
     private String logsTag;
     private DemoApplication application;
     /**
      * 加载进度等待对话框
      */
     private ProgressDialog pd_waiting;
+    private UIHandler mUIHandler;
+    private WorkerHandler mWorkerHandler;
+    private HandlerThread mHandlerThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public abstract class BaseActivity extends Activity {
         context = BaseActivity.this;
 //        TAG = getTAG();
         logsTag = getLocalClassName() + "-->";
-        application = (DemoApplication)getApplication();
+        application = (DemoApplication) getApplication();
         application.addActivity(this);
     }
 
@@ -279,10 +282,6 @@ public abstract class BaseActivity extends Activity {
             mWorkerHandler.removeCallbacksAndMessages(null);
         }
     }
-
-    private UIHandler mUIHandler;
-    private WorkerHandler mWorkerHandler;
-    private HandlerThread mHandlerThread;
 
     public static class UIHandler extends Handler {
         WeakReference<BaseActivity> weakReference;

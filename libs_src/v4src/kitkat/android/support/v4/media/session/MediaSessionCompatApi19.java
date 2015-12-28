@@ -22,10 +22,14 @@ import android.media.RemoteControlClient;
 import android.os.Bundle;
 
 public class MediaSessionCompatApi19 {
-    /***** PlaybackState actions *****/
+    /**
+     * ** PlaybackState actions ****
+     */
     private static final long ACTION_SET_RATING = 1 << 7;
 
-    /***** MediaMetadata keys ********/
+    /**
+     * ** MediaMetadata keys *******
+     */
     private static final String METADATA_KEY_USER_RATING = "android.media.metadata.USER_RATING";
     private static final String METADATA_KEY_RATING = "android.media.metadata.RATING";
     private static final String METADATA_KEY_YEAR = "android.media.metadata.YEAR";

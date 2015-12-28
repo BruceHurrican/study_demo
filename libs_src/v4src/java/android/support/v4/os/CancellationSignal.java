@@ -91,15 +91,15 @@ public final class CancellationSignal {
 
     /**
      * Sets the cancellation listener to be called when canceled.
-     *
+     * <p>
      * This method is intended to be used by the recipient of a cancellation signal
      * such as a database or a content provider to handle cancellation requests
      * while performing a long-running operation.  This method is not intended to be
      * used by applications themselves.
-     *
+     * <p>
      * If {@link CancellationSignal#cancel} has already been called, then the provided
      * listener is invoked immediately.
-     *
+     * <p>
      * This method is guaranteed that the listener will not be called after it
      * has been removed.
      *
@@ -155,7 +155,7 @@ public final class CancellationSignal {
         }
     }
 
-     /**
+    /**
      * Listens for cancellation.
      */
     public interface OnCancelListener {

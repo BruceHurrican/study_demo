@@ -18,12 +18,12 @@ package android.support.v4.internal.view;
 
 /**
  * Subclass of {@link SupportMenu} for sub menus.
- *
+ * <p>
  * This version extends the one available in the framework to ensures that any necessary
  * elements added in later versions of the framework, are available for all platforms.
  *
- * @see android.view.SubMenu
  * @hide
+ * @see android.view.SubMenu
  */
 public interface SupportSubMenu extends SupportMenu, android.view.SubMenu {
 }

@@ -26,12 +26,12 @@ import android.os.RemoteException;
 /**
  * Abstract service to receive side channel notifications sent from
  * {@link android.support.v4.app.NotificationManagerCompat}.
- *
+ * <p>
  * <p>To receive side channel notifications, extend this service and register it in your
  * android manifest with an intent filter for the BIND_NOTIFICATION_SIDE_CHANNEL action.
  * Note: you must also have an enabled
  * {@link android.service.notification.NotificationListenerService} within your package.
- *
+ * <p>
  * <p>Example AndroidManifest.xml addition:
  * <pre>
  * &lt;service android:name="com.example.NotificationSideChannelService"&gt;
@@ -39,7 +39,6 @@ import android.os.RemoteException;
  *         &lt;action android:name="android.support.BIND_NOTIFICATION_SIDE_CHANNEL" /&gt;
  *     &lt;/intent-filter&gt;
  * &lt;/service&gt;</pre>
- *
  */
 public abstract class NotificationCompatSideChannelService extends Service {
     @Override
@@ -69,6 +68,16 @@ public abstract class NotificationCompatSideChannelService extends Service {
      * Handle the side-channelled cancelling of all notifications for a package.
      */
     public abstract void cancelAll(String packageName);
+
+    private void checkPermission(int callingUid, String packageName) {
+        for (String validPackage : getPackageManager().getPackagesForUid(callingUid)) {
+            if (validPackage.equals(packageName)) {
+                return;
+            }
+        }
+        throw new SecurityException("NotificationSideChannelService: Uid " + callingUid
+                + " is not authorized for package " + packageName);
+    }
 
     private class NotificationSideChannelStub extends INotificationSideChannel.Stub {
         @Override
@@ -104,15 +113,5 @@ public abstract class NotificationCompatSideChannelService extends Service {
                 restoreCallingIdentity(idToken);
             }
         }
-    }
-
-    private void checkPermission(int callingUid, String packageName) {
-        for (String validPackage : getPackageManager().getPackagesForUid(callingUid)) {
-            if (validPackage.equals(packageName)) {
-                return;
-            }
-        }
-        throw new SecurityException("NotificationSideChannelService: Uid " + callingUid
-                + " is not authorized for package " + packageName);
     }
 }

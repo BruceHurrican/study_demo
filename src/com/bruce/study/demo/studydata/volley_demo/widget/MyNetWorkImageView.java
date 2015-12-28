@@ -27,8 +27,10 @@ import com.android.volley.toolbox.ImageLoader;
  * 原NetWorkImageView中此方法，存在多次调用无法取消已经存在的请求，导致图片无法下载
  * Created by BruceHurrican on 2015/9/20.
  */
-public class MyNetWorkImageView extends ImageView{
-    /** The URL of the network image to load */
+public class MyNetWorkImageView extends ImageView {
+    /**
+     * The URL of the network image to load
+     */
     private String mUrl;
 
     /**
@@ -41,10 +43,14 @@ public class MyNetWorkImageView extends ImageView{
      */
     private int mErrorImageId;
 
-    /** Local copy of the ImageLoader. */
+    /**
+     * Local copy of the ImageLoader.
+     */
     private ImageLoader mImageLoader;
 
-    /** Current ImageContainer. (either in-flight or finished) */
+    /**
+     * Current ImageContainer. (either in-flight or finished)
+     */
     private ImageLoader.ImageContainer mImageContainer;
 
     public MyNetWorkImageView(Context context) {
@@ -63,12 +69,12 @@ public class MyNetWorkImageView extends ImageView{
      * Sets URL of the image that should be loaded into this view. Note that calling this will
      * immediately either set the cached image (if available) or the default image specified by
      * {@link MyNetWorkImageView#setDefaultImageResId(int)} on the view.
-     *
+     * <p>
      * NOTE: If applicable, {@link MyNetWorkImageView#setDefaultImageResId(int)} and
      * {@link MyNetWorkImageView#setErrorImageResId(int)} should be called prior to calling
      * this function.
      *
-     * @param url The URL that should be loaded into this ImageView.
+     * @param url         The URL that should be loaded into this ImageView.
      * @param imageLoader ImageLoader that will be used to make the request.
      */
     public void setImageUrl(String url, ImageLoader imageLoader) {
@@ -104,6 +110,7 @@ public class MyNetWorkImageView extends ImageView{
 
     /**
      * Loads the image for the view if it isn't already loaded.
+     *
      * @param isInLayoutPass True if this was invoked from a layout pass, false otherwise.
      */
     private void loadImageIfNecessary(final boolean isInLayoutPass) {

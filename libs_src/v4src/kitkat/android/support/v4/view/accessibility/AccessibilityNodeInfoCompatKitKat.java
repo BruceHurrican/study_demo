@@ -41,7 +41,7 @@ class AccessibilityNodeInfoCompatKitKat {
 
     public static void setCollectionInfo(Object info, Object collectionInfo) {
         ((AccessibilityNodeInfo) info).setCollectionInfo(
-                (AccessibilityNodeInfo.CollectionInfo)collectionInfo);
+                (AccessibilityNodeInfo.CollectionInfo) collectionInfo);
     }
 
     public static void setCollectionItemInfo(Object info, Object collectionItemInfo) {
@@ -58,12 +58,12 @@ class AccessibilityNodeInfoCompatKitKat {
     }
 
     public static Object obtainCollectionInfo(int rowCount, int columnCount,
-            boolean hierarchical, int selectionMode) {
+                                              boolean hierarchical, int selectionMode) {
         return AccessibilityNodeInfo.CollectionInfo.obtain(rowCount, columnCount, hierarchical);
     }
 
     public static Object obtainCollectionItemInfo(int rowIndex, int rowSpan, int columnIndex,
-            int columnSpan, boolean heading) {
+                                                  int columnSpan, boolean heading) {
         return AccessibilityNodeInfo.CollectionItemInfo.obtain(rowIndex, rowSpan, columnIndex,
                 columnSpan, heading);
     }

@@ -27,5 +27,6 @@ import android.app.Notification;
  */
 public interface NotificationBuilderWithBuilderAccessor {
     public Notification.Builder getBuilder();
+
     public Notification build();
 }

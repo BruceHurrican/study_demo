@@ -95,7 +95,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                 canvas.drawText("SurfaceView练习", textX, textY, paint);
             }
         } catch (Exception e) {
-            Logs.e("MySurfaceView -->",e.toString());
+            Logs.e("MySurfaceView -->", e.toString());
         } finally {
             if (null != canvas) {
                 surfaceHolder.unlockCanvasAndPost(canvas);
@@ -134,7 +134,7 @@ public class MySurfaceView extends SurfaceView implements SurfaceHolder.Callback
                     Thread.sleep(50 - (end - start));
                 }
             } catch (InterruptedException e) {
-                Logs.e("MySurfaceView -- >",e.toString());
+                Logs.e("MySurfaceView -- >", e.toString());
             }
         }
     }

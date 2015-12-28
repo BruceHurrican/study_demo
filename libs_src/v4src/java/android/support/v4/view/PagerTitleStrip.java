@@ -41,63 +41,24 @@ import java.lang.ref.WeakReference;
  * of the ViewPager. The title from each page is supplied by the method
  * {@link PagerAdapter#getPageTitle(int)} in the adapter supplied to
  * the ViewPager.
- *
+ * <p>
  * <p>For an interactive indicator, see {@link PagerTabStrip}.</p>
  */
 public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
     private static final String TAG = "PagerTitleStrip";
-
-    ViewPager mPager;
-    TextView mPrevText;
-    TextView mCurrText;
-    TextView mNextText;
-
-    private int mLastKnownCurrentPage = -1;
-    private float mLastKnownPositionOffset = -1;
-    private int mScaledTextSpacing;
-    private int mGravity;
-
-    private boolean mUpdatingText;
-    private boolean mUpdatingPositions;
-
-    private final PageListener mPageListener = new PageListener();
-
-    private WeakReference<PagerAdapter> mWatchingAdapter;
-
-    private static final int[] ATTRS = new int[] {
-        android.R.attr.textAppearance,
-        android.R.attr.textSize,
-        android.R.attr.textColor,
-        android.R.attr.gravity
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.textAppearance,
+            android.R.attr.textSize,
+            android.R.attr.textColor,
+            android.R.attr.gravity
     };
-
-    private static final int[] TEXT_ATTRS = new int[] {
-        0x0101038c // android.R.attr.textAllCaps
+    private static final int[] TEXT_ATTRS = new int[]{
+            0x0101038c // android.R.attr.textAllCaps
     };
-
     private static final float SIDE_ALPHA = 0.6f;
     private static final int TEXT_SPACING = 16; // dip
-
-    private int mNonPrimaryAlpha;
-    int mTextColor;
-
-    interface PagerTitleStripImpl {
-        void setSingleLineAllCaps(TextView text);
-    }
-
-    static class PagerTitleStripImplBase implements PagerTitleStripImpl {
-        public void setSingleLineAllCaps(TextView text) {
-            text.setSingleLine();
-        }
-    }
-
-    static class PagerTitleStripImplIcs implements PagerTitleStripImpl {
-        public void setSingleLineAllCaps(TextView text) {
-            PagerTitleStripIcs.setSingleLineAllCaps(text);
-        }
-    }
-
     private static final PagerTitleStripImpl IMPL;
+
     static {
         if (android.os.Build.VERSION.SDK_INT >= 14) {
             IMPL = new PagerTitleStripImplIcs();
@@ -106,9 +67,20 @@ public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
         }
     }
 
-    private static void setSingleLineAllCaps(TextView text) {
-        IMPL.setSingleLineAllCaps(text);
-    }
+    private final PageListener mPageListener = new PageListener();
+    ViewPager mPager;
+    TextView mPrevText;
+    TextView mCurrText;
+    TextView mNextText;
+    int mTextColor;
+    private int mLastKnownCurrentPage = -1;
+    private float mLastKnownPositionOffset = -1;
+    private int mScaledTextSpacing;
+    private int mGravity;
+    private boolean mUpdatingText;
+    private boolean mUpdatingPositions;
+    private WeakReference<PagerAdapter> mWatchingAdapter;
+    private int mNonPrimaryAlpha;
 
     public PagerTitleStrip(Context context) {
         this(context, null);
@@ -169,6 +141,17 @@ public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
         mScaledTextSpacing = (int) (TEXT_SPACING * density);
     }
 
+    private static void setSingleLineAllCaps(TextView text) {
+        IMPL.setSingleLineAllCaps(text);
+    }
+
+    /**
+     * @return The required spacing between title segments in pixels
+     */
+    public int getTextSpacing() {
+        return mScaledTextSpacing;
+    }
+
     /**
      * Set the required spacing between title segments.
      *
@@ -180,18 +163,11 @@ public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
     }
 
     /**
-     * @return The required spacing between title segments in pixels
-     */
-    public int getTextSpacing() {
-        return mScaledTextSpacing;
-    }
-
-    /**
      * Set the alpha value used for non-primary page titles.
      *
      * @param alpha Opacity value in the range 0-1f
      */
-    public void setNonPrimaryAlpha(@FloatRange(from=0.0, to=1.0) float alpha) {
+    public void setNonPrimaryAlpha(@FloatRange(from = 0.0, to = 1.0) float alpha) {
         mNonPrimaryAlpha = (int) (alpha * 255) & 0xFF;
         final int transparentColor = (mNonPrimaryAlpha << 24) | (mTextColor & 0xFFFFFF);
         mPrevText.setTextColor(transparentColor);
@@ -215,7 +191,7 @@ public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
     /**
      * Set the default text size to a given unit and value.
      * See {@link TypedValue} for the possible dimension units.
-     *
+     * <p>
      * <p>Example: to set the text size to 14px, use
      * setTextSize(TypedValue.COMPLEX_UNIT_PX, 14);</p>
      *
@@ -469,6 +445,22 @@ public class PagerTitleStrip extends ViewGroup implements ViewPager.Decor {
             minHeight = bg.getIntrinsicHeight();
         }
         return minHeight;
+    }
+
+    interface PagerTitleStripImpl {
+        void setSingleLineAllCaps(TextView text);
+    }
+
+    static class PagerTitleStripImplBase implements PagerTitleStripImpl {
+        public void setSingleLineAllCaps(TextView text) {
+            text.setSingleLine();
+        }
+    }
+
+    static class PagerTitleStripImplIcs implements PagerTitleStripImpl {
+        public void setSingleLineAllCaps(TextView text) {
+            PagerTitleStripIcs.setSingleLineAllCaps(text);
+        }
     }
 
     private class PageListener extends DataSetObserver implements ViewPager.OnPageChangeListener,

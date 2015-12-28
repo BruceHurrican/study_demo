@@ -25,22 +25,22 @@ import android.widget.TextView;
 class TextViewCompatJbMr1 {
 
     public static void setCompoundDrawablesRelative(@NonNull TextView textView,
-            @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-            @Nullable Drawable bottom) {
+                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                    @Nullable Drawable bottom) {
         boolean rtl = textView.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
         textView.setCompoundDrawables(rtl ? end : start, top, rtl ? start : end, bottom);
     }
 
     public static void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-            @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-            @Nullable Drawable bottom) {
+                                                                       @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                       @Nullable Drawable bottom) {
         boolean rtl = textView.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
         textView.setCompoundDrawablesWithIntrinsicBounds(rtl ? end : start, top, rtl ? start : end,
                 bottom);
     }
 
     public static void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-            int start, int top, int end, int bottom) {
+                                                                       int start, int top, int end, int bottom) {
         boolean rtl = textView.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
         textView.setCompoundDrawablesWithIntrinsicBounds(rtl ? end : start, top, rtl ? start : end,
                 bottom);

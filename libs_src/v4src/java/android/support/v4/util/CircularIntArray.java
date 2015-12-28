@@ -18,28 +18,11 @@ package android.support.v4.util;
  * prepend and O(1) append. The CircularIntArray automatically grows its capacity when number of
  * added integers is over its capacity.
  */
-public final class CircularIntArray
-{
+public final class CircularIntArray {
     private int[] mElements;
     private int mHead;
     private int mTail;
     private int mCapacityBitmask;
-
-    private void doubleCapacity() {
-        int n = mElements.length;
-        int r = n - mHead;
-        int newCapacity = n << 1;
-        if (newCapacity < 0) {
-            throw new RuntimeException("Max array capacity exceeded");
-        }
-        int[] a = new int[newCapacity];
-        System.arraycopy(mElements, mHead, a, 0, r);
-        System.arraycopy(mElements, 0, a, r, mHead);
-        mElements = a;
-        mHead = 0;
-        mTail = n;
-        mCapacityBitmask = newCapacity - 1;
-    }
 
     /**
      * Create a CircularIntArray with default capacity.
@@ -67,9 +50,26 @@ public final class CircularIntArray
         mElements = new int[arrayCapacity];
     }
 
+    private void doubleCapacity() {
+        int n = mElements.length;
+        int r = n - mHead;
+        int newCapacity = n << 1;
+        if (newCapacity < 0) {
+            throw new RuntimeException("Max array capacity exceeded");
+        }
+        int[] a = new int[newCapacity];
+        System.arraycopy(mElements, mHead, a, 0, r);
+        System.arraycopy(mElements, 0, a, r, mHead);
+        mElements = a;
+        mHead = 0;
+        mTail = n;
+        mCapacityBitmask = newCapacity - 1;
+    }
+
     /**
      * Add an integer in front of the CircularIntArray.
-     * @param e  Integer to add.
+     *
+     * @param e Integer to add.
      */
     public void addFirst(int e) {
         mHead = (mHead - 1) & mCapacityBitmask;
@@ -81,7 +81,8 @@ public final class CircularIntArray
 
     /**
      * Add an integer at end of the CircularIntArray.
-     * @param e  Integer to add.
+     *
+     * @param e Integer to add.
      */
     public void addLast(int e) {
         mElements[mTail] = e;
@@ -93,7 +94,8 @@ public final class CircularIntArray
 
     /**
      * Remove first integer from front of the CircularIntArray and return it.
-     * @return  The integer removed.
+     *
+     * @return The integer removed.
      * @throws ArrayIndexOutOfBoundsException if CircularIntArray is empty.
      */
     public int popFirst() {
@@ -105,7 +107,8 @@ public final class CircularIntArray
 
     /**
      * Remove last integer from end of the CircularIntArray and return it.
-     * @return  The integer removed.
+     *
+     * @return The integer removed.
      * @throws ArrayIndexOutOfBoundsException if CircularIntArray is empty.
      */
     public int popLast() {
@@ -126,9 +129,10 @@ public final class CircularIntArray
     /**
      * Remove multiple integers from front of the CircularIntArray, ignore when numOfElements
      * is less than or equals to 0.
-     * @param numOfElements  Number of integers to remove.
+     *
+     * @param numOfElements Number of integers to remove.
      * @throws ArrayIndexOutOfBoundsException if numOfElements is larger than
-     *         {@link #size()}
+     *                                        {@link #size()}
      */
     public void removeFromStart(int numOfElements) {
         if (numOfElements <= 0) {
@@ -143,9 +147,10 @@ public final class CircularIntArray
     /**
      * Remove multiple elements from end of the CircularIntArray, ignore when numOfElements
      * is less than or equals to 0.
-     * @param numOfElements  Number of integers to remove.
+     *
+     * @param numOfElements Number of integers to remove.
      * @throws ArrayIndexOutOfBoundsException if numOfElements is larger than
-     *         {@link #size()}
+     *                                        {@link #size()}
      */
     public void removeFromEnd(int numOfElements) {
         if (numOfElements <= 0) {
@@ -159,6 +164,7 @@ public final class CircularIntArray
 
     /**
      * Get first integer of the CircularIntArray.
+     *
      * @return The first integer.
      * @throws {@link ArrayIndexOutOfBoundsException} if CircularIntArray is empty.
      */
@@ -169,6 +175,7 @@ public final class CircularIntArray
 
     /**
      * Get last integer of the CircularIntArray.
+     *
      * @return The last integer.
      * @throws {@link ArrayIndexOutOfBoundsException} if CircularIntArray is empty.
      */
@@ -179,7 +186,8 @@ public final class CircularIntArray
 
     /**
      * Get nth (0 <= n <= size()-1) integer of the CircularIntArray.
-     * @param n  The zero based element index in the CircularIntArray.
+     *
+     * @param n The zero based element index in the CircularIntArray.
      * @return The nth integer.
      * @throws {@link ArrayIndexOutOfBoundsException} if n < 0 or n >= size().
      */
@@ -190,6 +198,7 @@ public final class CircularIntArray
 
     /**
      * Get number of integers in the CircularIntArray.
+     *
      * @return Number of integers in the CircularIntArray.
      */
     public int size() {
@@ -198,6 +207,7 @@ public final class CircularIntArray
 
     /**
      * Return true if size() is 0.
+     *
      * @return true if size() is 0.
      */
     public boolean isEmpty() {

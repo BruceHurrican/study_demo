@@ -34,11 +34,6 @@ public class ContentLoadingProgressBar extends ProgressBar {
     private long mStartTime = -1;
 
     private boolean mPostedHide = false;
-
-    private boolean mPostedShow = false;
-
-    private boolean mDismissed = false;
-
     private final Runnable mDelayedHide = new Runnable() {
 
         @Override
@@ -48,7 +43,8 @@ public class ContentLoadingProgressBar extends ProgressBar {
             setVisibility(View.GONE);
         }
     };
-
+    private boolean mPostedShow = false;
+    private boolean mDismissed = false;
     private final Runnable mDelayedShow = new Runnable() {
 
         @Override

@@ -27,13 +27,13 @@ import android.support.annotation.StyleableRes;
  */
 public class TypedArrayUtils {
     public static boolean getBoolean(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex, boolean defaultValue) {
+                                     @StyleableRes int fallbackIndex, boolean defaultValue) {
         boolean val = a.getBoolean(fallbackIndex, defaultValue);
         return a.getBoolean(index, val);
     }
 
     public static Drawable getDrawable(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex) {
+                                       @StyleableRes int fallbackIndex) {
         Drawable val = a.getDrawable(index);
         if (val == null) {
             val = a.getDrawable(fallbackIndex);
@@ -42,19 +42,21 @@ public class TypedArrayUtils {
     }
 
     public static int getInt(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex, int defaultValue) {
+                             @StyleableRes int fallbackIndex, int defaultValue) {
         int val = a.getInt(fallbackIndex, defaultValue);
         return a.getInt(index, val);
     }
 
-    public static @AnyRes int getResourceId(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex, @AnyRes int defaultValue) {
+    public static
+    @AnyRes
+    int getResourceId(TypedArray a, @StyleableRes int index,
+                      @StyleableRes int fallbackIndex, @AnyRes int defaultValue) {
         int val = a.getResourceId(fallbackIndex, defaultValue);
         return a.getResourceId(index, val);
     }
 
     public static String getString(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex) {
+                                   @StyleableRes int fallbackIndex) {
         String val = a.getString(index);
         if (val == null) {
             val = a.getString(fallbackIndex);
@@ -63,7 +65,7 @@ public class TypedArrayUtils {
     }
 
     public static CharSequence[] getTextArray(TypedArray a, @StyleableRes int index,
-            @StyleableRes int fallbackIndex) {
+                                              @StyleableRes int fallbackIndex) {
         CharSequence[] val = a.getTextArray(index);
         if (val == null) {
             val = a.getTextArray(fallbackIndex);

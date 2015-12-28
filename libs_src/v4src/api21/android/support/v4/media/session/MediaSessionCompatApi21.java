@@ -58,7 +58,7 @@ class MediaSessionCompatApi21 {
     }
 
     public static void setFlags(Object sessionObj, int flags) {
-        ((MediaSession)sessionObj).setFlags(flags);
+        ((MediaSession) sessionObj).setFlags(flags);
     }
 
     public static void setPlaybackToLocal(Object sessionObj, int stream) {
@@ -69,35 +69,35 @@ class MediaSessionCompatApi21 {
     }
 
     public static void setPlaybackToRemote(Object sessionObj, Object volumeProviderObj) {
-        ((MediaSession)sessionObj).setPlaybackToRemote((VolumeProvider)volumeProviderObj);
+        ((MediaSession) sessionObj).setPlaybackToRemote((VolumeProvider) volumeProviderObj);
     }
 
     public static void setActive(Object sessionObj, boolean active) {
-        ((MediaSession)sessionObj).setActive(active);
+        ((MediaSession) sessionObj).setActive(active);
     }
 
     public static boolean isActive(Object sessionObj) {
-        return ((MediaSession)sessionObj).isActive();
+        return ((MediaSession) sessionObj).isActive();
     }
 
     public static void sendSessionEvent(Object sessionObj, String event, Bundle extras) {
-        ((MediaSession)sessionObj).sendSessionEvent(event, extras);
+        ((MediaSession) sessionObj).sendSessionEvent(event, extras);
     }
 
     public static void release(Object sessionObj) {
-        ((MediaSession)sessionObj).release();
+        ((MediaSession) sessionObj).release();
     }
 
     public static Parcelable getSessionToken(Object sessionObj) {
-        return ((MediaSession)sessionObj).getSessionToken();
+        return ((MediaSession) sessionObj).getSessionToken();
     }
 
     public static void setPlaybackState(Object sessionObj, Object stateObj) {
-        ((MediaSession)sessionObj).setPlaybackState((PlaybackState)stateObj);
+        ((MediaSession) sessionObj).setPlaybackState((PlaybackState) stateObj);
     }
 
     public static void setMetadata(Object sessionObj, Object metadataObj) {
-        ((MediaSession)sessionObj).setMetadata((MediaMetadata)metadataObj);
+        ((MediaSession) sessionObj).setMetadata((MediaMetadata) metadataObj);
     }
 
     public static void setSessionActivity(Object sessionObj, PendingIntent pi) {
@@ -130,19 +130,33 @@ class MediaSessionCompatApi21 {
 
     public static interface Callback {
         public void onCommand(String command, Bundle extras, ResultReceiver cb);
+
         public boolean onMediaButtonEvent(Intent mediaButtonIntent);
+
         public void onPlay();
+
         public void onPlayFromMediaId(String mediaId, Bundle extras);
+
         public void onPlayFromSearch(String search, Bundle extras);
+
         public void onSkipToQueueItem(long id);
+
         public void onPause();
+
         public void onSkipToNext();
+
         public void onSkipToPrevious();
+
         public void onFastForward();
+
         public void onRewind();
+
         public void onStop();
+
         public void onSeekTo(long pos);
+
         public void onSetRating(Object ratingObj);
+
         public void onCustomAction(String action, Bundle extras);
     }
 

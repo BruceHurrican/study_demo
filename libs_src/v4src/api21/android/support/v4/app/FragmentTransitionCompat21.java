@@ -35,13 +35,13 @@ class FragmentTransitionCompat21 {
 
     public static Object cloneTransition(Object transition) {
         if (transition != null) {
-            transition = ((Transition)transition).clone();
+            transition = ((Transition) transition).clone();
         }
         return transition;
     }
 
     public static Object captureExitingViews(Object exitTransition, View root,
-            ArrayList<View> viewList, Map<String, View> namedViews, View nonExistentView) {
+                                             ArrayList<View> viewList, Map<String, View> namedViews, View nonExistentView) {
         if (exitTransition != null) {
             captureTransitioningViews(viewList, root);
             if (namedViews != null) {
@@ -99,16 +99,16 @@ class FragmentTransitionCompat21 {
      * We will add to the views before the end state of the transition is captured so that the
      * views will appear. At the start of the transition, we clear the list of targets so that
      * we can restore the state of the transition and use it again.
-     *
+     * <p>
      * <p>The shared element transition maps its shared elements immediately prior to
-     *  capturing the final state of the Transition.</p>
+     * capturing the final state of the Transition.</p>
      */
     public static void addTransitionTargets(Object enterTransitionObject,
-            Object sharedElementTransitionObject, final View container,
-            final ViewRetriever inFragment, final View nonExistentView,
-            EpicenterView epicenterView, final Map<String, String> nameOverrides,
-            final ArrayList<View> enteringViews, final Map<String, View> namedViews,
-            final Map<String, View> renamedViews, final ArrayList<View> sharedElementTargets) {
+                                            Object sharedElementTransitionObject, final View container,
+                                            final ViewRetriever inFragment, final View nonExistentView,
+                                            EpicenterView epicenterView, final Map<String, String> nameOverrides,
+                                            final ArrayList<View> enteringViews, final Map<String, View> namedViews,
+                                            final Map<String, View> renamedViews, final ArrayList<View> sharedElementTargets) {
         if (enterTransitionObject != null || sharedElementTransitionObject != null) {
             final Transition enterTransition = (Transition) enterTransitionObject;
             if (enterTransition != null) {
@@ -157,8 +157,8 @@ class FragmentTransitionCompat21 {
     }
 
     public static Object mergeTransitions(Object enterTransitionObject,
-            Object exitTransitionObject, Object sharedElementTransitionObject,
-            boolean allowOverlap) {
+                                          Object exitTransitionObject, Object sharedElementTransitionObject,
+                                          boolean allowOverlap) {
         boolean overlap = true;
         Transition enterTransition = (Transition) enterTransitionObject;
         Transition exitTransition = (Transition) exitTransitionObject;
@@ -221,8 +221,8 @@ class FragmentTransitionCompat21 {
      * shared elements specifically, but this doesn't happen by default.
      */
     public static void setSharedElementTargets(Object transitionObj,
-            View nonExistentView, Map<String, View> namedViews,
-            ArrayList<View> sharedElementTargets) {
+                                               View nonExistentView, Map<String, View> namedViews,
+                                               ArrayList<View> sharedElementTargets) {
         TransitionSet transition = (TransitionSet) transitionObj;
         sharedElementTargets.clear();
         sharedElementTargets.addAll(namedViews.values());
@@ -252,7 +252,7 @@ class FragmentTransitionCompat21 {
             final View view = views.get(index);
             if (view instanceof ViewGroup) {
                 ViewGroup viewGroup = (ViewGroup) view;
-                final int childCount =  viewGroup.getChildCount();
+                final int childCount = viewGroup.getChildCount();
                 for (int childIndex = 0; childIndex < childCount; childIndex++) {
                     final View child = viewGroup.getChildAt(childIndex);
                     if (!containedBeforeIndex(views, child, startIndex)) {
@@ -267,7 +267,7 @@ class FragmentTransitionCompat21 {
      * Does a linear search through views for view, limited to maxIndex.
      */
     private static boolean containedBeforeIndex(final List<View> views, final View view,
-            final int maxIndex) {
+                                                final int maxIndex) {
         for (int i = 0; i < maxIndex; i++) {
             if (views.get(i) == view) {
                 return true;
@@ -277,7 +277,7 @@ class FragmentTransitionCompat21 {
     }
 
     private static void setSharedElementEpicenter(Transition transition,
-            final EpicenterView epicenterView) {
+                                                  final EpicenterView epicenterView) {
         if (transition != null) {
             transition.setEpicenterCallback(new Transition.EpicenterCallback() {
                 private Rect mEpicenter;
@@ -339,11 +339,11 @@ class FragmentTransitionCompat21 {
     }
 
     public static void cleanupTransitions(final View sceneRoot, final View nonExistentView,
-            Object enterTransitionObject, final ArrayList<View> enteringViews,
-            Object exitTransitionObject, final ArrayList<View> exitingViews,
-            Object sharedElementTransitionObject, final ArrayList<View> sharedElementTargets,
-            Object overallTransitionObject, final ArrayList<View> hiddenViews,
-            final Map<String, View> renamedViews) {
+                                          Object enterTransitionObject, final ArrayList<View> enteringViews,
+                                          Object exitTransitionObject, final ArrayList<View> exitingViews,
+                                          Object sharedElementTransitionObject, final ArrayList<View> sharedElementTargets,
+                                          Object overallTransitionObject, final ArrayList<View> hiddenViews,
+                                          final Map<String, View> renamedViews) {
         final Transition enterTransition = (Transition) enterTransitionObject;
         final Transition exitTransition = (Transition) exitTransitionObject;
         final Transition sharedElementTransition = (Transition) sharedElementTransitionObject;
@@ -351,30 +351,30 @@ class FragmentTransitionCompat21 {
         if (overallTransition != null) {
             sceneRoot.getViewTreeObserver().addOnPreDrawListener(
                     new ViewTreeObserver.OnPreDrawListener() {
-                public boolean onPreDraw() {
-                    sceneRoot.getViewTreeObserver().removeOnPreDrawListener(this);
-                    if (enterTransition != null) {
-                        removeTargets(enterTransition, enteringViews);
-                    }
-                    if (exitTransition != null) {
-                        removeTargets(exitTransition, exitingViews);
-                    }
-                    if (sharedElementTransition != null) {
-                        removeTargets(sharedElementTransition, sharedElementTargets);
-                    }
-                    for (Map.Entry<String, View> entry : renamedViews.entrySet()) {
-                        View view = entry.getValue();
-                        String name = entry.getKey();
-                        view.setTransitionName(name);
-                    }
-                    int numViews = hiddenViews.size();
-                    for (int i = 0; i < numViews; i++) {
-                        overallTransition.excludeTarget(hiddenViews.get(i), false);
-                    }
-                    overallTransition.excludeTarget(nonExistentView, false);
-                    return true;
-                }
-            });
+                        public boolean onPreDraw() {
+                            sceneRoot.getViewTreeObserver().removeOnPreDrawListener(this);
+                            if (enterTransition != null) {
+                                removeTargets(enterTransition, enteringViews);
+                            }
+                            if (exitTransition != null) {
+                                removeTargets(exitTransition, exitingViews);
+                            }
+                            if (sharedElementTransition != null) {
+                                removeTargets(sharedElementTransition, sharedElementTargets);
+                            }
+                            for (Map.Entry<String, View> entry : renamedViews.entrySet()) {
+                                View view = entry.getValue();
+                                String name = entry.getKey();
+                                view.setTransitionName(name);
+                            }
+                            int numViews = hiddenViews.size();
+                            for (int i = 0; i < numViews; i++) {
+                                overallTransition.excludeTarget(hiddenViews.get(i), false);
+                            }
+                            overallTransition.excludeTarget(nonExistentView, false);
+                            return true;
+                        }
+                    });
         }
     }
 

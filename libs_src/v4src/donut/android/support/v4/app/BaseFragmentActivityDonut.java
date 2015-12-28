@@ -49,6 +49,6 @@ abstract class BaseFragmentActivityDonut extends Activity {
     }
 
     abstract View dispatchFragmentsOnCreateView(View parent, String name,
-            Context context, AttributeSet attrs);
+                                                Context context, AttributeSet attrs);
 
 }

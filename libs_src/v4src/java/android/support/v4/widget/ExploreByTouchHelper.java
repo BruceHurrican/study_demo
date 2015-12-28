@@ -43,20 +43,26 @@ import java.util.List;
  * <p>
  * Clients should override abstract methods on this class and attach it to the
  * host view using {@link ViewCompat#setAccessibilityDelegate}:
- *
+ * <p>
  * <pre>
  * mAccessHelper = new MyExploreByTouchHelper(someView);
  * ViewCompat.setAccessibilityDelegate(someView, mAccessHelper);
  * </pre>
  */
 public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
-    /** Virtual node identifier value for invalid nodes. */
+    /**
+     * Virtual node identifier value for invalid nodes.
+     */
     public static final int INVALID_ID = Integer.MIN_VALUE;
 
-    /** Virtual node identifier value for the host view's node. */
+    /**
+     * Virtual node identifier value for the host view's node.
+     */
     public static final int HOST_ID = View.NO_ID;
 
-    /** Default class name used for virtual views. */
+    /**
+     * Default class name used for virtual views.
+     */
     private static final String DEFAULT_CLASS_NAME = View.class.getName();
 
     // Temporary, reusable data structures.
@@ -65,19 +71,29 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
     private final Rect mTempVisibleRect = new Rect();
     private final int[] mTempGlobalRect = new int[2];
 
-    /** System accessibility manager, used to check state and send events. */
+    /**
+     * System accessibility manager, used to check state and send events.
+     */
     private final AccessibilityManager mManager;
 
-    /** View whose internal structure is exposed through this helper. */
+    /**
+     * View whose internal structure is exposed through this helper.
+     */
     private final View mView;
 
-    /** Node provider that handles creating nodes and performing actions. */
+    /**
+     * Node provider that handles creating nodes and performing actions.
+     */
     private ExploreByTouchNodeProvider mNodeProvider;
 
-    /** Virtual view id for the currently focused logical item. */
+    /**
+     * Virtual view id for the currently focused logical item.
+     */
     private int mFocusedVirtualViewId = INVALID_ID;
 
-    /** Virtual view id for the currently hovered logical item. */
+    /**
+     * Virtual view id for the currently hovered logical item.
+     */
     private int mHoveredVirtualViewId = INVALID_ID;
 
     /**
@@ -115,7 +131,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * <p>
      * This method should be called by overriding
      * {@link View#dispatchHoverEvent}:
-     *
+     * <p>
      * <pre>&#64;Override
      * public boolean dispatchHoverEvent(MotionEvent event) {
      *   if (mHelper.dispatchHoverEvent(this, event) {
@@ -157,7 +173,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * <p>
      * You should call this method after performing a user action that normally
      * fires an accessibility event, such as clicking on an item.
-     *
+     * <p>
      * <pre>public void performItemClick(T item) {
      *   ...
      *   sendEventForVirtualViewId(item.id, AccessibilityEvent.TYPE_VIEW_CLICKED);
@@ -165,7 +181,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * </pre>
      *
      * @param virtualViewId The virtual view id for which to send an event.
-     * @param eventType The type of event to send.
+     * @param eventType     The type of event to send.
      * @return true if the event was sent successfully.
      */
     public boolean sendEventForVirtualView(int virtualViewId, int eventType) {
@@ -211,7 +227,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * Returns the virtual view id for the currently focused item,
      *
      * @return A virtual view id, or {@link #INVALID_ID} if no item is
-     *         currently focused.
+     * currently focused.
      */
     public int getFocusedVirtualView() {
         return mFocusedVirtualViewId;
@@ -222,8 +238,8 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * necessary to maintain the correct state.
      *
      * @param virtualViewId The virtual view id for the item currently being
-     *            hovered, or {@link #INVALID_ID} if no item is hovered within
-     *            the parent view.
+     *                      hovered, or {@link #INVALID_ID} if no item is hovered within
+     *                      the parent view.
      */
     private void updateHoveredVirtualView(int virtualViewId) {
         if (mHoveredVirtualViewId == virtualViewId) {
@@ -245,10 +261,10 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * virtual view id, which includes the host view ({@link #HOST_ID}).
      *
      * @param virtualViewId The virtual view id for the item for which to
-     *            construct an event.
-     * @param eventType The type of event to construct.
+     *                      construct an event.
+     * @param eventType     The type of event to construct.
      * @return An {@link AccessibilityEvent} populated with information about
-     *         the specified item.
+     * the specified item.
      */
     private AccessibilityEvent createEvent(int virtualViewId, int eventType) {
         switch (virtualViewId) {
@@ -264,7 +280,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      *
      * @param eventType The type of event to construct.
      * @return An {@link AccessibilityEvent} populated with information about
-     *         the specified item.
+     * the specified item.
      */
     private AccessibilityEvent createEventForHost(int eventType) {
         final AccessibilityEvent event = AccessibilityEvent.obtain(eventType);
@@ -277,10 +293,10 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * information about the specified item.
      *
      * @param virtualViewId The virtual view id for the item for which to
-     *            construct an event.
-     * @param eventType The type of event to construct.
+     *                      construct an event.
+     * @param eventType     The type of event to construct.
      * @return An {@link AccessibilityEvent} populated with information about
-     *         the specified item.
+     * the specified item.
      */
     private AccessibilityEvent createEventForChild(int virtualViewId, int eventType) {
         final AccessibilityEvent event = AccessibilityEvent.obtain(eventType);
@@ -311,9 +327,9 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * ({@link #HOST_ID}).
      *
      * @param virtualViewId The virtual view id for the item for which to
-     *            construct a node.
+     *                      construct a node.
      * @return An {@link AccessibilityNodeInfoCompat} populated with information
-     *         about the specified item.
+     * about the specified item.
      */
     private AccessibilityNodeInfoCompat createNode(int virtualViewId) {
         switch (virtualViewId) {
@@ -373,7 +389,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * </ul>
      *
      * @param virtualViewId The virtual view id for item for which to construct
-     *            a node.
+     *                      a node.
      * @return An {@link AccessibilityNodeInfoCompat} for the specified item.
      */
     private AccessibilityNodeInfoCompat createNodeForChild(int virtualViewId) {
@@ -534,7 +550,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * or the view already has accessibility focus.
      *
      * @param virtualViewId The id of the virtual view on which to place
-     *            accessibility focus.
+     *                      accessibility focus.
      * @return Whether this virtual view actually took accessibility focus.
      */
     private boolean requestAccessibilityFocus(int virtualViewId) {
@@ -566,7 +582,7 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * Attempts to clear accessibility focus from a virtual view.
      *
      * @param virtualViewId The id of the virtual view from which to clear
-     *            accessibility focus.
+     *                      accessibility focus.
      * @return Whether this virtual view actually cleared accessibility focus.
      */
     private boolean clearAccessibilityFocus(int virtualViewId) {
@@ -587,8 +603,8 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * @param x The view-relative x coordinate
      * @param y The view-relative y coordinate
      * @return virtual view identifier for the logical item under
-     *         coordinates (x,y) or {@link #HOST_ID} if there is no item at
-     *         the given coordinates
+     * coordinates (x,y) or {@link #HOST_ID} if there is no item at
+     * the given coordinates
      */
     protected abstract int getVirtualViewAt(float x, float y);
 
@@ -628,8 +644,8 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * </ul>
      *
      * @param virtualViewId The virtual view id for the item for which to
-     *            populate the event
-     * @param event The event to populate
+     *                      populate the event
+     * @param event         The event to populate
      */
     protected abstract void onPopulateEventForVirtualView(
             int virtualViewId, AccessibilityEvent event);
@@ -686,8 +702,8 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * within its parent.
      *
      * @param virtualViewId The virtual view identifier of the item for
-     *            which to populate the node
-     * @param node The node to populate
+     *                      which to populate the node
+     * @param node          The node to populate
      */
     protected abstract void onPopulateNodeForVirtualView(
             int virtualViewId, AccessibilityNodeInfoCompat node);
@@ -719,10 +735,10 @@ public abstract class ExploreByTouchHelper extends AccessibilityDelegateCompat {
      * actions.
      *
      * @param virtualViewId The virtual view identifier of the item on which
-     *            to perform the action
-     * @param action The accessibility action to perform
-     * @param arguments (Optional) A bundle with additional arguments, or
-     *            null
+     *                      to perform the action
+     * @param action        The accessibility action to perform
+     * @param arguments     (Optional) A bundle with additional arguments, or
+     *                      null
      * @return true if the action was performed
      */
     protected abstract boolean onPerformActionForVirtualView(

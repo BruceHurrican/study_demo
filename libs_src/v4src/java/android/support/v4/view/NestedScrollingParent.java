@@ -25,11 +25,11 @@ import android.view.ViewConfiguration;
 /**
  * This interface should be implemented by {@link android.view.ViewGroup ViewGroup} subclasses
  * that wish to support scrolling operations delegated by a nested child view.
- *
+ * <p>
  * <p>Classes implementing this interface should create a final instance of a
  * {@link NestedScrollingParentHelper} as a field and delegate any View or ViewGroup methods
  * to the <code>NestedScrollingParentHelper</code> methods of the same signature.</p>
- *
+ * <p>
  * <p>Views invoking nested scrolling functionality should always do so from the relevant
  * {@link ViewCompat}, {@link ViewGroupCompat} or {@link ViewParentCompat} compatibility
  * shim static methods. This ensures interoperability with nested scrolling views on Android
@@ -39,12 +39,12 @@ public interface NestedScrollingParent {
     /**
      * React to a descendant view initiating a nestable scroll operation, claiming the
      * nested scroll operation if appropriate.
-     *
+     * <p>
      * <p>This method will be called in response to a descendant view invoking
      * {@link ViewCompat#startNestedScroll(View, int)}. Each parent up the view hierarchy will be
      * given an opportunity to respond and claim the nested scrolling operation by returning
      * <code>true</code>.</p>
-     *
+     * <p>
      * <p>This method may be overridden by ViewParent implementations to indicate when the view
      * is willing to support a nested scrolling operation that is about to begin. If it returns
      * true, this ViewParent will become the target view's nested scrolling parent for the duration
@@ -52,8 +52,8 @@ public interface NestedScrollingParent {
      * will receive a call to {@link #onStopNestedScroll(View)}.
      * </p>
      *
-     * @param child Direct child of this ViewParent containing target
-     * @param target View that initiated the nested scroll
+     * @param child            Direct child of this ViewParent containing target
+     * @param target           View that initiated the nested scroll
      * @param nestedScrollAxes Flags consisting of {@link ViewCompat#SCROLL_AXIS_HORIZONTAL},
      *                         {@link ViewCompat#SCROLL_AXIS_VERTICAL} or both
      * @return true if this ViewParent accepts the nested scroll operation
@@ -62,15 +62,15 @@ public interface NestedScrollingParent {
 
     /**
      * React to the successful claiming of a nested scroll operation.
-     *
+     * <p>
      * <p>This method will be called after
      * {@link #onStartNestedScroll(View, View, int) onStartNestedScroll} returns true. It offers
      * an opportunity for the view and its superclasses to perform initial configuration
      * for the nested scroll. Implementations of this method should always call their superclass's
      * implementation of this method if one is present.</p>
      *
-     * @param child Direct child of this ViewParent containing target
-     * @param target View that initiated the nested scroll
+     * @param child            Direct child of this ViewParent containing target
+     * @param target           View that initiated the nested scroll
      * @param nestedScrollAxes Flags consisting of {@link ViewCompat#SCROLL_AXIS_HORIZONTAL},
      *                         {@link ViewCompat#SCROLL_AXIS_VERTICAL} or both
      * @see #onStartNestedScroll(View, View, int)
@@ -80,7 +80,7 @@ public interface NestedScrollingParent {
 
     /**
      * React to a nested scroll operation ending.
-     *
+     * <p>
      * <p>Perform cleanup after a nested scrolling operation.
      * This method will be called when a nested scroll stops, for example when a nested touch
      * scroll ends with a {@link MotionEvent#ACTION_UP} or {@link MotionEvent#ACTION_CANCEL} event.
@@ -93,12 +93,12 @@ public interface NestedScrollingParent {
 
     /**
      * React to a nested scroll in progress.
-     *
+     * <p>
      * <p>This method will be called when the ViewParent's current nested scrolling child view
      * dispatches a nested scroll event. To receive calls to this method the ViewParent must have
      * previously returned <code>true</code> for a call to
      * {@link #onStartNestedScroll(View, View, int)}.</p>
-     *
+     * <p>
      * <p>Both the consumed and unconsumed portions of the scroll distance are reported to the
      * ViewParent. An implementation may choose to use the consumed portion to match or chase scroll
      * position of multiple child elements, for example. The unconsumed portion may be used to
@@ -106,23 +106,23 @@ public interface NestedScrollingParent {
      * a list within a vertical drawer where the drawer begins dragging once the edge of inner
      * scrolling content is reached.</p>
      *
-     * @param target The descendent view controlling the nested scroll
-     * @param dxConsumed Horizontal scroll distance in pixels already consumed by target
-     * @param dyConsumed Vertical scroll distance in pixels already consumed by target
+     * @param target       The descendent view controlling the nested scroll
+     * @param dxConsumed   Horizontal scroll distance in pixels already consumed by target
+     * @param dyConsumed   Vertical scroll distance in pixels already consumed by target
      * @param dxUnconsumed Horizontal scroll distance in pixels not consumed by target
      * @param dyUnconsumed Vertical scroll distance in pixels not consumed by target
      */
     public void onNestedScroll(View target, int dxConsumed, int dyConsumed,
-            int dxUnconsumed, int dyUnconsumed);
+                               int dxUnconsumed, int dyUnconsumed);
 
     /**
      * React to a nested scroll in progress before the target view consumes a portion of the scroll.
-     *
+     * <p>
      * <p>When working with nested scrolling often the parent view may want an opportunity
      * to consume the scroll before the nested scrolling child does. An example of this is a
      * drawer that contains a scrollable list. The user will want to be able to scroll the list
      * fully into view before the list itself begins scrolling.</p>
-     *
+     * <p>
      * <p><code>onNestedPreScroll</code> is called when a nested scrolling child invokes
      * {@link View#dispatchNestedPreScroll(int, int, int[], int[])}. The implementation should
      * report how any pixels of the scroll reported by dx, dy were consumed in the
@@ -130,50 +130,50 @@ public interface NestedScrollingParent {
      * This parameter will never be null. Initial values for consumed[0] and consumed[1]
      * will always be 0.</p>
      *
-     * @param target View that initiated the nested scroll
-     * @param dx Horizontal scroll distance in pixels
-     * @param dy Vertical scroll distance in pixels
+     * @param target   View that initiated the nested scroll
+     * @param dx       Horizontal scroll distance in pixels
+     * @param dy       Vertical scroll distance in pixels
      * @param consumed Output. The horizontal and vertical scroll distance consumed by this parent
      */
     public void onNestedPreScroll(View target, int dx, int dy, int[] consumed);
 
     /**
      * Request a fling from a nested scroll.
-     *
+     * <p>
      * <p>This method signifies that a nested scrolling child has detected suitable conditions
      * for a fling. Generally this means that a touch scroll has ended with a
      * {@link VelocityTracker velocity} in the direction of scrolling that meets or exceeds
      * the {@link ViewConfiguration#getScaledMinimumFlingVelocity() minimum fling velocity}
      * along a scrollable axis.</p>
-     *
+     * <p>
      * <p>If a nested scrolling child view would normally fling but it is at the edge of
      * its own content, it can use this method to delegate the fling to its nested scrolling
      * parent instead. The parent may optionally consume the fling or observe a child fling.</p>
      *
-     * @param target View that initiated the nested scroll
+     * @param target    View that initiated the nested scroll
      * @param velocityX Horizontal velocity in pixels per second
      * @param velocityY Vertical velocity in pixels per second
-     * @param consumed true if the child consumed the fling, false otherwise
+     * @param consumed  true if the child consumed the fling, false otherwise
      * @return true if this parent consumed or otherwise reacted to the fling
      */
     public boolean onNestedFling(View target, float velocityX, float velocityY, boolean consumed);
 
     /**
      * React to a nested fling before the target view consumes it.
-     *
+     * <p>
      * <p>This method siginfies that a nested scrolling child has detected a fling with the given
      * velocity along each axis. Generally this means that a touch scroll has ended with a
      * {@link VelocityTracker velocity} in the direction of scrolling that meets or exceeds
      * the {@link ViewConfiguration#getScaledMinimumFlingVelocity() minimum fling velocity}
      * along a scrollable axis.</p>
-     *
+     * <p>
      * <p>If a nested scrolling parent is consuming motion as part of a
      * {@link #onNestedPreScroll(View, int, int, int[]) pre-scroll}, it may be appropriate for
      * it to also consume the pre-fling to complete that same motion. By returning
      * <code>true</code> from this method, the parent indicates that the child should not
      * fling its own internal content as well.</p>
      *
-     * @param target View that initiated the nested scroll
+     * @param target    View that initiated the nested scroll
      * @param velocityX Horizontal velocity in pixels per second
      * @param velocityY Vertical velocity in pixels per second
      * @return true if this parent consumed the fling ahead of the target view
@@ -182,7 +182,7 @@ public interface NestedScrollingParent {
 
     /**
      * Return the current axes of nested scrolling for this NestedScrollingParent.
-     *
+     * <p>
      * <p>A NestedScrollingParent returning something other than {@link ViewCompat#SCROLL_AXIS_NONE}
      * is currently acting as a nested scrolling parent for one or more descendant views in
      * the hierarchy.</p>

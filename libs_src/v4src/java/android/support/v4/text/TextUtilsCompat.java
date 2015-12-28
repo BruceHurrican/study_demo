@@ -24,7 +24,70 @@ import android.support.v4.view.ViewCompat;
 import java.util.Locale;
 
 public class TextUtilsCompat {
+    public static final Locale ROOT = new Locale("", "");
+    private static final TextUtilsCompatImpl IMPL;
+    private static String ARAB_SCRIPT_SUBTAG = "Arab";
+    private static String HEBR_SCRIPT_SUBTAG = "Hebr";
+
+    static {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 17) { // JellyBean MR1
+            IMPL = new TextUtilsCompatJellybeanMr1Impl();
+        } else {
+            IMPL = new TextUtilsCompatImpl();
+        }
+    }
+
+    /**
+     * Html-encode the string.
+     *
+     * @param s the string to be encoded
+     * @return the encoded string
+     */
+    @NonNull
+    public static String htmlEncode(@NonNull String s) {
+        return IMPL.htmlEncode(s);
+    }
+
+    /**
+     * Return the layout direction for a given Locale
+     *
+     * @param locale the Locale for which we want the layout direction. Can be null.
+     * @return the layout direction. This may be one of:
+     * {@link ViewCompat#LAYOUT_DIRECTION_LTR} or
+     * {@link ViewCompat#LAYOUT_DIRECTION_RTL}.
+     * <p>
+     * Be careful: this code will need to be updated when vertical scripts will be supported
+     */
+    public static int getLayoutDirectionFromLocale(@Nullable Locale locale) {
+        return IMPL.getLayoutDirectionFromLocale(locale);
+    }
+
     private static class TextUtilsCompatImpl {
+        /**
+         * Fallback algorithm to detect the locale direction. Rely on the first char of the
+         * localized locale name. This will not work if the localized locale name is in English
+         * (this is the case for ICU 4.4 and "Urdu" script)
+         *
+         * @param locale
+         * @return the layout direction. This may be one of:
+         * {@link ViewCompat#LAYOUT_DIRECTION_LTR} or
+         * {@link ViewCompat#LAYOUT_DIRECTION_RTL}.
+         * <p>
+         * Be careful: this code will need to be updated when vertical scripts will be supported
+         */
+        private static int getLayoutDirectionFromFirstChar(@NonNull Locale locale) {
+            switch (Character.getDirectionality(locale.getDisplayName(locale).charAt(0))) {
+                case Character.DIRECTIONALITY_RIGHT_TO_LEFT:
+                case Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC:
+                    return ViewCompat.LAYOUT_DIRECTION_RTL;
+
+                case Character.DIRECTIONALITY_LEFT_TO_RIGHT:
+                default:
+                    return ViewCompat.LAYOUT_DIRECTION_LTR;
+            }
+        }
+
         @NonNull
         public String htmlEncode(@NonNull String s) {
             StringBuilder sb = new StringBuilder();
@@ -71,30 +134,6 @@ public class TextUtilsCompat {
             }
             return ViewCompat.LAYOUT_DIRECTION_LTR;
         }
-
-        /**
-         * Fallback algorithm to detect the locale direction. Rely on the first char of the
-         * localized locale name. This will not work if the localized locale name is in English
-         * (this is the case for ICU 4.4 and "Urdu" script)
-         *
-         * @param locale
-         * @return the layout direction. This may be one of:
-         * {@link ViewCompat#LAYOUT_DIRECTION_LTR} or
-         * {@link ViewCompat#LAYOUT_DIRECTION_RTL}.
-         *
-         * Be careful: this code will need to be updated when vertical scripts will be supported
-         */
-        private static int getLayoutDirectionFromFirstChar(@NonNull Locale locale) {
-            switch(Character.getDirectionality(locale.getDisplayName(locale).charAt(0))) {
-                case Character.DIRECTIONALITY_RIGHT_TO_LEFT:
-                case Character.DIRECTIONALITY_RIGHT_TO_LEFT_ARABIC:
-                    return ViewCompat.LAYOUT_DIRECTION_RTL;
-
-                case Character.DIRECTIONALITY_LEFT_TO_RIGHT:
-                default:
-                    return ViewCompat.LAYOUT_DIRECTION_LTR;
-            }
-        }
     }
 
     private static class TextUtilsCompatJellybeanMr1Impl extends TextUtilsCompatImpl {
@@ -108,43 +147,4 @@ public class TextUtilsCompat {
             return TextUtilsCompatJellybeanMr1.getLayoutDirectionFromLocale(locale);
         }
     }
-
-    private static final TextUtilsCompatImpl IMPL;
-    static {
-        final int version = Build.VERSION.SDK_INT;
-        if (version >= 17) { // JellyBean MR1
-            IMPL = new TextUtilsCompatJellybeanMr1Impl();
-        } else {
-            IMPL = new TextUtilsCompatImpl();
-        }
-    }
-
-    /**
-     * Html-encode the string.
-     * @param s the string to be encoded
-     * @return the encoded string
-     */
-    @NonNull
-    public static String htmlEncode(@NonNull String s) {
-        return IMPL.htmlEncode(s);
-    }
-
-    /**
-     * Return the layout direction for a given Locale
-     *
-     * @param locale the Locale for which we want the layout direction. Can be null.
-     * @return the layout direction. This may be one of:
-     * {@link ViewCompat#LAYOUT_DIRECTION_LTR} or
-     * {@link ViewCompat#LAYOUT_DIRECTION_RTL}.
-     *
-     * Be careful: this code will need to be updated when vertical scripts will be supported
-     */
-    public static int getLayoutDirectionFromLocale(@Nullable Locale locale) {
-        return IMPL.getLayoutDirectionFromLocale(locale);
-    }
-
-    public static final Locale ROOT = new Locale("", "");
-
-    private static String ARAB_SCRIPT_SUBTAG = "Arab";
-    private static String HEBR_SCRIPT_SUBTAG = "Hebr";
 }

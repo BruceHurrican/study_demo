@@ -34,18 +34,18 @@ class MediaRouterJellybeanMr1 extends MediaRouterJellybean {
         return new CallbackProxy<Callback>(callback);
     }
 
+    public static interface Callback extends MediaRouterJellybean.Callback {
+        public void onRoutePresentationDisplayChanged(Object routeObj);
+    }
+
     public static final class RouteInfo {
         public static boolean isEnabled(Object routeObj) {
-            return ((android.media.MediaRouter.RouteInfo)routeObj).isEnabled();
+            return ((android.media.MediaRouter.RouteInfo) routeObj).isEnabled();
         }
 
         public static Display getPresentationDisplay(Object routeObj) {
-            return ((android.media.MediaRouter.RouteInfo)routeObj).getPresentationDisplay();
+            return ((android.media.MediaRouter.RouteInfo) routeObj).getPresentationDisplay();
         }
-    }
-
-    public static interface Callback extends MediaRouterJellybean.Callback {
-        public void onRoutePresentationDisplayChanged(Object routeObj);
     }
 
     /**
@@ -145,11 +145,11 @@ class MediaRouterJellybeanMr1 extends MediaRouterJellybean {
 
         public boolean isConnecting(Object routeObj) {
             android.media.MediaRouter.RouteInfo route =
-                    (android.media.MediaRouter.RouteInfo)routeObj;
+                    (android.media.MediaRouter.RouteInfo) routeObj;
 
             if (mGetStatusCodeMethod != null) {
                 try {
-                    int statusCode = (Integer)mGetStatusCodeMethod.invoke(route);
+                    int statusCode = (Integer) mGetStatusCodeMethod.invoke(route);
                     return statusCode == mStatusConnecting;
                 } catch (IllegalAccessException ex) {
                 } catch (InvocationTargetException ex) {
@@ -169,7 +169,7 @@ class MediaRouterJellybeanMr1 extends MediaRouterJellybean {
 
         @Override
         public void onRoutePresentationDisplayChanged(android.media.MediaRouter router,
-                android.media.MediaRouter.RouteInfo route) {
+                                                      android.media.MediaRouter.RouteInfo route) {
             mCallback.onRoutePresentationDisplayChanged(route);
         }
     }

@@ -33,21 +33,18 @@ import java.util.*;
 
 /**
  * Compatibility library for NotificationManager with fallbacks for older platforms.
- *
+ * <p>
  * <p>To use this class, call the static function {@link #from} to get a
  * {@link NotificationManagerCompat} object, and then call one of its
  * methods to post or cancel notifications.
  */
 public class NotificationManagerCompat {
-    private static final String TAG = "NotifManCompat";
-
     /**
      * Notification extras key: if set to true, the posted notification should use
      * the side channel for delivery instead of using notification manager.
      */
     public static final String EXTRA_USE_SIDE_CHANNEL =
             NotificationCompatJellybean.EXTRA_USE_SIDE_CHANNEL;
-
     /**
      * Intent action to register for on a service to receive side channel
      * notifications. The listening service must be in the same package as an enabled
@@ -55,98 +52,48 @@ public class NotificationManagerCompat {
      */
     public static final String ACTION_BIND_SIDE_CHANNEL =
             "android.support.BIND_NOTIFICATION_SIDE_CHANNEL";
-
     /**
      * Maximum sdk build version which needs support for side channeled notifications.
      * Currently the only needed use is for side channeling group children before KITKAT_WATCH.
      */
     static final int MAX_SIDE_CHANNEL_SDK_VERSION = 19;
-
-    /** Base time delay for a side channel listener queue retry. */
+    private static final String TAG = "NotifManCompat";
+    /**
+     * Base time delay for a side channel listener queue retry.
+     */
     private static final int SIDE_CHANNEL_RETRY_BASE_INTERVAL_MS = 1000;
-    /** Maximum retries for a side channel listener before dropping tasks. */
+    /**
+     * Maximum retries for a side channel listener before dropping tasks.
+     */
     private static final int SIDE_CHANNEL_RETRY_MAX_COUNT = 6;
-    /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
+    /**
+     * Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS
+     */
     private static final String SETTING_ENABLED_NOTIFICATION_LISTENERS =
             "enabled_notification_listeners";
     private static final int SIDE_CHANNEL_BIND_FLAGS;
 
-    /** Cache of enabled notification listener components */
+    /**
+     * Cache of enabled notification listener components
+     */
     private static final Object sEnabledNotificationListenersLock = new Object();
-    /** Guarded by {@link #sEnabledNotificationListenersLock} */
-    private static String sEnabledNotificationListeners;
-    /** Guarded by {@link #sEnabledNotificationListenersLock} */
-    private static Set<String> sEnabledNotificationListenerPackages = new HashSet<String>();
-
-    private final Context mContext;
-    private final NotificationManager mNotificationManager;
-    /** Lock for mutable static fields */
+    /**
+     * Lock for mutable static fields
+     */
     private static final Object sLock = new Object();
-    /** Guarded by {@link #sLock} */
-    private static SideChannelManager sSideChannelManager;
-
-    /** Get a {@link NotificationManagerCompat} instance for a provided context. */
-    public static NotificationManagerCompat from(Context context) {
-        return new NotificationManagerCompat(context);
-    }
-
-    private NotificationManagerCompat(Context context) {
-        mContext = context;
-        mNotificationManager = (NotificationManager) mContext.getSystemService(
-                Context.NOTIFICATION_SERVICE);
-    }
-
     private static final Impl IMPL;
-
-    interface Impl {
-        void cancelNotification(NotificationManager notificationManager, String tag, int id);
-
-        void postNotification(NotificationManager notificationManager, String tag, int id,
-                Notification notification);
-
-        int getSideChannelBindFlags();
-    }
-
-    static class ImplBase implements Impl {
-        @Override
-        public void cancelNotification(NotificationManager notificationManager, String tag,
-                int id) {
-            notificationManager.cancel(id);
-        }
-
-        @Override
-        public void postNotification(NotificationManager notificationManager, String tag, int id,
-                Notification notification) {
-            notificationManager.notify(id, notification);
-        }
-
-        @Override
-        public int getSideChannelBindFlags() {
-            return Service.BIND_AUTO_CREATE;
-        }
-    }
-
-    static class ImplEclair extends ImplBase {
-        @Override
-        public void cancelNotification(NotificationManager notificationManager, String tag,
-                int id) {
-            NotificationManagerCompatEclair.cancelNotification(notificationManager, tag, id);
-        }
-
-        @Override
-        public void postNotification(NotificationManager notificationManager, String tag, int id,
-                Notification notification) {
-            NotificationManagerCompatEclair.postNotification(notificationManager, tag, id,
-                    notification);
-        }
-    }
-
-    static class ImplIceCreamSandwich extends ImplEclair {
-        @Override
-        public int getSideChannelBindFlags() {
-            return NotificationManagerCompatIceCreamSandwich.SIDE_CHANNEL_BIND_FLAGS;
-        }
-    }
+    /**
+     * Guarded by {@link #sEnabledNotificationListenersLock}
+     */
+    private static String sEnabledNotificationListeners;
+    /**
+     * Guarded by {@link #sEnabledNotificationListenersLock}
+     */
+    private static Set<String> sEnabledNotificationListenerPackages = new HashSet<String>();
+    /**
+     * Guarded by {@link #sLock}
+     */
+    private static SideChannelManager sSideChannelManager;
 
     static {
         if (Build.VERSION.SDK_INT >= 14) {
@@ -159,58 +106,20 @@ public class NotificationManagerCompat {
         SIDE_CHANNEL_BIND_FLAGS = IMPL.getSideChannelBindFlags();
     }
 
+    private final Context mContext;
+    private final NotificationManager mNotificationManager;
+
+    private NotificationManagerCompat(Context context) {
+        mContext = context;
+        mNotificationManager = (NotificationManager) mContext.getSystemService(
+                Context.NOTIFICATION_SERVICE);
+    }
+
     /**
-     * Cancel a previously shown notification.
-     * @param id the ID of the notification
+     * Get a {@link NotificationManagerCompat} instance for a provided context.
      */
-    public void cancel(int id) {
-        cancel(null, id);
-    }
-
-    /**
-     * Cancel a previously shown notification.
-     * @param tag the string identifier of the notification.
-     * @param id the ID of the notification
-     */
-    public void cancel(String tag, int id) {
-        IMPL.cancelNotification(mNotificationManager, tag, id);
-        if (Build.VERSION.SDK_INT <= MAX_SIDE_CHANNEL_SDK_VERSION) {
-            pushSideChannelQueue(new CancelTask(mContext.getPackageName(), id, tag));
-        }
-    }
-
-    /** Cancel all previously shown notifications. */
-    public void cancelAll() {
-        mNotificationManager.cancelAll();
-        if (Build.VERSION.SDK_INT <= MAX_SIDE_CHANNEL_SDK_VERSION) {
-            pushSideChannelQueue(new CancelTask(mContext.getPackageName()));
-        }
-    }
-
-    /**
-     * Post a notification to be shown in the status bar, stream, etc.
-     * @param id the ID of the notification
-     * @param notification the notification to post to the system
-     */
-    public void notify(int id, Notification notification) {
-        notify(null, id, notification);
-    }
-
-    /**
-     * Post a notification to be shown in the status bar, stream, etc.
-     * @param tag the string identifier for a notification. Can be {@code null}.
-     * @param id the ID of the notification. The pair (tag, id) must be unique within your app.
-     * @param notification the notification to post to the system
-    */
-    public void notify(String tag, int id, Notification notification) {
-        if (useSideChannelForNotification(notification)) {
-            pushSideChannelQueue(new NotifyTask(mContext.getPackageName(), id, tag, notification));
-            // Cancel this notification in notification manager if it just transitioned to being
-            // side channelled.
-            IMPL.cancelNotification(mNotificationManager, tag, id);
-        } else {
-            IMPL.postNotification(mNotificationManager, tag, id, notification);
-        }
+    public static NotificationManagerCompat from(Context context) {
+        return new NotificationManagerCompat(context);
     }
 
     /**
@@ -248,6 +157,66 @@ public class NotificationManagerCompat {
     }
 
     /**
+     * Cancel a previously shown notification.
+     *
+     * @param id the ID of the notification
+     */
+    public void cancel(int id) {
+        cancel(null, id);
+    }
+
+    /**
+     * Cancel a previously shown notification.
+     *
+     * @param tag the string identifier of the notification.
+     * @param id  the ID of the notification
+     */
+    public void cancel(String tag, int id) {
+        IMPL.cancelNotification(mNotificationManager, tag, id);
+        if (Build.VERSION.SDK_INT <= MAX_SIDE_CHANNEL_SDK_VERSION) {
+            pushSideChannelQueue(new CancelTask(mContext.getPackageName(), id, tag));
+        }
+    }
+
+    /**
+     * Cancel all previously shown notifications.
+     */
+    public void cancelAll() {
+        mNotificationManager.cancelAll();
+        if (Build.VERSION.SDK_INT <= MAX_SIDE_CHANNEL_SDK_VERSION) {
+            pushSideChannelQueue(new CancelTask(mContext.getPackageName()));
+        }
+    }
+
+    /**
+     * Post a notification to be shown in the status bar, stream, etc.
+     *
+     * @param id           the ID of the notification
+     * @param notification the notification to post to the system
+     */
+    public void notify(int id, Notification notification) {
+        notify(null, id, notification);
+    }
+
+    /**
+     * Post a notification to be shown in the status bar, stream, etc.
+     *
+     * @param tag          the string identifier for a notification. Can be {@code null}.
+     * @param id           the ID of the notification. The pair (tag, id) must be unique within your app.
+     * @param notification the notification to post to the system
+     */
+    public void notify(String tag, int id, Notification notification) {
+        if (useSideChannelForNotification(notification)) {
+            pushSideChannelQueue(new NotifyTask(mContext.getPackageName(), id, tag, notification));
+            // Cancel this notification in notification manager if it just transitioned to being
+            // side channelled.
+            IMPL.cancelNotification(mNotificationManager, tag, id);
+        } else {
+            IMPL.postNotification(mNotificationManager, tag, id, notification);
+        }
+    }
+
+    /**
      * Push a notification task for distribution to notification side channels.
      */
     private void pushSideChannelQueue(Task task) {
@@ -257,6 +226,60 @@ public class NotificationManagerCompat {
             }
         }
         sSideChannelManager.queueTask(task);
+    }
+
+    interface Impl {
+        void cancelNotification(NotificationManager notificationManager, String tag, int id);
+
+        void postNotification(NotificationManager notificationManager, String tag, int id,
+                              Notification notification);
+
+        int getSideChannelBindFlags();
+    }
+
+    private interface Task {
+        public void send(INotificationSideChannel service) throws RemoteException;
+    }
+
+    static class ImplBase implements Impl {
+        @Override
+        public void cancelNotification(NotificationManager notificationManager, String tag,
+                                       int id) {
+            notificationManager.cancel(id);
+        }
+
+        @Override
+        public void postNotification(NotificationManager notificationManager, String tag, int id,
+                                     Notification notification) {
+            notificationManager.notify(id, notification);
+        }
+
+        @Override
+        public int getSideChannelBindFlags() {
+            return Service.BIND_AUTO_CREATE;
+        }
+    }
+
+    static class ImplEclair extends ImplBase {
+        @Override
+        public void cancelNotification(NotificationManager notificationManager, String tag,
+                                       int id) {
+            NotificationManagerCompatEclair.cancelNotification(notificationManager, tag, id);
+        }
+
+        @Override
+        public void postNotification(NotificationManager notificationManager, String tag, int id,
+                                     Notification notification) {
+            NotificationManagerCompatEclair.postNotification(notificationManager, tag, id,
+                    notification);
+        }
+    }
+
+    static class ImplIceCreamSandwich extends ImplEclair {
+        @Override
+        public int getSideChannelBindFlags() {
+            return NotificationManagerCompatIceCreamSandwich.SIDE_CHANNEL_BIND_FLAGS;
+        }
     }
 
     /**
@@ -415,6 +438,7 @@ public class NotificationManagerCompat {
 
         /**
          * Ensure we are already attempting to bind to a service, or start a new binding if not.
+         *
          * @return Whether the service bind attempt was successful.
          */
         private boolean ensureServiceBound(ListenerRecord record) {
@@ -512,16 +536,26 @@ public class NotificationManagerCompat {
             }
         }
 
-        /** A per-side-channel-service listener state record */
+        /**
+         * A per-side-channel-service listener state record
+         */
         private static class ListenerRecord {
             public final ComponentName componentName;
-            /** Whether the service is currently bound to. */
+            /**
+             * Whether the service is currently bound to.
+             */
             public boolean bound = false;
-            /** The service stub provided by onServiceConnected */
+            /**
+             * The service stub provided by onServiceConnected
+             */
             public INotificationSideChannel service;
-            /** Queue of pending tasks to send to this listener service */
+            /**
+             * Queue of pending tasks to send to this listener service
+             */
             public LinkedList<Task> taskQueue = new LinkedList<Task>();
-            /** Number of retries attempted while connecting to this listener service */
+            /**
+             * Number of retries attempted while connecting to this listener service
+             */
             public int retryCount = 0;
 
             public ListenerRecord(ComponentName componentName) {
@@ -535,14 +569,10 @@ public class NotificationManagerCompat {
         final IBinder iBinder;
 
         public ServiceConnectedEvent(ComponentName componentName,
-                final IBinder iBinder) {
+                                     final IBinder iBinder) {
             this.componentName = componentName;
             this.iBinder = iBinder;
         }
-    }
-
-    private interface Task {
-        public void send(INotificationSideChannel service) throws RemoteException;
     }
 
     private static class NotifyTask implements Task {

@@ -46,7 +46,7 @@ public class ContextCompat {
 
     /**
      * Start a set of activities as a synthesized task stack, if able.
-     *
+     * <p>
      * <p>In API level 11 (Android 3.0/Honeycomb) the recommended conventions for
      * app navigation using the back key changed. The back key's behavior is local
      * to the current task and does not capture navigation across different tasks.
@@ -54,12 +54,12 @@ public class ContextCompat {
      * through the "recents" UI, accessible through the software-provided Recents key
      * on the navigation or system bar. On devices with the older hardware button configuration
      * the recents UI can be accessed with a long press on the Home key.</p>
-     *
+     * <p>
      * <p>When crossing from one task stack to another post-Android 3.0,
      * the application should synthesize a back stack/history for the new task so that
      * the user may navigate out of the new task and back to the Launcher by repeated
      * presses of the back key. Back key presses should not navigate across task stacks.</p>
-     *
+     * <p>
      * <p>startActivities provides a mechanism for constructing a synthetic task stack of
      * multiple activities. If the underlying API is not available on the system this method
      * will return false.</p>
@@ -75,7 +75,7 @@ public class ContextCompat {
 
     /**
      * Start a set of activities as a synthesized task stack, if able.
-     *
+     * <p>
      * <p>In API level 11 (Android 3.0/Honeycomb) the recommended conventions for
      * app navigation using the back key changed. The back key's behavior is local
      * to the current task and does not capture navigation across different tasks.
@@ -83,12 +83,12 @@ public class ContextCompat {
      * through the "recents" UI, accessible through the software-provided Recents key
      * on the navigation or system bar. On devices with the older hardware button configuration
      * the recents UI can be accessed with a long press on the Home key.</p>
-     *
+     * <p>
      * <p>When crossing from one task stack to another post-Android 3.0,
      * the application should synthesize a back stack/history for the new task so that
      * the user may navigate out of the new task and back to the Launcher by repeated
      * presses of the back key. Back key presses should not navigate across task stacks.</p>
-     *
+     * <p>
      * <p>startActivities provides a mechanism for constructing a synthetic task stack of
      * multiple activities. If the underlying API is not available on the system this method
      * will return false.</p>
@@ -97,11 +97,11 @@ public class ContextCompat {
      * @param intents Array of intents defining the activities that will be started. The element
      *                length-1 will correspond to the top activity on the resulting task stack.
      * @param options Additional options for how the Activity should be started.
-     * See {@link android.content.Context#startActivity(Intent, android.os.Bundle)
+     *                See {@link android.content.Context#startActivity(Intent, android.os.Bundle)
      * @return true if the underlying API was available and the call was successful, false otherwise
      */
     public static boolean startActivities(Context context, Intent[] intents,
-            Bundle options) {
+                                          Bundle options) {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 16) {
             ContextCompatJellybean.startActivities(context, intents, options);
@@ -145,10 +145,10 @@ public class ContextCompat {
      * devices is not available. To request external storage access in a
      * backwards compatible way, consider using {@code android:maxSdkVersion}
      * like this:
-     *
+     * <p>
      * <pre class="prettyprint">&lt;uses-permission
-     *     android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-     *     android:maxSdkVersion="18" /&gt;</pre>
+     * android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+     * android:maxSdkVersion="18" /&gt;</pre>
      * <p>
      * The first path returned is the same as {@link Context#getObbDir()}.
      * Returned paths may be {@code null} if a storage device is unavailable.
@@ -168,7 +168,7 @@ public class ContextCompat {
                 single = buildPath(Environment.getExternalStorageDirectory(), DIR_ANDROID, DIR_OBB,
                         context.getPackageName());
             }
-            return new File[] { single };
+            return new File[]{single};
         }
     }
 
@@ -204,10 +204,10 @@ public class ContextCompat {
      * devices is not available. To request external storage access in a
      * backwards compatible way, consider using {@code android:maxSdkVersion}
      * like this:
-     *
+     * <p>
      * <pre class="prettyprint">&lt;uses-permission
-     *     android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-     *     android:maxSdkVersion="18" /&gt;</pre>
+     * android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+     * android:maxSdkVersion="18" /&gt;</pre>
      * <p>
      * The first path returned is the same as
      * {@link Context#getExternalFilesDir(String)}. Returned paths may be
@@ -228,7 +228,7 @@ public class ContextCompat {
                 single = buildPath(Environment.getExternalStorageDirectory(), DIR_ANDROID, DIR_DATA,
                         context.getPackageName(), DIR_FILES, type);
             }
-            return new File[] { single };
+            return new File[]{single};
         }
     }
 
@@ -264,10 +264,10 @@ public class ContextCompat {
      * devices is not available. To request external storage access in a
      * backwards compatible way, consider using {@code android:maxSdkVersion}
      * like this:
-     *
+     * <p>
      * <pre class="prettyprint">&lt;uses-permission
-     *     android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-     *     android:maxSdkVersion="18" /&gt;</pre>
+     * android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+     * android:maxSdkVersion="18" /&gt;</pre>
      * <p>
      * The first path returned is the same as
      * {@link Context#getExternalCacheDir()}. Returned paths may be {@code null}
@@ -288,7 +288,7 @@ public class ContextCompat {
                 single = buildPath(Environment.getExternalStorageDirectory(), DIR_ANDROID, DIR_DATA,
                         context.getPackageName(), DIR_CACHE);
             }
-            return new File[] { single };
+            return new File[]{single};
         }
     }
 
@@ -311,8 +311,8 @@ public class ContextCompat {
      * drawable will be styled for the specified Context's theme.
      *
      * @param id The desired resource identifier, as generated by the aapt tool.
-     *            This integer encodes the package, type, and resource entry.
-     *            The value 0 is an invalid identifier.
+     *           This integer encodes the package, type, and resource entry.
+     *           The value 0 is an invalid identifier.
      * @return Drawable An object that can be used to draw this resource.
      */
     public static final Drawable getDrawable(Context context, int id) {
@@ -334,9 +334,9 @@ public class ContextCompat {
      *           tool. This integer encodes the package, type, and resource
      *           entry. The value 0 is an invalid identifier.
      * @return A color state list, or {@code null} if the resource could not be
-     *         resolved.
+     * resolved.
      * @throws android.content.res.Resources.NotFoundException if the given ID
-     *         does not exist.
+     *                                                         does not exist.
      */
     public static final ColorStateList getColorStateList(Context context, int id) {
         final int version = Build.VERSION.SDK_INT;
@@ -358,7 +358,7 @@ public class ContextCompat {
      *           entry. The value 0 is an invalid identifier.
      * @return A single color value in the form 0xAARRGGBB.
      * @throws android.content.res.Resources.NotFoundException if the given ID
-     *         does not exist.
+     *                                                         does not exist.
      */
     public static final int getColor(Context context, int id) {
         final int version = Build.VERSION.SDK_INT;
@@ -373,10 +373,8 @@ public class ContextCompat {
      * Determine whether <em>you</em> have been granted a particular permission.
      *
      * @param permission The name of the permission being checked.
-     *
      * @return {@link android.content.pm.PackageManager#PERMISSION_GRANTED} if you have the
      * permission, or {@link android.content.pm.PackageManager#PERMISSION_DENIED} if not.
-     *
      * @see android.content.pm.PackageManager#checkPermission(String, String)
      */
     public static int checkSelfPermission(@NonNull Context context, @NonNull String permission) {
@@ -387,6 +385,20 @@ public class ContextCompat {
         return context.checkPermission(permission, android.os.Process.myPid(), Process.myUid());
     }
 
+    private synchronized static File createFilesDir(File file) {
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                if (file.exists()) {
+                    // spurious failure; probably racing with another process for this app
+                    return file;
+                }
+                Log.w(TAG, "Unable to create files subdir " + file.getPath());
+                return null;
+            }
+        }
+        return file;
+    }
+
     /**
      * Returns the absolute path to the directory on the filesystem similar to
      * {@link Context#getFilesDir()}.  The difference is that files placed under this
@@ -394,13 +406,12 @@ public class ContextCompat {
      * devices running {@link android.os.Build.VERSION_CODES#LOLLIPOP} or later.  See
      * {@link android.app.backup.BackupAgent BackupAgent} for a full discussion
      * of the automatic backup mechanism in Android.
-     *
+     * <p>
      * <p>No permissions are required to read or write to the returned path, since this
      * path is internal storage.
      *
      * @return The path of the directory holding application files that will not be
-     *         automatically backed up to remote storage.
-     *
+     * automatically backed up to remote storage.
      * @see android.content.Context.getFilesDir
      */
     public final File getNoBackupFilesDir(Context context) {
@@ -436,19 +447,5 @@ public class ContextCompat {
             ApplicationInfo appInfo = context.getApplicationInfo();
             return createFilesDir(new File(appInfo.dataDir, "code_cache"));
         }
-    }
-
-    private synchronized static File createFilesDir(File file) {
-        if (!file.exists()) {
-            if (!file.mkdirs()) {
-                if (file.exists()) {
-                    // spurious failure; probably racing with another process for this app
-                    return file;
-                }
-                Log.w(TAG, "Unable to create files subdir " + file.getPath());
-                return null;
-            }
-        }
-        return file;
     }
 }

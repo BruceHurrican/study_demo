@@ -22,7 +22,9 @@ import android.media.RemoteControlClient;
 import android.os.SystemClock;
 
 public class MediaSessionCompatApi18 {
-    /***** PlaybackState actions *****/
+    /**
+     * ** PlaybackState actions ****
+     */
     private static final long ACTION_SEEK_TO = 1 << 8;
 
     public static Object createPlaybackPositionUpdateListener(
@@ -41,7 +43,7 @@ public class MediaSessionCompatApi18 {
     }
 
     public static void setState(Object rccObj, int state, long position, float speed,
-            long updateTime) {
+                                long updateTime) {
         long currTime = SystemClock.elapsedRealtime();
         if (state == MediaSessionCompatApi14.STATE_PLAYING && position > 0) {
             long diff = 0;
@@ -63,7 +65,7 @@ public class MediaSessionCompatApi18 {
     }
 
     public static void setOnPlaybackPositionUpdateListener(Object rccObj,
-            Object onPositionUpdateObj) {
+                                                           Object onPositionUpdateObj) {
         ((RemoteControlClient) rccObj).setPlaybackPositionUpdateListener(
                 (RemoteControlClient.OnPlaybackPositionUpdateListener) onPositionUpdateObj);
     }

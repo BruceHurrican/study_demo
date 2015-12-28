@@ -20,19 +20,22 @@ import android.graphics.Rect;
 
 /**
  * Describes a set of insets for window content.
- *
+ * <p>
  * <p>WindowInsetsCompats are immutable and may be expanded to include more inset types in the
  * future. To adjust insets, use one of the supplied clone methods to obtain a new
  * WindowInsetsCompat instance with the adjusted properties.</p>
  */
 public class WindowInsetsCompat {
 
-    /** Private ctor */
-    WindowInsetsCompat() {}
+    /**
+     * Private ctor
+     */
+    WindowInsetsCompat() {
+    }
 
     /**
      * Returns the left system window inset in pixels.
-     *
+     * <p>
      * <p>The system window inset represents the area of a full-screen window that is
      * partially or fully obscured by the status bar, navigation bar, IME or other system windows.
      * </p>
@@ -45,7 +48,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the top system window inset in pixels.
-     *
+     * <p>
      * <p>The system window inset represents the area of a full-screen window that is
      * partially or fully obscured by the status bar, navigation bar, IME or other system windows.
      * </p>
@@ -58,7 +61,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the right system window inset in pixels.
-     *
+     * <p>
      * <p>The system window inset represents the area of a full-screen window that is
      * partially or fully obscured by the status bar, navigation bar, IME or other system windows.
      * </p>
@@ -71,7 +74,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the bottom system window inset in pixels.
-     *
+     * <p>
      * <p>The system window inset represents the area of a full-screen window that is
      * partially or fully obscured by the status bar, navigation bar, IME or other system windows.
      * </p>
@@ -84,7 +87,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns true if this WindowInsets has nonzero system window insets.
-     *
+     * <p>
      * <p>The system window inset represents the area of a full-screen window that is
      * partially or fully obscured by the status bar, navigation bar, IME or other system windows.
      * </p>
@@ -106,12 +109,12 @@ public class WindowInsetsCompat {
 
     /**
      * Check if these insets have been fully consumed.
-     *
+     * <p>
      * <p>Insets are considered "consumed" if the applicable <code>consume*</code> methods
      * have been called such that all insets have been set to zero. This affects propagation of
      * insets through the view hierarchy; insets that have not been fully consumed will continue
      * to propagate down to child views.</p>
-     *
+     * <p>
      * <p>The result of this method is equivalent to the return value of
      * {@link android.view.View#fitSystemWindows(android.graphics.Rect)}.</p>
      *
@@ -123,7 +126,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns true if the associated window has a round shape.
-     *
+     * <p>
      * <p>A round window's left, top, right and bottom edges reach all the way to the
      * associated edges of the window but the corners may not be visible. Views responding
      * to round insets should take care to not lay out critical elements within the corners
@@ -148,9 +151,9 @@ public class WindowInsetsCompat {
      * Returns a copy of this WindowInsets with selected system window insets replaced
      * with new values.
      *
-     * @param left New left inset in pixels
-     * @param top New top inset in pixels
-     * @param right New right inset in pixels
+     * @param left   New left inset in pixels
+     * @param top    New top inset in pixels
+     * @param right  New right inset in pixels
      * @param bottom New bottom inset in pixels
      * @return A modified copy of this WindowInsets
      */
@@ -172,7 +175,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the top stable inset in pixels.
-     *
+     * <p>
      * <p>The stable inset represents the area of a full-screen window that <b>may</b> be
      * partially or fully obscured by the system UI elements.  This value does not change
      * based on the visibility state of those elements; for example, if the status bar is
@@ -188,7 +191,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the left stable inset in pixels.
-     *
+     * <p>
      * <p>The stable inset represents the area of a full-screen window that <b>may</b> be
      * partially or fully obscured by the system UI elements.  This value does not change
      * based on the visibility state of those elements; for example, if the status bar is
@@ -203,7 +206,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the right stable inset in pixels.
-     *
+     * <p>
      * <p>The stable inset represents the area of a full-screen window that <b>may</b> be
      * partially or fully obscured by the system UI elements.  This value does not change
      * based on the visibility state of those elements; for example, if the status bar is
@@ -219,7 +222,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns the bottom stable inset in pixels.
-     *
+     * <p>
      * <p>The stable inset represents the area of a full-screen window that <b>may</b> be
      * partially or fully obscured by the system UI elements.  This value does not change
      * based on the visibility state of those elements; for example, if the status bar is
@@ -234,7 +237,7 @@ public class WindowInsetsCompat {
 
     /**
      * Returns true if this WindowInsets has nonzero stable insets.
-     *
+     * <p>
      * <p>The stable inset represents the area of a full-screen window that <b>may</b> be
      * partially or fully obscured by the system UI elements.  This value does not change
      * based on the visibility state of those elements; for example, if the status bar is

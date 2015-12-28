@@ -36,16 +36,16 @@ import java.util.ArrayList;
  * its tab content.  When placing this in a view hierarchy, after inflating
  * the hierarchy you must call {@link #setup(Context, FragmentManager, int)}
  * to complete the initialization of the tab host.
- *
+ * <p>
  * <p>Here is a simple example of using a FragmentTabHost in an Activity:
- *
+ * <p>
  * {@sample development/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabs.java
- *      complete}
- *
+ * complete}
+ * <p>
  * <p>This can also be used inside of a fragment through fragment nesting:
- *
+ * <p>
  * {@sample development/samples/Support4Demos/src/com/example/android/supportv4/app/FragmentTabsFragmentSupport.java
- *      complete}
+ * complete}
  */
 public class FragmentTabHost extends TabHost
         implements TabHost.OnTabChangeListener {
@@ -57,72 +57,6 @@ public class FragmentTabHost extends TabHost
     private TabHost.OnTabChangeListener mOnTabChangeListener;
     private TabInfo mLastTab;
     private boolean mAttached;
-
-    static final class TabInfo {
-        private final String tag;
-        private final Class<?> clss;
-        private final Bundle args;
-        private Fragment fragment;
-
-        TabInfo(String _tag, Class<?> _class, Bundle _args) {
-            tag = _tag;
-            clss = _class;
-            args = _args;
-        }
-    }
-
-    static class DummyTabFactory implements TabHost.TabContentFactory {
-        private final Context mContext;
-
-        public DummyTabFactory(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public View createTabContent(String tag) {
-            View v = new View(mContext);
-            v.setMinimumWidth(0);
-            v.setMinimumHeight(0);
-            return v;
-        }
-    }
-
-    static class SavedState extends BaseSavedState {
-        String curTab;
-
-        SavedState(Parcelable superState) {
-            super(superState);
-        }
-
-        private SavedState(Parcel in) {
-            super(in);
-            curTab = in.readString();
-        }
-
-        @Override
-        public void writeToParcel(Parcel out, int flags) {
-            super.writeToParcel(out, flags);
-            out.writeString(curTab);
-        }
-
-        @Override
-        public String toString() {
-            return "FragmentTabHost.SavedState{"
-                    + Integer.toHexString(System.identityHashCode(this))
-                    + " curTab=" + curTab + "}";
-        }
-
-        public static final Parcelable.Creator<SavedState> CREATOR
-                = new Parcelable.Creator<SavedState>() {
-            public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in);
-            }
-
-            public SavedState[] newArray(int size) {
-                return new SavedState[size];
-            }
-        };
-    }
 
     public FragmentTabHost(Context context) {
         // Note that we call through to the version that takes an AttributeSet,
@@ -138,7 +72,7 @@ public class FragmentTabHost extends TabHost
 
     private void initFragmentTabHost(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs,
-                new int[] { android.R.attr.inflatedId }, 0, 0);
+                new int[]{android.R.attr.inflatedId}, 0, 0);
         mContainerId = a.getResourceId(0, 0);
         a.recycle();
 
@@ -178,7 +112,8 @@ public class FragmentTabHost extends TabHost
      * call {@link #setup(Context, FragmentManager)} or
      * {@link #setup(Context, FragmentManager, int)}.
      */
-    @Override @Deprecated
+    @Override
+    @Deprecated
     public void setup() {
         throw new IllegalStateException(
                 "Must call setup() that takes a Context and FragmentManager");
@@ -210,7 +145,7 @@ public class FragmentTabHost extends TabHost
 
     private void ensureContent() {
         if (mRealTabContent == null) {
-            mRealTabContent = (FrameLayout)findViewById(mContainerId);
+            mRealTabContent = (FrameLayout) findViewById(mContainerId);
             if (mRealTabContent == null) {
                 throw new IllegalStateException(
                         "No tab content FrameLayout found for id " + mContainerId);
@@ -254,7 +189,7 @@ public class FragmentTabHost extends TabHost
         // Go through all tabs and make sure their fragments match
         // the correct state.
         FragmentTransaction ft = null;
-        for (int i=0; i<mTabs.size(); i++) {
+        for (int i = 0; i < mTabs.size(); i++) {
             TabInfo tab = mTabs.get(i);
             tab.fragment = mFragmentManager.findFragmentByTag(tab.tag);
             if (tab.fragment != null && !tab.fragment.isDetached()) {
@@ -300,7 +235,7 @@ public class FragmentTabHost extends TabHost
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        SavedState ss = (SavedState)state;
+        SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
         setCurrentTabByTag(ss.curTab);
     }
@@ -320,7 +255,7 @@ public class FragmentTabHost extends TabHost
 
     private FragmentTransaction doTabChanged(String tabId, FragmentTransaction ft) {
         TabInfo newTab = null;
-        for (int i=0; i<mTabs.size(); i++) {
+        for (int i = 0; i < mTabs.size(); i++) {
             TabInfo tab = mTabs.get(i);
             if (tab.tag.equals(tabId)) {
                 newTab = tab;
@@ -351,5 +286,70 @@ public class FragmentTabHost extends TabHost
             mLastTab = newTab;
         }
         return ft;
+    }
+
+    static final class TabInfo {
+        private final String tag;
+        private final Class<?> clss;
+        private final Bundle args;
+        private Fragment fragment;
+
+        TabInfo(String _tag, Class<?> _class, Bundle _args) {
+            tag = _tag;
+            clss = _class;
+            args = _args;
+        }
+    }
+
+    static class DummyTabFactory implements TabHost.TabContentFactory {
+        private final Context mContext;
+
+        public DummyTabFactory(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public View createTabContent(String tag) {
+            View v = new View(mContext);
+            v.setMinimumWidth(0);
+            v.setMinimumHeight(0);
+            return v;
+        }
+    }
+
+    static class SavedState extends BaseSavedState {
+        public static final Parcelable.Creator<SavedState> CREATOR
+                = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel in) {
+                return new SavedState(in);
+            }
+
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
+        String curTab;
+
+        SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        private SavedState(Parcel in) {
+            super(in);
+            curTab = in.readString();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeString(curTab);
+        }
+
+        @Override
+        public String toString() {
+            return "FragmentTabHost.SavedState{"
+                    + Integer.toHexString(System.identityHashCode(this))
+                    + " curTab=" + curTab + "}";
+        }
     }
 }

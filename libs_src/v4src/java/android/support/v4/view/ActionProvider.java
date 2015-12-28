@@ -26,13 +26,13 @@ import android.view.View;
  * This class is a mediator for accomplishing a given task, for example sharing a file. It is
  * responsible for creating a view that performs an action that accomplishes the task. This class
  * also implements other functions such a performing a default action.
- *
+ * <p>
  * <p class="note"><strong>Note:</strong> This class is included in the <a
  * href="{@docRoot}tools/extras/support-library.html">support library</a> for compatibility
  * with API level 4 and higher. If you're developing your app for API level 14 and higher
  * <em>only</em>, you should instead use the framework {@link android.view.ActionProvider}
  * class.</p>
- *
+ * <p>
  * <p>An ActionProvider can be
  * optionally specified for a {@link android.view.MenuItem} and in such a case it will be
  * responsible for
@@ -41,16 +41,16 @@ import android.view.View;
  * performing a default action if a menu item placed on the overflow menu of the ActionBar is
  * selected and none of the menu item callbacks has handled the selection. For this case the
  * provider can also optionally provide a sub-menu for accomplishing the task at hand.
- *
+ * <p>
  * <p>There are two ways for using an action provider for creating and handling of action views:
- *
+ * <p>
  * <ul><li> Setting the action provider on a {@link android.view.MenuItem} directly by
  * calling {@link
  * android.support.v4.view.MenuItemCompat#setActionProvider(android.view.MenuItem, ActionProvider)}.
  * </li>
- *
+ * <p>
  * <li>Declaring the action provider in the menu XML resource. For example:
- *
+ * <p>
  * <pre><code>
  *   &lt;item android:id="@+id/my_menu_item"
  *     android:title="@string/my_menu_item_title"
@@ -96,7 +96,7 @@ public abstract class ActionProvider {
     /**
      * Factory method called by the Android framework to create new action views.
      * This method returns a new action view for the given MenuItem.
-     *
+     * <p>
      * <p>If your ActionProvider implementation overrides the deprecated no-argument overload
      * {@link #onCreateActionView()}, overriding this method for devices running API 16 or later
      * is recommended but optional. The default implementation calls {@link #onCreateActionView()}
@@ -114,7 +114,7 @@ public abstract class ActionProvider {
      * by the {@link MenuItem} this ActionProvider is bound to help determine its visibility.
      *
      * @return true if this ActionProvider overrides the visibility of the MenuItem
-     *         it is bound to, false otherwise. The default implementation returns false.
+     * it is bound to, false otherwise. The default implementation returns false.
      * @see #isVisible()
      */
     public boolean overridesItemVisibility() {
@@ -124,12 +124,12 @@ public abstract class ActionProvider {
     /**
      * If {@link #overridesItemVisibility()} returns true, the return value of this method
      * will help determine the visibility of the {@link MenuItem} this ActionProvider is bound to.
-     *
+     * <p>
      * <p>If the MenuItem's visibility is explicitly set to false by the application,
      * the MenuItem will not be shown, even if this method returns true.</p>
      *
      * @return true if the MenuItem this ActionProvider is bound to is visible, false if
-     *         it is invisible. The default implementation returns true.
+     * it is invisible. The default implementation returns true.
      */
     public boolean isVisible() {
         return true;
@@ -149,33 +149,33 @@ public abstract class ActionProvider {
 
     /**
      * Performs an optional default action.
-     *
+     * <p>
      * <p>For the case of an action provider placed in a menu
      * item not shown as an action this method is invoked if previous callbacks for processing menu
      * selection has handled the event.
-     *
+     * <p>
      * <p> A menu item selection is processed in the following order:
-     *
+     * <p>
      * <ul><li>Receiving a call to
      * {@link android.view.MenuItem.OnMenuItemClickListener#onMenuItemClick
      * MenuItem.OnMenuItemClickListener.onMenuItemClick}.</li>
-     *
+     * <p>
      * <li>Receiving a call to
      * {@link android.app.Activity#onOptionsItemSelected(android.view.MenuItem)}
      * FragmentsActivity.onOptionsItemSelected(MenuItem)}
      * </li>
-     *
+     * <p>
      * <li>Receiving a call to
      * {@link android.support.v4.app.Fragment#onOptionsItemSelected(android.view.MenuItem)}
      * Fragment.onOptionsItemSelected(MenuItem)}</li>
-     *
+     * <p>
      * <li>Launching the {@link android.content.Intent} set via
      * {@link android.view.MenuItem#setIntent(android.content.Intent)
      * MenuItem.setIntent(android.content.Intent)}
      * </li>
-     *
+     * <p>
      * <li>Invoking this method.</li></ul>
-     *
+     * <p>
      * <p>The default implementation does not perform any action and returns false.
      */
     public boolean onPerformDefaultAction() {
@@ -184,7 +184,7 @@ public abstract class ActionProvider {
 
     /**
      * Determines if this ActionProvider has a submenu associated with it.
-     *
+     * <p>
      * <p>Associated submenus will be shown when an action view is not. This provider instance will
      * receive a call to {@link #onPrepareSubMenu(SubMenu)} after the call to {@link
      * #onPerformDefaultAction()} and before a submenu is displayed to the user.
@@ -197,7 +197,7 @@ public abstract class ActionProvider {
 
     /**
      * Called to prepare an associated submenu for the menu item backed by this ActionProvider.
-     *
+     * <p>
      * <p>if {@link #hasSubMenu()} returns true, this method will be called when the menu item is
      * selected to prepare the submenu for presentation to the user. Apps may use this to create or
      * alter submenu content right before display.

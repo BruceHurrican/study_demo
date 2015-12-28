@@ -67,9 +67,25 @@ public final class MediaDescriptionCompat implements Parcelable {
      * A cached copy of the equivalent framework object.
      */
     private Object mDescriptionObj;
+    public static final Parcelable.Creator<MediaDescriptionCompat> CREATOR =
+            new Parcelable.Creator<MediaDescriptionCompat>() {
+                @Override
+                public MediaDescriptionCompat createFromParcel(Parcel in) {
+                    if (Build.VERSION.SDK_INT < 21) {
+                        return new MediaDescriptionCompat(in);
+                    } else {
+                        return fromMediaDescription(MediaDescriptionCompatApi21.fromParcel(in));
+                    }
+                }
+
+                @Override
+                public MediaDescriptionCompat[] newArray(int size) {
+                    return new MediaDescriptionCompat[size];
+                }
+            };
 
     private MediaDescriptionCompat(String mediaId, CharSequence title, CharSequence subtitle,
-            CharSequence description, Bitmap icon, Uri iconUri, Bundle extras, Uri mediaUri) {
+                                   CharSequence description, Bitmap icon, Uri iconUri, Bundle extras, Uri mediaUri) {
         mMediaId = mediaId;
         mTitle = title;
         mSubtitle = subtitle;
@@ -89,6 +105,40 @@ public final class MediaDescriptionCompat implements Parcelable {
         mIconUri = in.readParcelable(null);
         mExtras = in.readBundle();
         mMediaUri = in.readParcelable(null);
+    }
+
+    /**
+     * Creates an instance from a framework
+     * {@link android.media.MediaDescription} object.
+     * <p>
+     * This method is only supported on API 21+.
+     * </p>
+     *
+     * @param descriptionObj A {@link android.media.MediaDescription} object, or
+     *                       null if none.
+     * @return An equivalent {@link MediaMetadataCompat} object, or null if
+     * none.
+     */
+    public static MediaDescriptionCompat fromMediaDescription(Object descriptionObj) {
+        if (descriptionObj == null || Build.VERSION.SDK_INT < 21) {
+            return null;
+        }
+
+        Builder bob = new Builder();
+        bob.setMediaId(MediaDescriptionCompatApi21.getMediaId(descriptionObj));
+        bob.setTitle(MediaDescriptionCompatApi21.getTitle(descriptionObj));
+        bob.setSubtitle(MediaDescriptionCompatApi21.getSubtitle(descriptionObj));
+        bob.setDescription(MediaDescriptionCompatApi21.getDescription(descriptionObj));
+        bob.setIconBitmap(MediaDescriptionCompatApi21.getIconBitmap(descriptionObj));
+        bob.setIconUri(MediaDescriptionCompatApi21.getIconUri(descriptionObj));
+        bob.setExtras(MediaDescriptionCompatApi21.getExtras(descriptionObj));
+        if (Build.VERSION.SDK_INT >= 23) {
+            bob.setMediaUri(MediaDescriptionCompatApi23.getMediaUri(descriptionObj));
+        }
+        MediaDescriptionCompat descriptionCompat = bob.build();
+        descriptionCompat.mDescriptionObj = descriptionObj;
+
+        return descriptionCompat;
     }
 
     /**
@@ -204,7 +254,7 @@ public final class MediaDescriptionCompat implements Parcelable {
      * </p>
      *
      * @return An equivalent {@link android.media.MediaDescription} object, or
-     *         null if none.
+     * null if none.
      */
     public Object getMediaDescription() {
         if (mDescriptionObj != null || Build.VERSION.SDK_INT < 21) {
@@ -225,57 +275,6 @@ public final class MediaDescriptionCompat implements Parcelable {
 
         return mDescriptionObj;
     }
-
-    /**
-     * Creates an instance from a framework
-     * {@link android.media.MediaDescription} object.
-     * <p>
-     * This method is only supported on API 21+.
-     * </p>
-     *
-     * @param descriptionObj A {@link android.media.MediaDescription} object, or
-     *            null if none.
-     * @return An equivalent {@link MediaMetadataCompat} object, or null if
-     *         none.
-     */
-    public static MediaDescriptionCompat fromMediaDescription(Object descriptionObj) {
-        if (descriptionObj == null || Build.VERSION.SDK_INT < 21) {
-            return null;
-        }
-
-        Builder bob = new Builder();
-        bob.setMediaId(MediaDescriptionCompatApi21.getMediaId(descriptionObj));
-        bob.setTitle(MediaDescriptionCompatApi21.getTitle(descriptionObj));
-        bob.setSubtitle(MediaDescriptionCompatApi21.getSubtitle(descriptionObj));
-        bob.setDescription(MediaDescriptionCompatApi21.getDescription(descriptionObj));
-        bob.setIconBitmap(MediaDescriptionCompatApi21.getIconBitmap(descriptionObj));
-        bob.setIconUri(MediaDescriptionCompatApi21.getIconUri(descriptionObj));
-        bob.setExtras(MediaDescriptionCompatApi21.getExtras(descriptionObj));
-        if (Build.VERSION.SDK_INT >= 23) {
-            bob.setMediaUri(MediaDescriptionCompatApi23.getMediaUri(descriptionObj));
-        }
-        MediaDescriptionCompat descriptionCompat = bob.build();
-        descriptionCompat.mDescriptionObj = descriptionObj;
-
-        return descriptionCompat;
-    }
-
-    public static final Parcelable.Creator<MediaDescriptionCompat> CREATOR =
-            new Parcelable.Creator<MediaDescriptionCompat>() {
-            @Override
-                public MediaDescriptionCompat createFromParcel(Parcel in) {
-                    if (Build.VERSION.SDK_INT < 21) {
-                        return new MediaDescriptionCompat(in);
-                    } else {
-                        return fromMediaDescription(MediaDescriptionCompatApi21.fromParcel(in));
-                    }
-                }
-
-            @Override
-                public MediaDescriptionCompat[] newArray(int size) {
-                    return new MediaDescriptionCompat[size];
-                }
-            };
 
     /**
      * Builder for {@link MediaDescriptionCompat} objects.
@@ -333,7 +332,7 @@ public final class MediaDescriptionCompat implements Parcelable {
          * Sets the description.
          *
          * @param description A description suitable for display to the user or
-         *            null.
+         *                    null.
          * @return this
          */
         public Builder setDescription(@Nullable CharSequence description) {
@@ -345,7 +344,7 @@ public final class MediaDescriptionCompat implements Parcelable {
          * Sets the icon.
          *
          * @param icon A {@link Bitmap} icon suitable for display to the user or
-         *            null.
+         *             null.
          * @return this
          */
         public Builder setIconBitmap(@Nullable Bitmap icon) {
@@ -357,7 +356,7 @@ public final class MediaDescriptionCompat implements Parcelable {
          * Sets the icon uri.
          *
          * @param iconUri A {@link Uri} for an icon suitable for display to the
-         *            user or null.
+         *                user or null.
          * @return this
          */
         public Builder setIconUri(@Nullable Uri iconUri) {

@@ -25,12 +25,131 @@ import java.util.Set;
 /**
  * Helper for writing standard Java collection interfaces to a data
  * structure like {@link ArrayMap}.
+ *
  * @hide
  */
 abstract class MapCollections<K, V> {
     EntrySet mEntrySet;
     KeySet mKeySet;
     ValuesCollection mValues;
+
+    public static <K, V> boolean containsAllHelper(Map<K, V> map, Collection<?> collection) {
+        Iterator<?> it = collection.iterator();
+        while (it.hasNext()) {
+            if (!map.containsKey(it.next())) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static <K, V> boolean removeAllHelper(Map<K, V> map, Collection<?> collection) {
+        int oldSize = map.size();
+        Iterator<?> it = collection.iterator();
+        while (it.hasNext()) {
+            map.remove(it.next());
+        }
+        return oldSize != map.size();
+    }
+
+    public static <K, V> boolean retainAllHelper(Map<K, V> map, Collection<?> collection) {
+        int oldSize = map.size();
+        Iterator<K> it = map.keySet().iterator();
+        while (it.hasNext()) {
+            if (!collection.contains(it.next())) {
+                it.remove();
+            }
+        }
+        return oldSize != map.size();
+    }
+
+    ;
+
+    public static <T> boolean equalsSetHelper(Set<T> set, Object object) {
+        if (set == object) {
+            return true;
+        }
+        if (object instanceof Set) {
+            Set<?> s = (Set<?>) object;
+
+            try {
+                return set.size() == s.size() && set.containsAll(s);
+            } catch (NullPointerException ignored) {
+                return false;
+            } catch (ClassCastException ignored) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    ;
+
+    public Object[] toArrayHelper(int offset) {
+        final int N = colGetSize();
+        Object[] result = new Object[N];
+        for (int i = 0; i < N; i++) {
+            result[i] = colGetEntry(i, offset);
+        }
+        return result;
+    }
+
+    ;
+
+    public <T> T[] toArrayHelper(T[] array, int offset) {
+        final int N = colGetSize();
+        if (array.length < N) {
+            @SuppressWarnings("unchecked") T[] newArray
+                    = (T[]) Array.newInstance(array.getClass().getComponentType(), N);
+            array = newArray;
+        }
+        for (int i = 0; i < N; i++) {
+            array[i] = (T) colGetEntry(i, offset);
+        }
+        if (array.length > N) {
+            array[N] = null;
+        }
+        return array;
+    }
+
+    public Set<Map.Entry<K, V>> getEntrySet() {
+        if (mEntrySet == null) {
+            mEntrySet = new EntrySet();
+        }
+        return mEntrySet;
+    }
+
+    public Set<K> getKeySet() {
+        if (mKeySet == null) {
+            mKeySet = new KeySet();
+        }
+        return mKeySet;
+    }
+
+    public Collection<V> getValues() {
+        if (mValues == null) {
+            mValues = new ValuesCollection();
+        }
+        return mValues;
+    }
+
+    protected abstract int colGetSize();
+
+    protected abstract Object colGetEntry(int index, int offset);
+
+    protected abstract int colIndexOfKey(Object key);
+
+    protected abstract int colIndexOfValue(Object key);
+
+    protected abstract Map<K, V> colGetMap();
+
+    protected abstract void colPut(K key, V value);
+
+    protected abstract V colSetValue(int index, V value);
+
+    protected abstract void colRemoveAt(int index);
+
+    protected abstract void colClear();
 
     final class ArrayIterator<T> implements Iterator<T> {
         final int mOffset;
@@ -53,7 +172,7 @@ abstract class MapCollections<K, V> {
             Object res = colGetEntry(mIndex, mOffset);
             mIndex++;
             mCanRemove = true;
-            return (T)res;
+            return (T) res;
         }
 
         @Override
@@ -107,7 +226,7 @@ abstract class MapCollections<K, V> {
                 throw new IllegalStateException(
                         "This container does not support retaining Map.Entry objects");
             }
-            return (K)colGetEntry(mIndex, 0);
+            return (K) colGetEntry(mIndex, 0);
         }
 
         @Override
@@ -116,7 +235,7 @@ abstract class MapCollections<K, V> {
                 throw new IllegalStateException(
                         "This container does not support retaining Map.Entry objects");
             }
-            return (V)colGetEntry(mIndex, 1);
+            return (V) colGetEntry(mIndex, 1);
         }
 
         @Override
@@ -252,15 +371,15 @@ abstract class MapCollections<K, V> {
         @Override
         public int hashCode() {
             int result = 0;
-            for (int i=colGetSize()-1; i>=0; i--) {
+            for (int i = colGetSize() - 1; i >= 0; i--) {
                 final Object key = colGetEntry(i, 0);
                 final Object value = colGetEntry(i, 1);
-                result += ( (key == null ? 0 : key.hashCode()) ^
-                        (value == null ? 0 : value.hashCode()) );
+                result += ((key == null ? 0 : key.hashCode()) ^
+                        (value == null ? 0 : value.hashCode()));
             }
             return result;
         }
-    };
+    }
 
     final class KeySet implements Set<K> {
 
@@ -342,13 +461,13 @@ abstract class MapCollections<K, V> {
         @Override
         public int hashCode() {
             int result = 0;
-            for (int i=colGetSize()-1; i>=0; i--) {
+            for (int i = colGetSize() - 1; i >= 0; i--) {
                 Object obj = colGetEntry(i, 0);
                 result += obj == null ? 0 : obj.hashCode();
             }
             return result;
         }
-    };
+    }
 
     final class ValuesCollection implements Collection<V> {
 
@@ -407,7 +526,7 @@ abstract class MapCollections<K, V> {
         public boolean removeAll(Collection<?> collection) {
             int N = colGetSize();
             boolean changed = false;
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 Object cur = colGetEntry(i, 1);
                 if (collection.contains(cur)) {
                     colRemoveAt(i);
@@ -423,7 +542,7 @@ abstract class MapCollections<K, V> {
         public boolean retainAll(Collection<?> collection) {
             int N = colGetSize();
             boolean changed = false;
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 Object cur = colGetEntry(i, 1);
                 if (!collection.contains(cur)) {
                     colRemoveAt(i);
@@ -449,110 +568,5 @@ abstract class MapCollections<K, V> {
         public <T> T[] toArray(T[] array) {
             return toArrayHelper(array, 1);
         }
-    };
-
-    public static <K, V> boolean containsAllHelper(Map<K, V> map, Collection<?> collection) {
-        Iterator<?> it = collection.iterator();
-        while (it.hasNext()) {
-            if (!map.containsKey(it.next())) {
-                return false;
-            }
-        }
-        return true;
     }
-
-    public static <K, V> boolean removeAllHelper(Map<K, V> map, Collection<?> collection) {
-        int oldSize = map.size();
-        Iterator<?> it = collection.iterator();
-        while (it.hasNext()) {
-            map.remove(it.next());
-        }
-        return oldSize != map.size();
-    }
-
-    public static <K, V> boolean retainAllHelper(Map<K, V> map, Collection<?> collection) {
-        int oldSize = map.size();
-        Iterator<K> it = map.keySet().iterator();
-        while (it.hasNext()) {
-            if (!collection.contains(it.next())) {
-                it.remove();
-            }
-        }
-        return oldSize != map.size();
-    }
-
-
-    public Object[] toArrayHelper(int offset) {
-        final int N = colGetSize();
-        Object[] result = new Object[N];
-        for (int i=0; i<N; i++) {
-            result[i] = colGetEntry(i, offset);
-        }
-        return result;
-    }
-
-    public <T> T[] toArrayHelper(T[] array, int offset) {
-        final int N  = colGetSize();
-        if (array.length < N) {
-            @SuppressWarnings("unchecked") T[] newArray
-                = (T[]) Array.newInstance(array.getClass().getComponentType(), N);
-            array = newArray;
-        }
-        for (int i=0; i<N; i++) {
-            array[i] = (T)colGetEntry(i, offset);
-        }
-        if (array.length > N) {
-            array[N] = null;
-        }
-        return array;
-    }
-
-    public static <T> boolean equalsSetHelper(Set<T> set, Object object) {
-        if (set == object) {
-            return true;
-        }
-        if (object instanceof Set) {
-            Set<?> s = (Set<?>) object;
-
-            try {
-                return set.size() == s.size() && set.containsAll(s);
-            } catch (NullPointerException ignored) {
-                return false;
-            } catch (ClassCastException ignored) {
-                return false;
-            }
-        }
-        return false;
-    }
-
-    public Set<Map.Entry<K, V>> getEntrySet() {
-        if (mEntrySet == null) {
-            mEntrySet = new EntrySet();
-        }
-        return mEntrySet;
-    }
-
-    public Set<K> getKeySet() {
-        if (mKeySet == null) {
-            mKeySet = new KeySet();
-        }
-        return mKeySet;
-    }
-
-    public Collection<V> getValues() {
-        if (mValues == null) {
-            mValues = new ValuesCollection();
-        }
-        return mValues;
-    }
-
-    protected abstract int colGetSize();
-    protected abstract Object colGetEntry(int index, int offset);
-    protected abstract int colIndexOfKey(Object key);
-    protected abstract int colIndexOfValue(Object key);
-    protected abstract Map<K, V> colGetMap();
-    protected abstract void colPut(K key, V value);
-    protected abstract V colSetValue(int index, V value);
-    protected abstract void colRemoveAt(int index);
-    protected abstract void colClear();
 }

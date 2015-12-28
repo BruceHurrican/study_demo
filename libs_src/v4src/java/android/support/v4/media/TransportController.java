@@ -61,6 +61,7 @@ public abstract class TransportController {
 
     /**
      * Move to a new location in the media stream.
+     *
      * @param pos Position to move to, in milliseconds.
      */
     public abstract void seekTo(long pos);
@@ -79,14 +80,14 @@ public abstract class TransportController {
     /**
      * Retrieve the flags for the media transport control buttons that this transport supports.
      * Result is a combination of the following flags:
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PREVIOUS},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_REWIND},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_STOP},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_FAST_FORWARD},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_NEXT}
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PREVIOUS},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_REWIND},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_STOP},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_FAST_FORWARD},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_NEXT}
      */
     public abstract int getTransportControlFlags();
 }

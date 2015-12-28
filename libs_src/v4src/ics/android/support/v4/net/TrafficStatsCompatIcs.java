@@ -33,16 +33,16 @@ class TrafficStatsCompatIcs {
         return TrafficStats.getThreadStatsTag();
     }
 
+    public static void setThreadStatsTag(int tag) {
+        TrafficStats.setThreadStatsTag(tag);
+    }
+
     public static void incrementOperationCount(int operationCount) {
         TrafficStats.incrementOperationCount(operationCount);
     }
 
     public static void incrementOperationCount(int tag, int operationCount) {
         TrafficStats.incrementOperationCount(tag, operationCount);
-    }
-
-    public static void setThreadStatsTag(int tag) {
-        TrafficStats.setThreadStatsTag(tag);
     }
 
     public static void tagSocket(Socket socket) throws SocketException {

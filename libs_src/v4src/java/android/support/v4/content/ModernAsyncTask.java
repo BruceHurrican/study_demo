@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * needed to support AsyncTaskLoader.  We use this rather than the one from the platform
  * because we rely on some subtle behavior of AsyncTask that is not reliable on
  * older platforms.
- *
+ * <p>
  * <p>Note that for now this is not publicly available because it is not a
  * complete implementation, only sufficient for the needs of
  * {@link AsyncTaskLoader}.
@@ -58,7 +58,7 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      */
     public static final Executor THREAD_POOL_EXECUTOR
             = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
-                    TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+            TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 
     private static final int MESSAGE_POST_RESULT = 0x1;
     private static final int MESSAGE_POST_PROGRESS = 0x2;
@@ -68,43 +68,8 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     private static volatile Executor sDefaultExecutor = THREAD_POOL_EXECUTOR;
     private final WorkerRunnable<Params, Result> mWorker;
     private final FutureTask<Result> mFuture;
-
-    private volatile Status mStatus = Status.PENDING;
-
     private final AtomicBoolean mTaskInvoked = new AtomicBoolean();
-
-    /**
-     * Indicates the current status of the task. Each status will be set only once
-     * during the lifetime of a task.
-     */
-    public enum Status {
-        /**
-         * Indicates that the task has not been executed yet.
-         */
-        PENDING,
-        /**
-         * Indicates that the task is running.
-         */
-        RUNNING,
-        /**
-         * Indicates that {@link android.os.AsyncTask#onPostExecute(Object)} has finished.
-         */
-        FINISHED,
-    }
-
-    private static Handler getHandler() {
-        synchronized (ModernAsyncTask.class) {
-            if (sHandler == null) {
-                sHandler = new InternalHandler();
-            }
-            return sHandler;
-        }
-    }
-
-    /** @hide */
-    public static void setDefaultExecutor(Executor exec) {
-        sDefaultExecutor = exec;
-    }
+    private volatile Status mStatus = Status.PENDING;
 
     /**
      * Creates a new asynchronous task. This constructor must be invoked on the UI thread.
@@ -141,6 +106,30 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
         };
     }
 
+    private static Handler getHandler() {
+        synchronized (ModernAsyncTask.class) {
+            if (sHandler == null) {
+                sHandler = new InternalHandler();
+            }
+            return sHandler;
+        }
+    }
+
+    /**
+     * @hide
+     */
+    public static void setDefaultExecutor(Executor exec) {
+        sDefaultExecutor = exec;
+    }
+
+    /**
+     * Convenience version of {@link #execute(Object...)} for use with
+     * a simple Runnable object.
+     */
+    public static void execute(Runnable runnable) {
+        sDefaultExecutor.execute(runnable);
+    }
+
     private void postResultIfNotInvoked(Result result) {
         final boolean wasTaskInvoked = mTaskInvoked.get();
         if (!wasTaskInvoked) {
@@ -168,14 +157,12 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * Override this method to perform a computation on a background thread. The
      * specified parameters are the parameters passed to {@link #execute}
      * by the caller of this task.
-     *
+     * <p>
      * This method can call {@link #publishProgress} to publish updates
      * on the UI thread.
      *
      * @param params The parameters of the task.
-     *
      * @return A result, defined by the subclass of this task.
-     *
      * @see #onPreExecute()
      * @see #onPostExecute
      * @see #publishProgress
@@ -194,11 +181,10 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     /**
      * <p>Runs on the UI thread after {@link #doInBackground}. The
      * specified result is the value returned by {@link #doInBackground}.</p>
-     *
+     * <p>
      * <p>This method won't be invoked if the task was cancelled.</p>
      *
      * @param result The result of the operation computed by {@link #doInBackground}.
-     *
      * @see #onPreExecute
      * @see #doInBackground
      * @see #onCancelled(Object)
@@ -212,7 +198,6 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * The specified values are the values passed to {@link #publishProgress}.
      *
      * @param values The values indicating progress.
-     *
      * @see #publishProgress
      * @see #doInBackground
      */
@@ -223,14 +208,13 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     /**
      * <p>Runs on the UI thread after {@link #cancel(boolean)} is invoked and
      * {@link #doInBackground(Object[])} has finished.</p>
-     *
+     * <p>
      * <p>The default implementation simply invokes {@link #onCancelled()} and
      * ignores the result. If you write your own implementation, do not call
      * <code>super.onCancelled(result)</code>.</p>
      *
      * @param result The result, if any, computed in
      *               {@link #doInBackground(Object[])}, can be null
-     *
      * @see #cancel(boolean)
      * @see #isCancelled()
      */
@@ -243,7 +227,7 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * <p>Applications should preferably override {@link #onCancelled(Object)}.
      * This method is invoked by the default implementation of
      * {@link #onCancelled(Object)}.</p>
-     *
+     * <p>
      * <p>Runs on the UI thread after {@link #cancel(boolean)} is invoked and
      * {@link #doInBackground(Object[])} has finished.</p>
      *
@@ -261,7 +245,6 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * {@link #doInBackground(Object[])} to end the task as soon as possible.
      *
      * @return <tt>true</tt> if task was cancelled before it completed
-     *
      * @see #cancel(boolean)
      */
     public final boolean isCancelled() {
@@ -277,7 +260,7 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * then the <tt>mayInterruptIfRunning</tt> parameter determines
      * whether the thread executing this task should be interrupted in
      * an attempt to stop the task.</p>
-     *
+     * <p>
      * <p>Calling this method will result in {@link #onCancelled(Object)} being
      * invoked on the UI thread after {@link #doInBackground(Object[])}
      * returns. Calling this method guarantees that {@link #onPostExecute(Object)}
@@ -287,13 +270,11 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * possible.</p>
      *
      * @param mayInterruptIfRunning <tt>true</tt> if the thread executing this
-     *        task should be interrupted; otherwise, in-progress tasks are allowed
-     *        to complete.
-     *
+     *                              task should be interrupted; otherwise, in-progress tasks are allowed
+     *                              to complete.
      * @return <tt>false</tt> if the task could not be cancelled,
-     *         typically because it has already completed normally;
-     *         <tt>true</tt> otherwise
-     *
+     * typically because it has already completed normally;
+     * <tt>true</tt> otherwise
      * @see #isCancelled()
      * @see #onCancelled(Object)
      */
@@ -306,11 +287,10 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * retrieves its result.
      *
      * @return The computed result.
-     *
      * @throws CancellationException If the computation was cancelled.
-     * @throws ExecutionException If the computation threw an exception.
-     * @throws InterruptedException If the current thread was interrupted
-     *         while waiting.
+     * @throws ExecutionException    If the computation threw an exception.
+     * @throws InterruptedException  If the current thread was interrupted
+     *                               while waiting.
      */
     public final Result get() throws InterruptedException, ExecutionException {
         return mFuture.get();
@@ -321,15 +301,13 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * to complete, and then retrieves its result.
      *
      * @param timeout Time to wait before cancelling the operation.
-     * @param unit The time unit for the timeout.
-     *
+     * @param unit    The time unit for the timeout.
      * @return The computed result.
-     *
      * @throws CancellationException If the computation was cancelled.
-     * @throws ExecutionException If the computation threw an exception.
-     * @throws InterruptedException If the current thread was interrupted
-     *         while waiting.
-     * @throws TimeoutException If the wait timed out.
+     * @throws ExecutionException    If the computation threw an exception.
+     * @throws InterruptedException  If the current thread was interrupted
+     *                               while waiting.
+     * @throws TimeoutException      If the wait timed out.
      */
     public final Result get(long timeout, TimeUnit unit) throws InterruptedException,
             ExecutionException, TimeoutException {
@@ -339,7 +317,7 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     /**
      * Executes the task with the specified parameters. The task returns
      * itself (this) so that the caller can keep a reference to it.
-     *
+     * <p>
      * <p>Note: this function schedules the task on a queue for a single background
      * thread or pool of threads depending on the platform version.  When first
      * introduced, AsyncTasks were executed serially on a single background thread.
@@ -351,16 +329,14 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * the {@link #executeOnExecutor} version of this method
      * with {@link #THREAD_POOL_EXECUTOR}; however, see commentary there for warnings on
      * its use.
-     *
+     * <p>
      * <p>This method must be invoked on the UI thread.
      *
      * @param params The parameters of the task.
-     *
      * @return This instance of AsyncTask.
-     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
-     *         {@link android.os.AsyncTask.Status#RUNNING} or
-     *          {@link android.os.AsyncTask.Status#FINISHED}.
+     *                               {@link android.os.AsyncTask.Status#RUNNING} or
+     *                               {@link android.os.AsyncTask.Status#FINISHED}.
      */
     public final ModernAsyncTask<Params, Progress, Result> execute(Params... params) {
         return executeOnExecutor(sDefaultExecutor, params);
@@ -369,12 +345,12 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     /**
      * Executes the task with the specified parameters. The task returns
      * itself (this) so that the caller can keep a reference to it.
-     *
+     * <p>
      * <p>This method is typically used with {@link #THREAD_POOL_EXECUTOR} to
      * allow multiple tasks to run in parallel on a pool of threads managed by
      * AsyncTask, however you can also use your own {@link Executor} for custom
      * behavior.
-     *
+     * <p>
      * <p><em>Warning:</em> Allowing multiple tasks to run in parallel from
      * a thread pool is generally <em>not</em> what one wants, because the order
      * of their operation is not defined.  For example, if these tasks are used
@@ -383,21 +359,19 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
      * Without careful work it is possible in rare cases for the newer version
      * of the data to be over-written by an older one, leading to obscure data
      * loss and stability issues.
-     *
+     * <p>
      * <p>This method must be invoked on the UI thread.
      *
-     * @param exec The executor to use.  {@link #THREAD_POOL_EXECUTOR} is available as a
-     *              convenient process-wide thread pool for tasks that are loosely coupled.
+     * @param exec   The executor to use.  {@link #THREAD_POOL_EXECUTOR} is available as a
+     *               convenient process-wide thread pool for tasks that are loosely coupled.
      * @param params The parameters of the task.
-     *
      * @return This instance of AsyncTask.
-     *
      * @throws IllegalStateException If {@link #getStatus()} returns either
-     *         {@link android.os.AsyncTask.Status#RUNNING}
-     *          or {@link android.os.AsyncTask.Status#FINISHED}.
+     *                               {@link android.os.AsyncTask.Status#RUNNING}
+     *                               or {@link android.os.AsyncTask.Status#FINISHED}.
      */
     public final ModernAsyncTask<Params, Progress, Result> executeOnExecutor(Executor exec,
-            Params... params) {
+                                                                             Params... params) {
         if (mStatus != Status.PENDING) {
             switch (mStatus) {
                 case RUNNING:
@@ -421,24 +395,15 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
     }
 
     /**
-     * Convenience version of {@link #execute(Object...)} for use with
-     * a simple Runnable object.
-     */
-    public static void execute(Runnable runnable) {
-        sDefaultExecutor.execute(runnable);
-    }
-
-    /**
      * This method can be invoked from {@link #doInBackground} to
      * publish updates on the UI thread while the background computation is
      * still running. Each call to this method will trigger the execution of
      * {@link #onProgressUpdate} on the UI thread.
-     *
+     * <p>
      * {@link #onProgressUpdate} will note be called if the task has been
      * canceled.
      *
      * @param values The progress values to update the UI with.
-     *
      * @see #onProgressUpdate
      * @see #doInBackground
      */
@@ -456,6 +421,25 @@ abstract class ModernAsyncTask<Params, Progress, Result> {
             onPostExecute(result);
         }
         mStatus = Status.FINISHED;
+    }
+
+    /**
+     * Indicates the current status of the task. Each status will be set only once
+     * during the lifetime of a task.
+     */
+    public enum Status {
+        /**
+         * Indicates that the task has not been executed yet.
+         */
+        PENDING,
+        /**
+         * Indicates that the task is running.
+         */
+        RUNNING,
+        /**
+         * Indicates that {@link android.os.AsyncTask#onPostExecute(Object)} has finished.
+         */
+        FINISHED,
     }
 
     private static class InternalHandler extends Handler {

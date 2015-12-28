@@ -29,15 +29,12 @@ import android.graphics.drawable.Drawable;
 class DrawableWrapperDonut extends Drawable implements Drawable.Callback, DrawableWrapper {
 
     static final PorterDuff.Mode DEFAULT_MODE = PorterDuff.Mode.SRC_IN;
-
+    Drawable mDrawable;
     private ColorStateList mTintList;
     private PorterDuff.Mode mTintMode = DEFAULT_MODE;
-
     private int mCurrentColor;
     private PorterDuff.Mode mCurrentMode;
     private boolean mColorFilterSet;
-
-    Drawable mDrawable;
 
     DrawableWrapperDonut(Drawable drawable) {
         setWrappedDrawable(drawable);
@@ -54,13 +51,13 @@ class DrawableWrapperDonut extends Drawable implements Drawable.Callback, Drawab
     }
 
     @Override
-    public void setChangingConfigurations(int configs) {
-        mDrawable.setChangingConfigurations(configs);
+    public int getChangingConfigurations() {
+        return mDrawable.getChangingConfigurations();
     }
 
     @Override
-    public int getChangingConfigurations() {
-        return mDrawable.getChangingConfigurations();
+    public void setChangingConfigurations(int configs) {
+        mDrawable.setChangingConfigurations(configs);
     }
 
     @Override

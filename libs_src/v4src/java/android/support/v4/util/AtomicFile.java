@@ -49,6 +49,17 @@ public class AtomicFile {
         mBackupName = new File(baseName.getPath() + ".bak");
     }
 
+    static boolean sync(FileOutputStream stream) {
+        try {
+            if (stream != null) {
+                stream.getFD().sync();
+            }
+            return true;
+        } catch (IOException e) {
+        }
+        return false;
+    }
+
     /**
      * Return the path to the base file.  You should not generally use this,
      * as the data at that path may not be valid.
@@ -71,7 +82,7 @@ public class AtomicFile {
      * with the new data.  You <em>must not</em> directly close the given
      * FileOutputStream; instead call either {@link #finishWrite(FileOutputStream)}
      * or {@link #failWrite(FileOutputStream)}.
-     *
+     * <p>
      * <p>Note that if another thread is currently performing
      * a write, this will simply replace whatever that thread is writing
      * with the new file being written by this thread, and when the other
@@ -149,7 +160,7 @@ public class AtomicFile {
      * incomplete write, this will roll back to the last good data before
      * opening for read.  You should call close() on the FileInputStream when
      * you are done reading from it.
-     *
+     * <p>
      * <p>Note that if another thread is currently performing
      * a write, this will incorrectly consider it to be in the state of a bad
      * write and roll back, causing the new data currently being written to
@@ -175,7 +186,7 @@ public class AtomicFile {
             int avail = stream.available();
             byte[] data = new byte[avail];
             while (true) {
-                int amt = stream.read(data, pos, data.length-pos);
+                int amt = stream.read(data, pos, data.length - pos);
                 //Log.i("foo", "Read " + amt + " bytes at " + pos
                 //        + " of avail " + data.length);
                 if (amt <= 0) {
@@ -185,8 +196,8 @@ public class AtomicFile {
                 }
                 pos += amt;
                 avail = stream.available();
-                if (avail > data.length-pos) {
-                    byte[] newData = new byte[pos+avail];
+                if (avail > data.length - pos) {
+                    byte[] newData = new byte[pos + avail];
                     System.arraycopy(data, 0, newData, 0, pos);
                     data = newData;
                 }
@@ -194,16 +205,5 @@ public class AtomicFile {
         } finally {
             stream.close();
         }
-    }
-
-    static boolean sync(FileOutputStream stream) {
-        try {
-            if (stream != null) {
-                stream.getFD().sync();
-            }
-            return true;
-        } catch (IOException e) {
-        }
-        return false;
     }
 }

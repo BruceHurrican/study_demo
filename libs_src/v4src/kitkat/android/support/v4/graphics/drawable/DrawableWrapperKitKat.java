@@ -25,12 +25,12 @@ class DrawableWrapperKitKat extends DrawableWrapperHoneycomb {
     }
 
     @Override
-    public void setAutoMirrored(boolean mirrored) {
-        mDrawable.setAutoMirrored(mirrored);
+    public boolean isAutoMirrored() {
+        return mDrawable.isAutoMirrored();
     }
 
     @Override
-    public boolean isAutoMirrored() {
-        return mDrawable.isAutoMirrored();
+    public void setAutoMirrored(boolean mirrored) {
+        mDrawable.setAutoMirrored(mirrored);
     }
 }

@@ -49,7 +49,7 @@ public class NotificationCompat {
     /**
      * Use the default notification sound. This will ignore any sound set using
      * {@link Builder#setSound}
-     *
+     * <p>
      * <p>
      * A notification that is noisy is more likely to be presented as a heads-up notification,
      * on some platforms.
@@ -63,7 +63,7 @@ public class NotificationCompat {
      * Use the default notification vibrate. This will ignore any vibrate set using
      * {@link Builder#setVibrate}. Using phone vibration requires the
      * {@link android.Manifest.permission#VIBRATE VIBRATE} permission.
-     *
+     * <p>
      * <p>
      * A notification that vibrates is more likely to be presented as a heads-up notification,
      * on some platforms.
@@ -92,7 +92,7 @@ public class NotificationCompat {
      * Bit set in the Notification flags field when LEDs should be turned on
      * for this notification.
      */
-    public static final int FLAG_SHOW_LIGHTS        = 0x00000001;
+    public static final int FLAG_SHOW_LIGHTS = 0x00000001;
 
     /**
      * Bit set in the Notification flags field if this notification is in
@@ -100,32 +100,32 @@ public class NotificationCompat {
      * not be set if this notification is in reference to something that
      * happened at a particular point in time, like a missed phone call.
      */
-    public static final int FLAG_ONGOING_EVENT      = 0x00000002;
+    public static final int FLAG_ONGOING_EVENT = 0x00000002;
 
     /**
      * Bit set in the Notification flags field if
      * the audio will be repeated until the notification is
      * cancelled or the notification window is opened.
      */
-    public static final int FLAG_INSISTENT          = 0x00000004;
+    public static final int FLAG_INSISTENT = 0x00000004;
 
     /**
      * Bit set in the Notification flags field if the notification's sound,
      * vibrate and ticker should only be played if the notification is not already showing.
      */
-    public static final int FLAG_ONLY_ALERT_ONCE    = 0x00000008;
+    public static final int FLAG_ONLY_ALERT_ONCE = 0x00000008;
 
     /**
      * Bit set in the Notification flags field if the notification should be canceled when
      * it is clicked by the user.
      */
-    public static final int FLAG_AUTO_CANCEL        = 0x00000010;
+    public static final int FLAG_AUTO_CANCEL = 0x00000010;
 
     /**
      * Bit set in the Notification flags field if the notification should not be canceled
      * when the user clicks the Clear all button.
      */
-    public static final int FLAG_NO_CLEAR           = 0x00000020;
+    public static final int FLAG_NO_CLEAR = 0x00000020;
 
     /**
      * Bit set in the Notification flags field if this notification represents a currently
@@ -139,13 +139,13 @@ public class NotificationCompat {
      *
      * @deprecated Use {@link NotificationCompat.Builder#setPriority(int)} with a positive value.
      */
-    public static final int FLAG_HIGH_PRIORITY      = 0x00000080;
+    public static final int FLAG_HIGH_PRIORITY = 0x00000080;
 
     /**
      * Bit set in the Notification flags field if this notification is relevant to the current
      * device only and it is not recommended that it bridge to other devices.
      */
-    public static final int FLAG_LOCAL_ONLY         = 0x00000100;
+    public static final int FLAG_LOCAL_ONLY = 0x00000100;
 
     /**
      * Bit set in the Notification flags field if this notification is the group summary for a
@@ -153,7 +153,7 @@ public class NotificationCompat {
      * which support such rendering. Requires a group key also be set using
      * {@link Builder#setGroup}.
      */
-    public static final int FLAG_GROUP_SUMMARY      = 0x00000200;
+    public static final int FLAG_GROUP_SUMMARY = 0x00000200;
 
     /**
      * Default notification priority for {@link NotificationCompat.Builder#setPriority(int)}.
@@ -348,7 +348,7 @@ public class NotificationCompat {
 
     /**
      * Notification visibility: Show this notification in its entirety on all lockscreens.
-     *
+     * <p>
      * {@see android.app.Notification#visibility}
      */
     public static final int VISIBILITY_PUBLIC = 1;
@@ -356,14 +356,14 @@ public class NotificationCompat {
     /**
      * Notification visibility: Show this notification on all lockscreens, but conceal sensitive or
      * private information on secure lockscreens.
-     *
+     * <p>
      * {@see android.app.Notification#visibility}
      */
     public static final int VISIBILITY_PRIVATE = 0;
 
     /**
      * Notification visibility: Do not reveal any part of this notification on a secure lockscreen.
-     *
+     * <p>
      * {@see android.app.Notification#visibility}
      */
     public static final int VISIBILITY_SECRET = -1;
@@ -443,22 +443,206 @@ public class NotificationCompat {
 
     private static final NotificationCompatImpl IMPL;
 
+    static {
+        if (Build.VERSION.SDK_INT >= 21) {
+            IMPL = new NotificationCompatImplApi21();
+        } else if (Build.VERSION.SDK_INT >= 20) {
+            IMPL = new NotificationCompatImplApi20();
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            IMPL = new NotificationCompatImplKitKat();
+        } else if (Build.VERSION.SDK_INT >= 16) {
+            IMPL = new NotificationCompatImplJellybean();
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            IMPL = new NotificationCompatImplIceCreamSandwich();
+        } else if (Build.VERSION.SDK_INT >= 11) {
+            IMPL = new NotificationCompatImplHoneycomb();
+        } else if (Build.VERSION.SDK_INT >= 9) {
+            IMPL = new NotificationCompatImplGingerbread();
+        } else {
+            IMPL = new NotificationCompatImplBase();
+        }
+    }
+
+    private static void addActionsToBuilder(NotificationBuilderWithActions builder,
+                                            ArrayList<Action> actions) {
+        for (Action action : actions) {
+            builder.addAction(action);
+        }
+    }
+
+    private static void addStyleToBuilderJellybean(NotificationBuilderWithBuilderAccessor builder,
+                                                   Style style) {
+        if (style != null) {
+            if (style instanceof BigTextStyle) {
+                BigTextStyle bigTextStyle = (BigTextStyle) style;
+                NotificationCompatJellybean.addBigTextStyle(builder,
+                        bigTextStyle.mBigContentTitle,
+                        bigTextStyle.mSummaryTextSet,
+                        bigTextStyle.mSummaryText,
+                        bigTextStyle.mBigText);
+            } else if (style instanceof InboxStyle) {
+                InboxStyle inboxStyle = (InboxStyle) style;
+                NotificationCompatJellybean.addInboxStyle(builder,
+                        inboxStyle.mBigContentTitle,
+                        inboxStyle.mSummaryTextSet,
+                        inboxStyle.mSummaryText,
+                        inboxStyle.mTexts);
+            } else if (style instanceof BigPictureStyle) {
+                BigPictureStyle bigPictureStyle = (BigPictureStyle) style;
+                NotificationCompatJellybean.addBigPictureStyle(builder,
+                        bigPictureStyle.mBigContentTitle,
+                        bigPictureStyle.mSummaryTextSet,
+                        bigPictureStyle.mSummaryText,
+                        bigPictureStyle.mPicture,
+                        bigPictureStyle.mBigLargeIcon,
+                        bigPictureStyle.mBigLargeIconSet);
+            }
+        }
+    }
+
+    /**
+     * Get an array of Notification objects from a parcelable array bundle field.
+     * Update the bundle to have a typed array so fetches in the future don't need
+     * to do an array copy.
+     */
+    private static Notification[] getNotificationArrayFromBundle(Bundle bundle, String key) {
+        Parcelable[] array = bundle.getParcelableArray(key);
+        if (array instanceof Notification[] || array == null) {
+            return (Notification[]) array;
+        }
+        Notification[] typedArray = new Notification[array.length];
+        for (int i = 0; i < array.length; i++) {
+            typedArray[i] = (Notification) array[i];
+        }
+        bundle.putParcelableArray(key, typedArray);
+        return typedArray;
+    }
+
+    /**
+     * Gets the {@link Notification#extras} field from a notification in a backwards
+     * compatible manner. Extras field was supported from JellyBean (Api level 16)
+     * forwards. This function will return null on older api levels.
+     */
+    public static Bundle getExtras(Notification notif) {
+        return IMPL.getExtras(notif);
+    }
+
+    /**
+     * Get the number of actions in this notification in a backwards compatible
+     * manner. Actions were supported from JellyBean (Api level 16) forwards.
+     */
+    public static int getActionCount(Notification notif) {
+        return IMPL.getActionCount(notif);
+    }
+
+    /**
+     * Get an action on this notification in a backwards compatible
+     * manner. Actions were supported from JellyBean (Api level 16) forwards.
+     *
+     * @param notif       The notification to inspect.
+     * @param actionIndex The index of the action to retrieve.
+     */
+    public static Action getAction(Notification notif, int actionIndex) {
+        return IMPL.getAction(notif, actionIndex);
+    }
+
+    /**
+     * Get the category of this notification in a backwards compatible
+     * manner.
+     *
+     * @param notif The notification to inspect.
+     */
+    public static String getCategory(Notification notif) {
+        return IMPL.getCategory(notif);
+    }
+
+    /**
+     * Get whether or not this notification is only relevant to the current device.
+     * <p>
+     * <p>Some notifications can be bridged to other devices for remote display.
+     * If this hint is set, it is recommend that this notification not be bridged.
+     */
+    public static boolean getLocalOnly(Notification notif) {
+        return IMPL.getLocalOnly(notif);
+    }
+
+    /**
+     * Get the key used to group this notification into a cluster or stack
+     * with other notifications on devices which support such rendering.
+     */
+    public static String getGroup(Notification notif) {
+        return IMPL.getGroup(notif);
+    }
+
+    /**
+     * Get whether this notification to be the group summary for a group of notifications.
+     * Grouped notifications may display in a cluster or stack on devices which
+     * support such rendering. Requires a group key also be set using {@link Builder#setGroup}.
+     *
+     * @return Whether this notification is a group summary.
+     */
+    public static boolean isGroupSummary(Notification notif) {
+        return IMPL.isGroupSummary(notif);
+    }
+
+    /**
+     * Get a sort key that orders this notification among other notifications from the
+     * same package. This can be useful if an external sort was already applied and an app
+     * would like to preserve this. Notifications will be sorted lexicographically using this
+     * value, although providing different priorities in addition to providing sort key may
+     * cause this value to be ignored.
+     * <p>
+     * <p>This sort key can also be used to order members of a notification group. See
+     * {@link Builder#setGroup}.
+     *
+     * @see String#compareTo(String)
+     */
+    public static String getSortKey(Notification notif) {
+        return IMPL.getSortKey(notif);
+    }
+
     interface NotificationCompatImpl {
         public Notification build(Builder b, BuilderExtender extender);
+
         public Bundle getExtras(Notification n);
+
         public int getActionCount(Notification n);
+
         public Action getAction(Notification n, int actionIndex);
+
         public Action[] getActionsFromParcelableArrayList(ArrayList<Parcelable> parcelables);
+
         public ArrayList<Parcelable> getParcelableArrayListForActions(Action[] actions);
+
         public String getCategory(Notification n);
+
         public boolean getLocalOnly(Notification n);
+
         public String getGroup(Notification n);
+
         public boolean isGroupSummary(Notification n);
+
         public String getSortKey(Notification n);
+
         Bundle getBundleForUnreadConversation(NotificationCompatBase.UnreadConversation uc);
+
         NotificationCompatBase.UnreadConversation getUnreadConversationFromBundle(
                 Bundle b, NotificationCompatBase.UnreadConversation.Factory factory,
                 RemoteInputCompatBase.RemoteInput.Factory remoteInputFactory);
+    }
+
+    /**
+     * Extender interface for use with {@link Builder#extend}. Extenders may be used to add
+     * metadata or change options on a notification builder.
+     */
+    public interface Extender {
+        /**
+         * Apply this extender to a notification builder.
+         *
+         * @param builder the builder to be modified.
+         * @return the build object for chaining.
+         */
+        public Builder extend(Builder builder);
     }
 
     /**
@@ -579,9 +763,9 @@ public class NotificationCompat {
         public Notification build(Builder b, BuilderExtender extender) {
             NotificationCompatIceCreamSandwich.Builder builder =
                     new NotificationCompatIceCreamSandwich.Builder(
-                    b.mContext, b.mNotification, b.mContentTitle, b.mContentText, b.mContentInfo,
-                    b.mTickerView, b.mNumber, b.mContentIntent, b.mFullScreenIntent, b.mLargeIcon,
-                    b.mProgressMax, b.mProgress, b.mProgressIndeterminate);
+                            b.mContext, b.mNotification, b.mContentTitle, b.mContentText, b.mContentInfo,
+                            b.mTickerView, b.mNumber, b.mContentIntent, b.mFullScreenIntent, b.mLargeIcon,
+                            b.mProgressMax, b.mProgress, b.mProgressIndeterminate);
             return extender.build(b, builder);
         }
     }
@@ -789,63 +973,6 @@ public class NotificationCompat {
         }
     }
 
-    private static void addActionsToBuilder(NotificationBuilderWithActions builder,
-            ArrayList<Action> actions) {
-        for (Action action : actions) {
-            builder.addAction(action);
-        }
-    }
-
-    private static void addStyleToBuilderJellybean(NotificationBuilderWithBuilderAccessor builder,
-            Style style) {
-        if (style != null) {
-            if (style instanceof BigTextStyle) {
-                BigTextStyle bigTextStyle = (BigTextStyle) style;
-                NotificationCompatJellybean.addBigTextStyle(builder,
-                        bigTextStyle.mBigContentTitle,
-                        bigTextStyle.mSummaryTextSet,
-                        bigTextStyle.mSummaryText,
-                        bigTextStyle.mBigText);
-            } else if (style instanceof InboxStyle) {
-                InboxStyle inboxStyle = (InboxStyle) style;
-                NotificationCompatJellybean.addInboxStyle(builder,
-                        inboxStyle.mBigContentTitle,
-                        inboxStyle.mSummaryTextSet,
-                        inboxStyle.mSummaryText,
-                        inboxStyle.mTexts);
-            } else if (style instanceof BigPictureStyle) {
-                BigPictureStyle bigPictureStyle = (BigPictureStyle) style;
-                NotificationCompatJellybean.addBigPictureStyle(builder,
-                        bigPictureStyle.mBigContentTitle,
-                        bigPictureStyle.mSummaryTextSet,
-                        bigPictureStyle.mSummaryText,
-                        bigPictureStyle.mPicture,
-                        bigPictureStyle.mBigLargeIcon,
-                        bigPictureStyle.mBigLargeIconSet);
-            }
-        }
-    }
-
-    static {
-        if (Build.VERSION.SDK_INT >= 21) {
-            IMPL = new NotificationCompatImplApi21();
-        } else if (Build.VERSION.SDK_INT >= 20) {
-            IMPL = new NotificationCompatImplApi20();
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            IMPL = new NotificationCompatImplKitKat();
-        } else if (Build.VERSION.SDK_INT >= 16) {
-            IMPL = new NotificationCompatImplJellybean();
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            IMPL = new NotificationCompatImplIceCreamSandwich();
-        } else if (Build.VERSION.SDK_INT >= 11) {
-            IMPL = new NotificationCompatImplHoneycomb();
-        } else if (Build.VERSION.SDK_INT >= 9) {
-            IMPL = new NotificationCompatImplGingerbread();
-        } else {
-            IMPL = new NotificationCompatImplBase();
-        }
-    }
-
     /**
      * Builder class for {@link NotificationCompat} objects.  Allows easier control over
      * all the flags, as well as help constructing the typical notification layouts.
@@ -864,12 +991,11 @@ public class NotificationCompat {
      * {@link NotificationCompat.Builder#setContentIntent setContentIntent()}
      * method.
      * </p>
-     *
      */
     public static class Builder {
         /**
          * Maximum length of CharSequences accepted by Builder and friends.
-         *
+         * <p>
          * <p>
          * Avoids spamming the system with overly large strings such as full e-mails.
          */
@@ -878,38 +1004,63 @@ public class NotificationCompat {
         // All these variables are declared public/hidden so they can be accessed by a builder
         // extender.
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public Context mContext;
 
-        /** @hide */
+        /**
+         * @hide
+         */
         public CharSequence mContentTitle;
-        /** @hide */
+        /**
+         * @hide
+         */
         public CharSequence mContentText;
+        /**
+         * @hide
+         */
+        public Bitmap mLargeIcon;
+        /**
+         * @hide
+         */
+        public CharSequence mContentInfo;
+        /**
+         * @hide
+         */
+        public int mNumber;
+        /**
+         * @hide
+         */
+        public boolean mUseChronometer;
+        /**
+         * @hide
+         */
+        public Style mStyle;
+        /**
+         * @hide
+         */
+        public CharSequence mSubText;
+        /**
+         * @hide
+         */
+        public ArrayList<Action> mActions = new ArrayList<Action>();
+        /**
+         * @hide
+         */
+        public Notification mNotification = new Notification();
+        public ArrayList<String> mPeople;
         PendingIntent mContentIntent;
         PendingIntent mFullScreenIntent;
         RemoteViews mTickerView;
-        /** @hide */
-        public Bitmap mLargeIcon;
-        /** @hide */
-        public CharSequence mContentInfo;
-        /** @hide */
-        public int mNumber;
         int mPriority;
         boolean mShowWhen = true;
-        /** @hide */
-        public boolean mUseChronometer;
-        /** @hide */
-        public Style mStyle;
-        /** @hide */
-        public CharSequence mSubText;
         int mProgressMax;
         int mProgress;
         boolean mProgressIndeterminate;
         String mGroupKey;
         boolean mGroupSummary;
         String mSortKey;
-        /** @hide */
-        public ArrayList<Action> mActions = new ArrayList<Action>();
         boolean mLocalOnly = false;
         String mCategory;
         Bundle mExtras;
@@ -917,20 +1068,16 @@ public class NotificationCompat {
         int mVisibility = VISIBILITY_PRIVATE;
         Notification mPublicVersion;
 
-        /** @hide */
-        public Notification mNotification = new Notification();
-        public ArrayList<String> mPeople;
-
         /**
          * Constructor.
-         *
+         * <p>
          * Automatically sets the when field to {@link System#currentTimeMillis()
          * System.currentTimeMillis()} and the audio stream to the
          * {@link Notification#STREAM_DEFAULT}.
          *
          * @param context A {@link Context} that will be used to construct the
-         *      RemoteViews. The Context will not be held past the lifetime of this
-         *      Builder object.
+         *                RemoteViews. The Context will not be held past the lifetime of this
+         *                Builder object.
          */
         public Builder(Context context) {
             mContext = context;
@@ -940,6 +1087,14 @@ public class NotificationCompat {
             mNotification.audioStreamType = Notification.STREAM_DEFAULT;
             mPriority = PRIORITY_DEFAULT;
             mPeople = new ArrayList<String>();
+        }
+
+        protected static CharSequence limitCharSequenceLength(CharSequence cs) {
+            if (cs == null) return cs;
+            if (cs.length() > MAX_CHARSEQUENCE_LENGTH) {
+                cs = cs.subSequence(0, MAX_CHARSEQUENCE_LENGTH);
+            }
+            return cs;
         }
 
         /**
@@ -962,10 +1117,10 @@ public class NotificationCompat {
 
         /**
          * Show the {@link Notification#when} field as a stopwatch.
-         *
+         * <p>
          * Instead of presenting <code>when</code> as a timestamp, the notification will show an
          * automatically updating display of the minutes and seconds since <code>when</code>.
-         *
+         * <p>
          * Useful when showing an elapsed time (like an ongoing phone call).
          *
          * @see android.widget.Chronometer
@@ -993,9 +1148,8 @@ public class NotificationCompat {
          * level parameter for when the icon is a {@link android.graphics.drawable.LevelListDrawable
          * LevelListDrawable}.
          *
-         * @param icon A resource ID in the application's package of the drawble to use.
+         * @param icon  A resource ID in the application's package of the drawble to use.
          * @param level The level to use for the icon.
-         *
          * @see android.graphics.drawable.LevelListDrawable
          */
         public Builder setSmallIcon(int icon, int level) {
@@ -1104,15 +1258,15 @@ public class NotificationCompat {
          * If this facility is used for something else, please give the user an option
          * to turn it off and use a normal notification, as this can be extremely
          * disruptive.
-         *
+         * <p>
          * <p>
          * On some platforms, the system UI may choose to display a heads-up notification,
          * instead of launching this intent, while the user is using the device.
          * </p>
          *
-         * @param intent The pending intent to launch.
+         * @param intent       The pending intent to launch.
          * @param highPriority Passing true will cause this notification to be sent
-         *          even if other notifications are suppressed.
+         *                     even if other notifications are suppressed.
          */
         public Builder setFullScreenIntent(PendingIntent intent, boolean highPriority) {
             mFullScreenIntent = intent;
@@ -1150,7 +1304,7 @@ public class NotificationCompat {
 
         /**
          * Set the sound to play.  It will play on the default stream.
-         *
+         * <p>
          * <p>
          * On some platforms, a notification that is noisy is more likely to be presented
          * as a heads-up notification.
@@ -1164,7 +1318,7 @@ public class NotificationCompat {
 
         /**
          * Set the sound to play.  It will play on the stream you supply.
-         *
+         * <p>
          * <p>
          * On some platforms, a notification that is noisy is more likely to be presented
          * as a heads-up notification.
@@ -1181,7 +1335,7 @@ public class NotificationCompat {
 
         /**
          * Set the vibration pattern to use.
-         *
+         * <p>
          * <p>
          * On some platforms, a notification that vibrates is more likely to be presented
          * as a heads-up notification.
@@ -1212,13 +1366,13 @@ public class NotificationCompat {
 
         /**
          * Set whether this is an ongoing notification.
-         *
+         * <p>
          * <p>Ongoing notifications differ from regular notifications in the following ways:
          * <ul>
-         *   <li>Ongoing notifications are sorted above the regular notifications in the
-         *   notification panel.</li>
-         *   <li>Ongoing notifications do not have an 'X' close button, and are not affected
-         *   by the "Clear all" button.
+         * <li>Ongoing notifications are sorted above the regular notifications in the
+         * notification panel.</li>
+         * <li>Ongoing notifications do not have an 'X' close button, and are not affected
+         * by the "Clear all" button.
          * </ul>
          */
         public Builder setOngoing(boolean ongoing) {
@@ -1248,7 +1402,7 @@ public class NotificationCompat {
 
         /**
          * Set whether or not this notification is only relevant to the current device.
-         *
+         * <p>
          * <p>Some notifications can be bridged to other devices for remote display.
          * This hint can be set to recommend this notification not be bridged.
          */
@@ -1259,7 +1413,7 @@ public class NotificationCompat {
 
         /**
          * Set the notification category.
-         *
+         * <p>
          * <p>Must be one of the predefined notification categories (see the <code>CATEGORY_*</code>
          * constants in {@link Notification}) that best describes this notification.
          * May be used by the system for ranking and filtering.
@@ -1297,7 +1451,7 @@ public class NotificationCompat {
 
         /**
          * Set the relative priority for this notification.
-         *
+         * <p>
          * Priority is an indication of how much of the user's
          * valuable attention should be consumed by this
          * notification. Low-priority notifications may be hidden from
@@ -1307,10 +1461,10 @@ public class NotificationCompat {
          * setPriority value. The effect may differ slightly on different platforms.
          *
          * @param pri Relative priority for this notification. Must be one of
-         *     the priority constants defined by {@link NotificationCompat}.
-         *     Acceptable values range from {@link
-         *     NotificationCompat#PRIORITY_MIN} (-2) to {@link
-         *     NotificationCompat#PRIORITY_MAX} (2).
+         *            the priority constants defined by {@link NotificationCompat}.
+         *            Acceptable values range from {@link
+         *            NotificationCompat#PRIORITY_MIN} (-2) to {@link
+         *            NotificationCompat#PRIORITY_MAX} (2).
          */
         public Builder setPriority(int pri) {
             mPriority = pri;
@@ -1319,17 +1473,17 @@ public class NotificationCompat {
 
         /**
          * Add a person that is relevant to this notification.
-         *
-         * <P>
+         * <p>
+         * <p>
          * Depending on user preferences, this annotation may allow the notification to pass
          * through interruption filters, and to appear more prominently in the user interface.
          * </P>
-         *
-         * <P>
+         * <p>
+         * <p>
          * The person should be specified by the {@code String} representation of a
          * {@link android.provider.ContactsContract.Contacts#CONTENT_LOOKUP_URI}.
          * </P>
-         *
+         * <p>
          * <P>The system will also attempt to resolve {@code mailto:} and {@code tel:} schema
          * URIs.  The path part of these URIs must exist in the contacts database, in the
          * appropriate column, or the reference will be discarded as invalid. Telephone schema
@@ -1348,10 +1502,11 @@ public class NotificationCompat {
          * Set this notification to be part of a group of notifications sharing the same key.
          * Grouped notifications may display in a cluster or stack on devices which
          * support such rendering.
-         *
+         * <p>
          * <p>To make this notification the summary for its group, also call
          * {@link #setGroupSummary}. A sort order can be specified for group members by using
          * {@link #setSortKey}.
+         *
          * @param groupKey The group key of the group.
          * @return this object for method chaining
          */
@@ -1364,6 +1519,7 @@ public class NotificationCompat {
          * Set this notification to be the group summary for a group of notifications.
          * Grouped notifications may display in a cluster or stack on devices which
          * support such rendering. Requires a group key also be set using {@link #setGroup}.
+         *
          * @param isGroupSummary Whether this notification should be a group summary.
          * @return this object for method chaining
          */
@@ -1378,7 +1534,7 @@ public class NotificationCompat {
          * would like to preserve this. Notifications will be sorted lexicographically using this
          * value, although providing different priorities in addition to providing sort key may
          * cause this value to be ignored.
-         *
+         * <p>
          * <p>This sort key can also be used to order members of a notification group. See
          * {@link Builder#setGroup}.
          *
@@ -1391,7 +1547,7 @@ public class NotificationCompat {
 
         /**
          * Merge additional metadata into this notification.
-         *
+         * <p>
          * <p>Values within the Bundle will replace existing extras values in this Builder.
          *
          * @see Notification#extras
@@ -1408,27 +1564,10 @@ public class NotificationCompat {
         }
 
         /**
-         * Set metadata for this notification.
-         *
-         * <p>A reference to the Bundle is held for the lifetime of this Builder, and the Bundle's
-         * current contents are copied into the Notification each time {@link #build()} is
-         * called.
-         *
-         * <p>Replaces any existing extras values with those from the provided Bundle.
-         * Use {@link #addExtras} to merge in metadata instead.
-         *
-         * @see Notification#extras
-         */
-        public Builder setExtras(Bundle extras) {
-            mExtras = extras;
-            return this;
-        }
-
-        /**
          * Get the current metadata Bundle used by this notification Builder.
-         *
+         * <p>
          * <p>The returned Bundle is shared with this Builder.
-         *
+         * <p>
          * <p>The current contents of this Bundle are copied into the Notification each time
          * {@link #build()} is called.
          *
@@ -1439,6 +1578,23 @@ public class NotificationCompat {
                 mExtras = new Bundle();
             }
             return mExtras;
+        }
+
+        /**
+         * Set metadata for this notification.
+         * <p>
+         * <p>A reference to the Bundle is held for the lifetime of this Builder, and the Bundle's
+         * current contents are copied into the Notification each time {@link #build()} is
+         * called.
+         * <p>
+         * <p>Replaces any existing extras values with those from the provided Bundle.
+         * Use {@link #addExtras} to merge in metadata instead.
+         *
+         * @see Notification#extras
+         */
+        public Builder setExtras(Bundle extras) {
+            mExtras = extras;
+            return this;
         }
 
         /**
@@ -1453,8 +1609,8 @@ public class NotificationCompat {
          * enhance the notification by implementing the same functionality with
          * {@link #addAction addAction()}.
          *
-         * @param icon Resource ID of a drawable that represents the action.
-         * @param title Text describing the action.
+         * @param icon   Resource ID of a drawable that represents the action.
+         * @param title  Text describing the action.
          * @param intent {@link android.app.PendingIntent} to be fired when the action is invoked.
          */
         public Builder addAction(int icon, CharSequence title, PendingIntent intent) {
@@ -1503,7 +1659,6 @@ public class NotificationCompat {
          * Sets {@link Notification#color}.
          *
          * @param argb The accent color to use
-         *
          * @return The same Builder.
          */
         public Builder setColor(@ColorInt int argb) {
@@ -1567,14 +1722,6 @@ public class NotificationCompat {
         protected BuilderExtender getExtender() {
             return new BuilderExtender();
         }
-
-        protected static CharSequence limitCharSequenceLength(CharSequence cs) {
-            if (cs == null) return cs;
-            if (cs.length() > MAX_CHARSEQUENCE_LENGTH) {
-                cs = cs.subSequence(0, MAX_CHARSEQUENCE_LENGTH);
-            }
-            return cs;
-        }
     }
 
     /**
@@ -1617,13 +1764,13 @@ public class NotificationCompat {
      * This class is a "rebuilder": It attaches to a Builder object and modifies its behavior, like so:
      * <pre class="prettyprint">
      * Notification notif = new Notification.Builder(mContext)
-     *     .setContentTitle(&quot;New photo from &quot; + sender.toString())
-     *     .setContentText(subject)
-     *     .setSmallIcon(R.drawable.new_post)
-     *     .setLargeIcon(aBitmap)
-     *     .setStyle(new Notification.BigPictureStyle()
-     *         .bigPicture(aBigBitmap))
-     *     .build();
+     * .setContentTitle(&quot;New photo from &quot; + sender.toString())
+     * .setContentText(subject)
+     * .setSmallIcon(R.drawable.new_post)
+     * .setLargeIcon(aBitmap)
+     * .setStyle(new Notification.BigPictureStyle()
+     * .bigPicture(aBigBitmap))
+     * .build();
      * </pre>
      *
      * @see Notification#bigContentView
@@ -1678,7 +1825,7 @@ public class NotificationCompat {
 
     /**
      * Helper class for generating large-format notifications that include a lot of text.
-     *
+     * <p>
      * <br>
      * If the platform does not provide large-format notifications, this method has no effect. The
      * user will always see the normal notification view.
@@ -1686,13 +1833,13 @@ public class NotificationCompat {
      * This class is a "rebuilder": It attaches to a Builder object and modifies its behavior, like so:
      * <pre class="prettyprint">
      * Notification notif = new Notification.Builder(mContext)
-     *     .setContentTitle(&quot;New mail from &quot; + sender.toString())
-     *     .setContentText(subject)
-     *     .setSmallIcon(R.drawable.new_mail)
-     *     .setLargeIcon(aBitmap)
-     *     .setStyle(new Notification.BigTextStyle()
-     *         .bigText(aVeryLongString))
-     *     .build();
+     * .setContentTitle(&quot;New mail from &quot; + sender.toString())
+     * .setContentText(subject)
+     * .setSmallIcon(R.drawable.new_mail)
+     * .setLargeIcon(aBitmap)
+     * .setStyle(new Notification.BigTextStyle()
+     * .bigText(aVeryLongString))
+     * .build();
      * </pre>
      *
      * @see Notification#bigContentView
@@ -1737,7 +1884,7 @@ public class NotificationCompat {
 
     /**
      * Helper class for generating large-format notifications that include a list of (up to 5) strings.
-     *
+     * <p>
      * <br>
      * If the platform does not provide large-format notifications, this method has no effect. The
      * user will always see the normal notification view.
@@ -1745,16 +1892,16 @@ public class NotificationCompat {
      * This class is a "rebuilder": It attaches to a Builder object and modifies its behavior, like so:
      * <pre class="prettyprint">
      * Notification noti = new Notification.Builder()
-     *     .setContentTitle(&quot;5 New mails from &quot; + sender.toString())
-     *     .setContentText(subject)
-     *     .setSmallIcon(R.drawable.new_mail)
-     *     .setLargeIcon(aBitmap)
-     *     .setStyle(new Notification.InboxStyle()
-     *         .addLine(str1)
-     *         .addLine(str2)
-     *         .setContentTitle(&quot;&quot;)
-     *         .setSummaryText(&quot;+3 more&quot;))
-     *     .build();
+     * .setContentTitle(&quot;5 New mails from &quot; + sender.toString())
+     * .setContentText(subject)
+     * .setSmallIcon(R.drawable.new_mail)
+     * .setLargeIcon(aBitmap)
+     * .setStyle(new Notification.InboxStyle()
+     * .addLine(str1)
+     * .addLine(str2)
+     * .setContentTitle(&quot;&quot;)
+     * .setSummaryText(&quot;+3 more&quot;))
+     * .build();
      * </pre>
      *
      * @see Notification#bigContentView
@@ -1806,9 +1953,25 @@ public class NotificationCompat {
      * to attach actions.
      */
     public static class Action extends NotificationCompatBase.Action {
+        /**
+         * @hide
+         */
+        public static final Factory FACTORY = new Factory() {
+            @Override
+            public Action build(int icon, CharSequence title,
+                                PendingIntent actionIntent, Bundle extras,
+                                RemoteInputCompatBase.RemoteInput[] remoteInputs) {
+                return new Action(icon, title, actionIntent, extras,
+                        (RemoteInput[]) remoteInputs);
+            }
+
+            @Override
+            public Action[] newArray(int length) {
+                return new Action[length];
+            }
+        };
         private final Bundle mExtras;
         private final RemoteInput[] mRemoteInputs;
-
         /**
          * Small icon representing the action.
          */
@@ -1828,7 +1991,7 @@ public class NotificationCompat {
         }
 
         private Action(int icon, CharSequence title, PendingIntent intent, Bundle extras,
-                RemoteInput[] remoteInputs) {
+                       RemoteInput[] remoteInputs) {
             this.icon = icon;
             this.title = NotificationCompat.Builder.limitCharSequenceLength(title);
             this.actionIntent = intent;
@@ -1868,6 +2031,21 @@ public class NotificationCompat {
             return mRemoteInputs;
         }
 
+
+        /**
+         * Extender interface for use with {@link Builder#extend}. Extenders may be used to add
+         * metadata or change options on an action builder.
+         */
+        public interface Extender {
+            /**
+             * Apply this extender to a notification action builder.
+             *
+             * @param builder the builder to be modified.
+             * @return the build object for chaining.
+             */
+            public Builder extend(Builder builder);
+        }
+
         /**
          * Builder class for {@link Action} objects.
          */
@@ -1880,8 +2058,9 @@ public class NotificationCompat {
 
             /**
              * Construct a new builder for {@link Action} object.
-             * @param icon icon to show for this action
-             * @param title the title of the action
+             *
+             * @param icon   icon to show for this action
+             * @param title  the title of the action
              * @param intent the {@link PendingIntent} to fire when users trigger this action
              */
             public Builder(int icon, CharSequence title, PendingIntent intent) {
@@ -1891,6 +2070,7 @@ public class NotificationCompat {
             /**
              * Construct a new builder for {@link Action} object using the fields from an
              * {@link Action}.
+             *
              * @param action the action to read fields from.
              */
             public Builder(Action action) {
@@ -1906,7 +2086,7 @@ public class NotificationCompat {
 
             /**
              * Merge additional metadata into this builder.
-             *
+             * <p>
              * <p>Values within the Bundle will replace existing extras values in this Builder.
              *
              * @see NotificationCompat.Action#getExtras
@@ -1920,7 +2100,7 @@ public class NotificationCompat {
 
             /**
              * Get the metadata Bundle used by this Builder.
-             *
+             * <p>
              * <p>The returned Bundle is shared with this Builder.
              */
             public Bundle getExtras() {
@@ -1931,6 +2111,7 @@ public class NotificationCompat {
              * Add an input to be collected from the user when this action is sent.
              * Response values can be retrieved from the fired intent by using the
              * {@link RemoteInput#getResultsFromIntent} function.
+             *
              * @param remoteInput a {@link RemoteInput} to add to the action
              * @return this object for method chaining
              */
@@ -1954,6 +2135,7 @@ public class NotificationCompat {
             /**
              * Combine all of the options that have been set and return a new {@link Action}
              * object.
+             *
              * @return the built action
              */
             public Action build() {
@@ -1963,36 +2145,24 @@ public class NotificationCompat {
             }
         }
 
-
-        /**
-         * Extender interface for use with {@link Builder#extend}. Extenders may be used to add
-         * metadata or change options on an action builder.
-         */
-        public interface Extender {
-            /**
-             * Apply this extender to a notification action builder.
-             * @param builder the builder to be modified.
-             * @return the build object for chaining.
-             */
-            public Builder extend(Builder builder);
-        }
-
         /**
          * Wearable extender for notification actions. To add extensions to an action,
          * create a new {@link NotificationCompat.Action.WearableExtender} object using
          * the {@code WearableExtender()} constructor and apply it to a
          * {@link NotificationCompat.Action.Builder} using
          * {@link NotificationCompat.Action.Builder#extend}.
-         *
+         * <p>
          * <pre class="prettyprint">
          * NotificationCompat.Action action = new NotificationCompat.Action.Builder(
-         *         R.drawable.archive_all, "Archive all", actionIntent)
-         *         .extend(new NotificationCompat.Action.WearableExtender()
-         *                 .setAvailableOffline(false))
-         *         .build();</pre>
+         * R.drawable.archive_all, "Archive all", actionIntent)
+         * .extend(new NotificationCompat.Action.WearableExtender()
+         * .setAvailableOffline(false))
+         * .build();</pre>
          */
         public static final class WearableExtender implements Extender {
-            /** Notification action extra which contains wearable extensions */
+            /**
+             * Notification action extra which contains wearable extensions
+             */
             private static final String EXTRA_WEARABLE_EXTENSIONS = "android.wearable.EXTENSIONS";
 
             // Keys within EXTRA_WEARABLE_EXTENSIONS for wearable options.
@@ -2023,6 +2193,7 @@ public class NotificationCompat {
             /**
              * Create a {@link NotificationCompat.Action.WearableExtender} by reading
              * wearable options present in an existing notification action.
+             *
              * @param action the notification action to inspect.
              */
             public WearableExtender(Action action) {
@@ -2072,6 +2243,16 @@ public class NotificationCompat {
             }
 
             /**
+             * Get whether this action is available when the wearable device is not connected to
+             * a companion device. The user can still trigger this action when the wearable device
+             * is offline, but a visual hint will indicate that the action may not be available.
+             * Defaults to true.
+             */
+            public boolean isAvailableOffline() {
+                return (mFlags & FLAG_AVAILABLE_OFFLINE) != 0;
+            }
+
+            /**
              * Set whether this action is available when the wearable device is not connected to
              * a companion device. The user can still trigger this action when the wearable device
              * is offline, but a visual hint will indicate that the action may not be available.
@@ -2082,22 +2263,22 @@ public class NotificationCompat {
                 return this;
             }
 
-            /**
-             * Get whether this action is available when the wearable device is not connected to
-             * a companion device. The user can still trigger this action when the wearable device
-             * is offline, but a visual hint will indicate that the action may not be available.
-             * Defaults to true.
-             */
-            public boolean isAvailableOffline() {
-                return (mFlags & FLAG_AVAILABLE_OFFLINE) != 0;
-            }
-
             private void setFlag(int mask, boolean value) {
                 if (value) {
                     mFlags |= mask;
                 } else {
                     mFlags &= ~mask;
                 }
+            }
+
+            /**
+             * Get the label to display while the wearable is preparing to automatically execute
+             * the action. This is usually a 'ing' verb ending in ellipsis like "Sending..."
+             *
+             * @return the label to display while the action is being prepared to execute
+             */
+            public CharSequence getInProgressLabel() {
+                return mInProgressLabel;
             }
 
             /**
@@ -2113,13 +2294,13 @@ public class NotificationCompat {
             }
 
             /**
-             * Get the label to display while the wearable is preparing to automatically execute
-             * the action. This is usually a 'ing' verb ending in ellipsis like "Sending..."
+             * Get the label to display to confirm that the action should be executed.
+             * This is usually an imperative verb like "Send".
              *
-             * @return the label to display while the action is being prepared to execute
+             * @return the label to confirm the action should be executed
              */
-            public CharSequence getInProgressLabel() {
-                return mInProgressLabel;
+            public CharSequence getConfirmLabel() {
+                return mConfirmLabel;
             }
 
             /**
@@ -2135,13 +2316,13 @@ public class NotificationCompat {
             }
 
             /**
-             * Get the label to display to confirm that the action should be executed.
-             * This is usually an imperative verb like "Send".
+             * Get the label to display to cancel the action.
+             * This is usually an imperative verb like "Cancel".
              *
-             * @return the label to confirm the action should be executed
+             * @return the label to display to cancel the action
              */
-            public CharSequence getConfirmLabel() {
-                return mConfirmLabel;
+            public CharSequence getCancelLabel() {
+                return mCancelLabel;
             }
 
             /**
@@ -2155,47 +2336,7 @@ public class NotificationCompat {
                 mCancelLabel = label;
                 return this;
             }
-
-            /**
-             * Get the label to display to cancel the action.
-             * This is usually an imperative verb like "Cancel".
-             *
-             * @return the label to display to cancel the action
-             */
-            public CharSequence getCancelLabel() {
-                return mCancelLabel;
-            }
         }
-
-        /** @hide */
-        public static final Factory FACTORY = new Factory() {
-            @Override
-            public Action build(int icon, CharSequence title,
-                    PendingIntent actionIntent, Bundle extras,
-                    RemoteInputCompatBase.RemoteInput[] remoteInputs) {
-                return new Action(icon, title, actionIntent, extras,
-                        (RemoteInput[]) remoteInputs);
-            }
-
-            @Override
-            public Action[] newArray(int length) {
-                return new Action[length];
-            }
-        };
-    }
-
-
-    /**
-     * Extender interface for use with {@link Builder#extend}. Extenders may be used to add
-     * metadata or change options on a notification builder.
-     */
-    public interface Extender {
-        /**
-         * Apply this extender to a notification builder.
-         * @param builder the builder to be modified.
-         * @return the build object for chaining.
-         */
-        public Builder extend(Builder builder);
     }
 
     /**
@@ -2206,35 +2347,35 @@ public class NotificationCompat {
      * <p>
      * To create a notification with wearable extensions:
      * <ol>
-     *   <li>Create a {@link NotificationCompat.Builder}, setting any desired
-     *   properties.
-     *   <li>Create a {@link NotificationCompat.WearableExtender}.
-     *   <li>Set wearable-specific properties using the
-     *   {@code add} and {@code set} methods of {@link NotificationCompat.WearableExtender}.
-     *   <li>Call {@link NotificationCompat.Builder#extend} to apply the extensions to a
-     *   notification.
-     *   <li>Post the notification to the notification
-     *   system with the {@code NotificationManagerCompat.notify(...)} methods
-     *   and not the {@code NotificationManager.notify(...)} methods.
+     * <li>Create a {@link NotificationCompat.Builder}, setting any desired
+     * properties.
+     * <li>Create a {@link NotificationCompat.WearableExtender}.
+     * <li>Set wearable-specific properties using the
+     * {@code add} and {@code set} methods of {@link NotificationCompat.WearableExtender}.
+     * <li>Call {@link NotificationCompat.Builder#extend} to apply the extensions to a
+     * notification.
+     * <li>Post the notification to the notification
+     * system with the {@code NotificationManagerCompat.notify(...)} methods
+     * and not the {@code NotificationManager.notify(...)} methods.
      * </ol>
-     *
+     * <p>
      * <pre class="prettyprint">
      * Notification notif = new NotificationCompat.Builder(mContext)
-     *         .setContentTitle(&quot;New mail from &quot; + sender.toString())
-     *         .setContentText(subject)
-     *         .setSmallIcon(R.drawable.new_mail)
-     *         .extend(new NotificationCompat.WearableExtender()
-     *                 .setContentIcon(R.drawable.new_mail))
-     *         .build();
+     * .setContentTitle(&quot;New mail from &quot; + sender.toString())
+     * .setContentText(subject)
+     * .setSmallIcon(R.drawable.new_mail)
+     * .extend(new NotificationCompat.WearableExtender()
+     * .setContentIcon(R.drawable.new_mail))
+     * .build();
      * NotificationManagerCompat.from(mContext).notify(0, notif);</pre>
-     *
+     * <p>
      * <p>Wearable extensions can be accessed on an existing notification by using the
      * {@code WearableExtender(Notification)} constructor,
      * and then using the {@code get} methods to access values.
-     *
+     * <p>
      * <pre class="prettyprint">
      * NotificationCompat.WearableExtender wearableExtender =
-     *         new NotificationCompat.WearableExtender(notification);
+     * new NotificationCompat.WearableExtender(notification);
      * List&lt;Notification&gt; pages = wearableExtender.getPages();</pre>
      */
     public static final class WearableExtender implements Extender {
@@ -2305,7 +2446,9 @@ public class NotificationCompat {
          */
         public static final int SCREEN_TIMEOUT_LONG = -1;
 
-        /** Notification extra which contains wearable extensions */
+        /**
+         * Notification extra which contains wearable extensions
+         */
         private static final String EXTRA_WEARABLE_EXTENSIONS = "android.wearable.EXTENSIONS";
 
         // Keys within EXTRA_WEARABLE_EXTENSIONS for wearable options.
@@ -2463,7 +2606,7 @@ public class NotificationCompat {
 
         /**
          * Add a wearable action to this notification.
-         *
+         * <p>
          * <p>When wearable actions are added using this method, the set of actions that
          * show on a wearable device splits from devices that only show actions added
          * using {@link NotificationCompat.Builder#addAction}. This allows for customization
@@ -2480,7 +2623,7 @@ public class NotificationCompat {
 
         /**
          * Adds wearable actions to this notification.
-         *
+         * <p>
          * <p>When wearable actions are added using this method, the set of actions that
          * show on a wearable device splits from devices that only show actions added
          * using {@link NotificationCompat.Builder#addAction}. This allows for customization
@@ -2497,6 +2640,7 @@ public class NotificationCompat {
 
         /**
          * Clear all wearable actions present on this builder.
+         *
          * @return this object for method chaining.
          * @see #addAction
          */
@@ -2513,30 +2657,38 @@ public class NotificationCompat {
         }
 
         /**
+         * Get the intent to launch inside of an activity view when displaying this
+         * notification. This {@code PendingIntent} should be for an activity.
+         */
+        public PendingIntent getDisplayIntent() {
+            return mDisplayIntent;
+        }
+
+        /**
          * Set an intent to launch inside of an activity view when displaying
          * this notification. The {@link PendingIntent} provided should be for an activity.
-         *
+         * <p>
          * <pre class="prettyprint">
          * Intent displayIntent = new Intent(context, MyDisplayActivity.class);
          * PendingIntent displayPendingIntent = PendingIntent.getActivity(context,
-         *         0, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+         * 0, displayIntent, PendingIntent.FLAG_UPDATE_CURRENT);
          * Notification notif = new NotificationCompat.Builder(context)
-         *         .extend(new NotificationCompat.WearableExtender()
-         *                 .setDisplayIntent(displayPendingIntent)
-         *                 .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM))
-         *         .build();</pre>
-         *
+         * .extend(new NotificationCompat.WearableExtender()
+         * .setDisplayIntent(displayPendingIntent)
+         * .setCustomSizePreset(NotificationCompat.WearableExtender.SIZE_MEDIUM))
+         * .build();</pre>
+         * <p>
          * <p>The activity to launch needs to allow embedding, must be exported, and
          * should have an empty task affinity. It is also recommended to use the device
          * default light theme.
-         *
+         * <p>
          * <p>Example AndroidManifest.xml entry:
          * <pre class="prettyprint">
          * &lt;activity android:name=&quot;com.example.MyDisplayActivity&quot;
-         *     android:exported=&quot;true&quot;
-         *     android:allowEmbedded=&quot;true&quot;
-         *     android:taskAffinity=&quot;&quot;
-         *     android:theme=&quot;@android:style/Theme.DeviceDefault.Light&quot; /&gt;</pre>
+         * android:exported=&quot;true&quot;
+         * android:allowEmbedded=&quot;true&quot;
+         * android:taskAffinity=&quot;&quot;
+         * android:theme=&quot;@android:style/Theme.DeviceDefault.Light&quot; /&gt;</pre>
          *
          * @param intent the {@link PendingIntent} for an activity
          * @return this object for method chaining
@@ -2545,14 +2697,6 @@ public class NotificationCompat {
         public WearableExtender setDisplayIntent(PendingIntent intent) {
             mDisplayIntent = intent;
             return this;
-        }
-
-        /**
-         * Get the intent to launch inside of an activity view when displaying this
-         * notification. This {@code PendingIntent} should be for an activity.
-         */
-        public PendingIntent getDisplayIntent() {
-            return mDisplayIntent;
         }
 
         /**
@@ -2587,6 +2731,7 @@ public class NotificationCompat {
 
         /**
          * Clear all additional pages present on this builder.
+         *
          * @return this object for method chaining.
          * @see #addPage
          */
@@ -2600,10 +2745,23 @@ public class NotificationCompat {
          * current notification forms the first page, and elements within this array form
          * subsequent pages. This field can be used to separate a notification into multiple
          * sections.
+         *
          * @return the pages for this notification
          */
         public List<Notification> getPages() {
             return mPages;
+        }
+
+        /**
+         * Get a background image to be displayed behind the notification content.
+         * Contrary to the {@link NotificationCompat.BigPictureStyle}, this background
+         * will work with any notification style.
+         *
+         * @return the background image
+         * @see NotificationCompat.WearableExtender#setBackground
+         */
+        public Bitmap getBackground() {
+            return mBackground;
         }
 
         /**
@@ -2621,15 +2779,10 @@ public class NotificationCompat {
         }
 
         /**
-         * Get a background image to be displayed behind the notification content.
-         * Contrary to the {@link NotificationCompat.BigPictureStyle}, this background
-         * will work with any notification style.
-         *
-         * @return the background image
-         * @see NotificationCompat.WearableExtender#setBackground
+         * Get an icon that goes with the content of this notification.
          */
-        public Bitmap getBackground() {
-            return mBackground;
+        public int getContentIcon() {
+            return mContentIcon;
         }
 
         /**
@@ -2641,16 +2794,21 @@ public class NotificationCompat {
         }
 
         /**
-         * Get an icon that goes with the content of this notification.
+         * Get the gravity that the content icon should have within the notification display.
+         * Supported values include {@link android.view.Gravity#START} and
+         * {@link android.view.Gravity#END}. The default value is {@link android.view.Gravity#END}.
+         *
+         * @see #getContentIcon
          */
-        public int getContentIcon() {
-            return mContentIcon;
+        public int getContentIconGravity() {
+            return mContentIconGravity;
         }
 
         /**
          * Set the gravity that the content icon should have within the notification display.
          * Supported values include {@link android.view.Gravity#START} and
          * {@link android.view.Gravity#END}. The default value is {@link android.view.Gravity#END}.
+         *
          * @see #setContentIcon
          */
         public WearableExtender setContentIconGravity(int contentIconGravity) {
@@ -2659,20 +2817,28 @@ public class NotificationCompat {
         }
 
         /**
-         * Get the gravity that the content icon should have within the notification display.
-         * Supported values include {@link android.view.Gravity#START} and
-         * {@link android.view.Gravity#END}. The default value is {@link android.view.Gravity#END}.
-         * @see #getContentIcon
+         * Get the index of the notification action, if any, that was specified as being clickable
+         * with the content of this notification. This action will no longer display separately
+         * from the notification's content.
+         * <p>
+         * <p>For notifications with multiple pages, child pages can also have content actions
+         * set, although the list of available actions comes from the main notification and not
+         * from the child page's notification.
+         * <p>
+         * <p>If wearable specific actions were added to the main notification, this index will
+         * apply to that list, otherwise it will apply to the regular actions list.
+         *
+         * @return the action index or {@link #UNSET_ACTION_INDEX} if no action was selected.
          */
-        public int getContentIconGravity() {
-            return mContentIconGravity;
+        public int getContentAction() {
+            return mContentActionIndex;
         }
 
         /**
          * Set an action from this notification's actions to be clickable with the content of
          * this notification. This action will no longer display separately from the
          * notification's content.
-         *
+         * <p>
          * <p>For notifications with multiple pages, child pages can also have content actions
          * set, although the list of available actions comes from the main notification and not
          * from the child page's notification.
@@ -2688,21 +2854,13 @@ public class NotificationCompat {
         }
 
         /**
-         * Get the index of the notification action, if any, that was specified as being clickable
-         * with the content of this notification. This action will no longer display separately
-         * from the notification's content.
-         *
-         * <p>For notifications with multiple pages, child pages can also have content actions
-         * set, although the list of available actions comes from the main notification and not
-         * from the child page's notification.
-         *
-         * <p>If wearable specific actions were added to the main notification, this index will
-         * apply to that list, otherwise it will apply to the regular actions list.
-         *
-         * @return the action index or {@link #UNSET_ACTION_INDEX} if no action was selected.
+         * Get the gravity that this notification should have within the available viewport space.
+         * Supported values include {@link android.view.Gravity#TOP},
+         * {@link android.view.Gravity#CENTER_VERTICAL} and {@link android.view.Gravity#BOTTOM}.
+         * The default value is {@link android.view.Gravity#BOTTOM}.
          */
-        public int getContentAction() {
-            return mContentActionIndex;
+        public int getGravity() {
+            return mGravity;
         }
 
         /**
@@ -2717,13 +2875,15 @@ public class NotificationCompat {
         }
 
         /**
-         * Get the gravity that this notification should have within the available viewport space.
-         * Supported values include {@link android.view.Gravity#TOP},
-         * {@link android.view.Gravity#CENTER_VERTICAL} and {@link android.view.Gravity#BOTTOM}.
-         * The default value is {@link android.view.Gravity#BOTTOM}.
+         * Get the custom size preset for the display of this notification out of the available
+         * presets found in {@link NotificationCompat.WearableExtender}, e.g.
+         * {@link #SIZE_LARGE}.
+         * <p>Some custom size presets are only applicable for custom display notifications created
+         * using {@link #setDisplayIntent}. Check the documentation for the preset in question.
+         * See also {@link #setCustomContentHeight} and {@link #setCustomSizePreset}.
          */
-        public int getGravity() {
-            return mGravity;
+        public int getCustomSizePreset() {
+            return mCustomSizePreset;
         }
 
         /**
@@ -2741,15 +2901,13 @@ public class NotificationCompat {
         }
 
         /**
-         * Get the custom size preset for the display of this notification out of the available
-         * presets found in {@link NotificationCompat.WearableExtender}, e.g.
-         * {@link #SIZE_LARGE}.
-         * <p>Some custom size presets are only applicable for custom display notifications created
-         * using {@link #setDisplayIntent}. Check the documentation for the preset in question.
-         * See also {@link #setCustomContentHeight} and {@link #setCustomSizePreset}.
+         * Get the custom height in pixels for the display of this notification's content.
+         * <p>This option is only available for custom display notifications created
+         * using {@link #setDisplayIntent}. See also {@link #setCustomSizePreset} and
+         * {@link #setCustomContentHeight}.
          */
-        public int getCustomSizePreset() {
-            return mCustomSizePreset;
+        public int getCustomContentHeight() {
+            return mCustomContentHeight;
         }
 
         /**
@@ -2765,13 +2923,12 @@ public class NotificationCompat {
         }
 
         /**
-         * Get the custom height in pixels for the display of this notification's content.
-         * <p>This option is only available for custom display notifications created
-         * using {@link #setDisplayIntent}. See also {@link #setCustomSizePreset} and
-         * {@link #setCustomContentHeight}.
+         * Get whether the scrolling position for the contents of this notification should start
+         * at the bottom of the contents instead of the top when the contents are too long to
+         * display within the screen. Default is false (start scroll at the top).
          */
-        public int getCustomContentHeight() {
-            return mCustomContentHeight;
+        public boolean getStartScrollBottom() {
+            return (mFlags & FLAG_START_SCROLL_BOTTOM) != 0;
         }
 
         /**
@@ -2785,12 +2942,13 @@ public class NotificationCompat {
         }
 
         /**
-         * Get whether the scrolling position for the contents of this notification should start
-         * at the bottom of the contents instead of the top when the contents are too long to
-         * display within the screen. Default is false (start scroll at the top).
+         * Get whether the content intent is available when the wearable device is not connected
+         * to a companion device.  The user can still trigger this intent when the wearable device
+         * is offline, but a visual hint will indicate that the content intent may not be available.
+         * Defaults to true.
          */
-        public boolean getStartScrollBottom() {
-            return (mFlags & FLAG_START_SCROLL_BOTTOM) != 0;
+        public boolean getContentIntentAvailableOffline() {
+            return (mFlags & FLAG_CONTENT_INTENT_AVAILABLE_OFFLINE) != 0;
         }
 
         /**
@@ -2806,27 +2964,8 @@ public class NotificationCompat {
         }
 
         /**
-         * Get whether the content intent is available when the wearable device is not connected
-         * to a companion device.  The user can still trigger this intent when the wearable device
-         * is offline, but a visual hint will indicate that the content intent may not be available.
-         * Defaults to true.
-         */
-        public boolean getContentIntentAvailableOffline() {
-            return (mFlags & FLAG_CONTENT_INTENT_AVAILABLE_OFFLINE) != 0;
-        }
-
-        /**
-         * Set a hint that this notification's icon should not be displayed.
-         * @param hintHideIcon {@code true} to hide the icon, {@code false} otherwise.
-         * @return this object for method chaining
-         */
-        public WearableExtender setHintHideIcon(boolean hintHideIcon) {
-            setFlag(FLAG_HINT_HIDE_ICON, hintHideIcon);
-            return this;
-        }
-
-        /**
          * Get a hint that this notification's icon should not be displayed.
+         *
          * @return {@code true} if this icon should not be displayed, false otherwise.
          * The default value is {@code false} if this was never set.
          */
@@ -2835,12 +2974,13 @@ public class NotificationCompat {
         }
 
         /**
-         * Set a visual hint that only the background image of this notification should be
-         * displayed, and other semantic content should be hidden. This hint is only applicable
-         * to sub-pages added using {@link #addPage}.
+         * Set a hint that this notification's icon should not be displayed.
+         *
+         * @param hintHideIcon {@code true} to hide the icon, {@code false} otherwise.
+         * @return this object for method chaining
          */
-        public WearableExtender setHintShowBackgroundOnly(boolean hintShowBackgroundOnly) {
-            setFlag(FLAG_HINT_SHOW_BACKGROUND_ONLY, hintShowBackgroundOnly);
+        public WearableExtender setHintHideIcon(boolean hintHideIcon) {
+            setFlag(FLAG_HINT_HIDE_ICON, hintHideIcon);
             return this;
         }
 
@@ -2854,9 +2994,32 @@ public class NotificationCompat {
         }
 
         /**
+         * Set a visual hint that only the background image of this notification should be
+         * displayed, and other semantic content should be hidden. This hint is only applicable
+         * to sub-pages added using {@link #addPage}.
+         */
+        public WearableExtender setHintShowBackgroundOnly(boolean hintShowBackgroundOnly) {
+            setFlag(FLAG_HINT_SHOW_BACKGROUND_ONLY, hintShowBackgroundOnly);
+            return this;
+        }
+
+        /**
+         * Get a hint that this notification's background should not be clipped if possible,
+         * and should instead be resized to fully display on the screen, retaining the aspect
+         * ratio of the image. This can be useful for images like barcodes or qr codes.
+         *
+         * @return {@code true} if it's ok if the background is clipped on the screen, false
+         * otherwise. The default value is {@code false} if this was never set.
+         */
+        public boolean getHintAvoidBackgroundClipping() {
+            return (mFlags & FLAG_HINT_AVOID_BACKGROUND_CLIPPING) != 0;
+        }
+
+        /**
          * Set a hint that this notification's background should not be clipped if possible,
          * and should instead be resized to fully display on the screen, retaining the aspect
          * ratio of the image. This can be useful for images like barcodes or qr codes.
+         *
          * @param hintAvoidBackgroundClipping {@code true} to avoid clipping if possible.
          * @return this object for method chaining
          */
@@ -2867,36 +3030,27 @@ public class NotificationCompat {
         }
 
         /**
-         * Get a hint that this notification's background should not be clipped if possible,
-         * and should instead be resized to fully display on the screen, retaining the aspect
-         * ratio of the image. This can be useful for images like barcodes or qr codes.
-         * @return {@code true} if it's ok if the background is clipped on the screen, false
-         * otherwise. The default value is {@code false} if this was never set.
+         * Get the duration, in milliseconds, that the screen should remain on for
+         * when this notification is displayed.
+         *
+         * @return the duration in milliseconds if > 0, or either one of the sentinel values
+         * {@link #SCREEN_TIMEOUT_SHORT} or {@link #SCREEN_TIMEOUT_LONG}.
          */
-        public boolean getHintAvoidBackgroundClipping() {
-            return (mFlags & FLAG_HINT_AVOID_BACKGROUND_CLIPPING) != 0;
+        public int getHintScreenTimeout() {
+            return mHintScreenTimeout;
         }
 
         /**
          * Set a hint that the screen should remain on for at least this duration when
          * this notification is displayed on the screen.
+         *
          * @param timeout The requested screen timeout in milliseconds. Can also be either
-         *     {@link #SCREEN_TIMEOUT_SHORT} or {@link #SCREEN_TIMEOUT_LONG}.
+         *                {@link #SCREEN_TIMEOUT_SHORT} or {@link #SCREEN_TIMEOUT_LONG}.
          * @return this object for method chaining
          */
         public WearableExtender setHintScreenTimeout(int timeout) {
             mHintScreenTimeout = timeout;
             return this;
-        }
-
-        /**
-         * Get the duration, in milliseconds, that the screen should remain on for
-         * when this notification is displayed.
-         * @return the duration in milliseconds if > 0, or either one of the sentinel values
-         *     {@link #SCREEN_TIMEOUT_SHORT} or {@link #SCREEN_TIMEOUT_LONG}.
-         */
-        public int getHintScreenTimeout() {
-            return mHintScreenTimeout;
         }
 
         private void setFlag(int mask, boolean value) {
@@ -2911,28 +3065,28 @@ public class NotificationCompat {
     /**
      * <p>Helper class to add Android Auto extensions to notifications. To create a notification
      * with car extensions:
-     *
+     * <p>
      * <ol>
-     *  <li>Create an {@link NotificationCompat.Builder}, setting any desired
-     *  properties.
-     *  <li>Create a {@link CarExtender}.
-     *  <li>Set car-specific properties using the {@code add} and {@code set} methods of
-     *  {@link CarExtender}.
-     *  <li>Call {@link android.support.v4.app.NotificationCompat.Builder#extend(NotificationCompat.Extender)}
-     *  to apply the extensions to a notification.
-     *  <li>Post the notification to the notification system with the
-     *  {@code NotificationManagerCompat.notify(...)} methods and not the
-     *  {@code NotificationManager.notify(...)} methods.
+     * <li>Create an {@link NotificationCompat.Builder}, setting any desired
+     * properties.
+     * <li>Create a {@link CarExtender}.
+     * <li>Set car-specific properties using the {@code add} and {@code set} methods of
+     * {@link CarExtender}.
+     * <li>Call {@link android.support.v4.app.NotificationCompat.Builder#extend(NotificationCompat.Extender)}
+     * to apply the extensions to a notification.
+     * <li>Post the notification to the notification system with the
+     * {@code NotificationManagerCompat.notify(...)} methods and not the
+     * {@code NotificationManager.notify(...)} methods.
      * </ol>
-     *
+     * <p>
      * <pre class="prettyprint">
      * Notification notification = new NotificationCompat.Builder(context)
-     *         ...
-     *         .extend(new CarExtender()
-     *                 .set*(...))
-     *         .build();
+     * ...
+     * .extend(new CarExtender()
+     * .set*(...))
+     * .build();
      * </pre>
-     *
+     * <p>
      * <p>Car extensions can be accessed on an existing notification by using the
      * {@code CarExtender(Notification)} constructor, and then using the {@code get} methods
      * to access values.
@@ -2965,7 +3119,7 @@ public class NotificationCompat {
                 return;
             }
 
-            Bundle carBundle = getExtras(notif)==null ?
+            Bundle carBundle = getExtras(notif) == null ?
                     null : getExtras(notif).getBundle(EXTRA_CAR_EXTENDER);
             if (carBundle != null) {
                 mLargeIcon = carBundle.getParcelable(EXTRA_LARGE_ICON);
@@ -3007,19 +3161,6 @@ public class NotificationCompat {
         }
 
         /**
-         * Sets the accent color to use when Android Auto presents the notification.
-         *
-         * Android Auto uses the color set with {@link android.support.v4.app.NotificationCompat.Builder#setColor(int)}
-         * to accent the displayed notification. However, not all colors are acceptable in an
-         * automotive setting. This method can be used to override the color provided in the
-         * notification in such a situation.
-         */
-        public CarExtender setColor(@ColorInt int color) {
-            mColor = color;
-            return this;
-        }
-
-        /**
          * Gets the accent color.
          *
          * @see setColor
@@ -3030,16 +3171,15 @@ public class NotificationCompat {
         }
 
         /**
-         * Sets the large icon of the car notification.
-         *
-         * If no large icon is set in the extender, Android Auto will display the icon
-         * specified by {@link android.support.v4.app.NotificationCompat.Builder#setLargeIcon(android.graphics.Bitmap)}
-         *
-         * @param largeIcon The large icon to use in the car notification.
-         * @return This object for method chaining.
+         * Sets the accent color to use when Android Auto presents the notification.
+         * <p>
+         * Android Auto uses the color set with {@link android.support.v4.app.NotificationCompat.Builder#setColor(int)}
+         * to accent the displayed notification. However, not all colors are acceptable in an
+         * automotive setting. This method can be used to override the color provided in the
+         * notification in such a situation.
          */
-        public CarExtender setLargeIcon(Bitmap largeIcon) {
-            mLargeIcon = largeIcon;
+        public CarExtender setColor(@ColorInt int color) {
+            mColor = color;
             return this;
         }
 
@@ -3054,6 +3194,29 @@ public class NotificationCompat {
         }
 
         /**
+         * Sets the large icon of the car notification.
+         * <p>
+         * If no large icon is set in the extender, Android Auto will display the icon
+         * specified by {@link android.support.v4.app.NotificationCompat.Builder#setLargeIcon(android.graphics.Bitmap)}
+         *
+         * @param largeIcon The large icon to use in the car notification.
+         * @return This object for method chaining.
+         */
+        public CarExtender setLargeIcon(Bitmap largeIcon) {
+            mLargeIcon = largeIcon;
+            return this;
+        }
+
+        /**
+         * Returns the unread conversation conveyed by this notification.
+         *
+         * @see #setUnreadConversation(UnreadConversation)
+         */
+        public UnreadConversation getUnreadConversation() {
+            return mUnreadConversation;
+        }
+
+        /**
          * Sets the unread conversation in a message notification.
          *
          * @param unreadConversation The unread part of the conversation this notification conveys.
@@ -3065,17 +3228,24 @@ public class NotificationCompat {
         }
 
         /**
-         * Returns the unread conversation conveyed by this notification.
-         * @see #setUnreadConversation(UnreadConversation)
-         */
-        public UnreadConversation getUnreadConversation() {
-            return mUnreadConversation;
-        }
-
-        /**
          * A class which holds the unread messages from a conversation.
          */
         public static class UnreadConversation extends NotificationCompatBase.UnreadConversation {
+            /**
+             * @hide
+             */
+            static final Factory FACTORY = new Factory() {
+                @Override
+                public UnreadConversation build(
+                        String[] messages, RemoteInputCompatBase.RemoteInput remoteInput,
+                        PendingIntent replyPendingIntent, PendingIntent readPendingIntent,
+                        String[] participants, long latestTimestamp) {
+                    return new UnreadConversation(
+                            messages, (RemoteInput) remoteInput, replyPendingIntent,
+                            readPendingIntent,
+                            participants, latestTimestamp);
+                }
+            };
             private final String[] mMessages;
             private final RemoteInput mRemoteInput;
             private final PendingIntent mReplyPendingIntent;
@@ -3084,8 +3254,8 @@ public class NotificationCompat {
             private final long mLatestTimestamp;
 
             UnreadConversation(String[] messages, RemoteInput remoteInput,
-                    PendingIntent replyPendingIntent, PendingIntent readPendingIntent,
-                    String[] participants, long latestTimestamp) {
+                               PendingIntent replyPendingIntent, PendingIntent readPendingIntent,
+                               String[] participants, long latestTimestamp) {
                 mMessages = messages;
                 mRemoteInput = remoteInput;
                 mReadPendingIntent = readPendingIntent;
@@ -3153,20 +3323,6 @@ public class NotificationCompat {
                 return mLatestTimestamp;
             }
 
-            /** @hide */
-            static final Factory FACTORY = new Factory() {
-                @Override
-                public UnreadConversation build(
-                        String[] messages, RemoteInputCompatBase.RemoteInput remoteInput,
-                        PendingIntent replyPendingIntent, PendingIntent readPendingIntent,
-                        String[] participants, long latestTimestamp) {
-                    return new UnreadConversation(
-                            messages, (RemoteInput) remoteInput, replyPendingIntent,
-                            readPendingIntent,
-                            participants, latestTimestamp);
-                }
-            };
-
             /**
              * Builder class for {@link CarExtender.UnreadConversation} objects.
              */
@@ -3189,7 +3345,7 @@ public class NotificationCompat {
 
                 /**
                  * Appends a new unread message to the list of messages for this conversation.
-                 *
+                 * <p>
                  * The messages should be added from oldest to newest.
                  *
                  * @param message The text of the new unread message.
@@ -3205,9 +3361,8 @@ public class NotificationCompat {
                  * notification.
                  *
                  * @param pendingIntent The pending intent which will be triggered on a reply.
-                 * @param remoteInput The remote input parcelable which will carry the reply.
+                 * @param remoteInput   The remote input parcelable which will carry the reply.
                  * @return This object for method chaining.
-                 *
                  * @see CarExtender.UnreadConversation#getRemoteInput
                  * @see CarExtender.UnreadConversation#getReplyPendingIntent
                  */
@@ -3233,7 +3388,7 @@ public class NotificationCompat {
 
                 /**
                  * Sets the timestamp of the most recent message in an unread conversation.
-                 *
+                 * <p>
                  * If a messaging notification has been posted by your application and has not
                  * yet been cancelled, posting a later notification with the same id and tag
                  * but without a newer timestamp may result in Android Auto not displaying a
@@ -3254,110 +3409,11 @@ public class NotificationCompat {
                  */
                 public UnreadConversation build() {
                     String[] messages = mMessages.toArray(new String[mMessages.size()]);
-                    String[] participants = { mParticipant };
+                    String[] participants = {mParticipant};
                     return new UnreadConversation(messages, mRemoteInput, mReplyPendingIntent,
                             mReadPendingIntent, participants, mLatestTimestamp);
                 }
             }
         }
-    }
-
-
-    /**
-     * Get an array of Notification objects from a parcelable array bundle field.
-     * Update the bundle to have a typed array so fetches in the future don't need
-     * to do an array copy.
-     */
-    private static Notification[] getNotificationArrayFromBundle(Bundle bundle, String key) {
-        Parcelable[] array = bundle.getParcelableArray(key);
-        if (array instanceof Notification[] || array == null) {
-            return (Notification[]) array;
-        }
-        Notification[] typedArray = new Notification[array.length];
-        for (int i = 0; i < array.length; i++) {
-            typedArray[i] = (Notification) array[i];
-        }
-        bundle.putParcelableArray(key, typedArray);
-        return typedArray;
-    }
-
-    /**
-     * Gets the {@link Notification#extras} field from a notification in a backwards
-     * compatible manner. Extras field was supported from JellyBean (Api level 16)
-     * forwards. This function will return null on older api levels.
-     */
-    public static Bundle getExtras(Notification notif) {
-        return IMPL.getExtras(notif);
-    }
-
-    /**
-     * Get the number of actions in this notification in a backwards compatible
-     * manner. Actions were supported from JellyBean (Api level 16) forwards.
-     */
-    public static int getActionCount(Notification notif) {
-        return IMPL.getActionCount(notif);
-    }
-
-    /**
-     * Get an action on this notification in a backwards compatible
-     * manner. Actions were supported from JellyBean (Api level 16) forwards.
-     * @param notif The notification to inspect.
-     * @param actionIndex The index of the action to retrieve.
-     */
-    public static Action getAction(Notification notif, int actionIndex) {
-        return IMPL.getAction(notif, actionIndex);
-    }
-
-    /**
-    * Get the category of this notification in a backwards compatible
-    * manner.
-    * @param notif The notification to inspect.
-    */
-    public static String getCategory(Notification notif) {
-        return IMPL.getCategory(notif);
-    }
-
-    /**
-     * Get whether or not this notification is only relevant to the current device.
-     *
-     * <p>Some notifications can be bridged to other devices for remote display.
-     * If this hint is set, it is recommend that this notification not be bridged.
-     */
-    public static boolean getLocalOnly(Notification notif) {
-        return IMPL.getLocalOnly(notif);
-    }
-
-    /**
-     * Get the key used to group this notification into a cluster or stack
-     * with other notifications on devices which support such rendering.
-     */
-    public static String getGroup(Notification notif) {
-        return IMPL.getGroup(notif);
-    }
-
-    /**
-     * Get whether this notification to be the group summary for a group of notifications.
-     * Grouped notifications may display in a cluster or stack on devices which
-     * support such rendering. Requires a group key also be set using {@link Builder#setGroup}.
-     * @return Whether this notification is a group summary.
-     */
-    public static boolean isGroupSummary(Notification notif) {
-        return IMPL.isGroupSummary(notif);
-    }
-
-    /**
-     * Get a sort key that orders this notification among other notifications from the
-     * same package. This can be useful if an external sort was already applied and an app
-     * would like to preserve this. Notifications will be sorted lexicographically using this
-     * value, although providing different priorities in addition to providing sort key may
-     * cause this value to be ignored.
-     *
-     * <p>This sort key can also be used to order members of a notification group. See
-     * {@link Builder#setGroup}.
-     *
-     * @see String#compareTo(String)
-     */
-    public static String getSortKey(Notification notif) {
-        return IMPL.getSortKey(notif);
     }
 }

@@ -23,13 +23,13 @@ import java.util.List;
 
 class PlaybackStateCompatApi22 {
     public static Bundle getExtras(Object stateObj) {
-        return ((PlaybackState)stateObj).getExtras();
+        return ((PlaybackState) stateObj).getExtras();
     }
 
     public static Object newInstance(int state, long position, long bufferedPosition,
-            float speed, long actions, CharSequence errorMessage, long updateTime,
-            List<Object> customActions,
-            long activeItemId, Bundle extras) {
+                                     float speed, long actions, CharSequence errorMessage, long updateTime,
+                                     List<Object> customActions,
+                                     long activeItemId, Bundle extras) {
         PlaybackState.Builder stateObj = new PlaybackState.Builder();
         stateObj.setState(state, position, speed, updateTime);
         stateObj.setBufferedPosition(bufferedPosition);

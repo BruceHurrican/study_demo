@@ -25,7 +25,7 @@ import android.content.Intent;
  */
 class TaskStackBuilderHoneycomb {
     public static PendingIntent getActivitiesPendingIntent(Context context, int requestCode,
-            Intent[] intents, int flags) {
+                                                           Intent[] intents, int flags) {
         return PendingIntent.getActivities(context, requestCode, intents, flags);
     }
 }

@@ -30,6 +30,47 @@ import static android.net.ConnectivityManager.TYPE_WIFI;
  */
 public class ConnectivityManagerCompat {
 
+    private static final ConnectivityManagerCompatImpl IMPL;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 16) {
+            IMPL = new JellyBeanConnectivityManagerCompatImpl();
+        } else if (Build.VERSION.SDK_INT >= 13) {
+            IMPL = new HoneycombMR2ConnectivityManagerCompatImpl();
+        } else if (Build.VERSION.SDK_INT >= 8) {
+            IMPL = new GingerbreadConnectivityManagerCompatImpl();
+        } else {
+            IMPL = new BaseConnectivityManagerCompatImpl();
+        }
+    }
+
+    /**
+     * Returns if the currently active data network is metered. A network is
+     * classified as metered when the user is sensitive to heavy data usage on
+     * that connection. You should check this before doing large data transfers,
+     * and warn the user or delay the operation until another network is
+     * available.
+     */
+    public static boolean isActiveNetworkMetered(ConnectivityManager cm) {
+        return IMPL.isActiveNetworkMetered(cm);
+    }
+
+    /**
+     * Return the {@link NetworkInfo} that caused the given
+     * {@link ConnectivityManager#CONNECTIVITY_ACTION} broadcast. This obtains
+     * the current state from {@link ConnectivityManager} instead of using the
+     * potentially-stale value from
+     * {@link ConnectivityManager#EXTRA_NETWORK_INFO}. May be {@code null}.
+     */
+    public static NetworkInfo getNetworkInfoFromBroadcast(ConnectivityManager cm, Intent intent) {
+        final NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+        if (info != null) {
+            return cm.getNetworkInfo(info.getType());
+        } else {
+            return null;
+        }
+    }
+
     interface ConnectivityManagerCompatImpl {
         boolean isActiveNetworkMetered(ConnectivityManager cm);
     }
@@ -75,47 +116,6 @@ public class ConnectivityManagerCompat {
         @Override
         public boolean isActiveNetworkMetered(ConnectivityManager cm) {
             return ConnectivityManagerCompatJellyBean.isActiveNetworkMetered(cm);
-        }
-    }
-
-    private static final ConnectivityManagerCompatImpl IMPL;
-
-    static {
-        if (Build.VERSION.SDK_INT >= 16) {
-            IMPL = new JellyBeanConnectivityManagerCompatImpl();
-        } else if (Build.VERSION.SDK_INT >= 13) {
-            IMPL = new HoneycombMR2ConnectivityManagerCompatImpl();
-        } else if (Build.VERSION.SDK_INT >= 8) {
-            IMPL = new GingerbreadConnectivityManagerCompatImpl();
-        } else {
-            IMPL = new BaseConnectivityManagerCompatImpl();
-        }
-    }
-
-    /**
-     * Returns if the currently active data network is metered. A network is
-     * classified as metered when the user is sensitive to heavy data usage on
-     * that connection. You should check this before doing large data transfers,
-     * and warn the user or delay the operation until another network is
-     * available.
-     */
-    public static boolean isActiveNetworkMetered(ConnectivityManager cm) {
-        return IMPL.isActiveNetworkMetered(cm);
-    }
-
-    /**
-     * Return the {@link NetworkInfo} that caused the given
-     * {@link ConnectivityManager#CONNECTIVITY_ACTION} broadcast. This obtains
-     * the current state from {@link ConnectivityManager} instead of using the
-     * potentially-stale value from
-     * {@link ConnectivityManager#EXTRA_NETWORK_INFO}. May be {@code null}.
-     */
-    public static NetworkInfo getNetworkInfoFromBroadcast(ConnectivityManager cm, Intent intent) {
-        final NetworkInfo info = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-        if (info != null) {
-            return cm.getNetworkInfo(info.getType());
-        } else {
-            return null;
         }
     }
 }

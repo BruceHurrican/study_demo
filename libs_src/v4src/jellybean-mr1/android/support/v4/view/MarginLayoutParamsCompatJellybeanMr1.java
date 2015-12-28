@@ -49,7 +49,7 @@ class MarginLayoutParamsCompatJellybeanMr1 {
     }
 
     public static void resolveLayoutDirection(ViewGroup.MarginLayoutParams lp,
-            int layoutDirection) {
+                                              int layoutDirection) {
         lp.resolveLayoutDirection(layoutDirection);
     }
 }

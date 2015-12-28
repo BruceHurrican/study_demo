@@ -29,15 +29,6 @@ import android.widget.SearchView.OnQueryTextListener;
  */
 class SearchViewCompatHoneycomb {
 
-    interface OnQueryTextListenerCompatBridge {
-        public boolean onQueryTextSubmit(String query);
-        public boolean onQueryTextChange(String newText);
-    }
-
-    interface OnCloseListenerCompatBridge {
-        public boolean onClose();
-    }
-
     public static View newSearchView(Context context) {
         return new SearchView(context);
     }
@@ -118,5 +109,15 @@ class SearchViewCompatHoneycomb {
 
     public static void setMaxWidth(View searchView, int maxpixels) {
         ((SearchView) searchView).setMaxWidth(maxpixels);
+    }
+
+    interface OnQueryTextListenerCompatBridge {
+        public boolean onQueryTextSubmit(String query);
+
+        public boolean onQueryTextChange(String newText);
+    }
+
+    interface OnCloseListenerCompatBridge {
+        public boolean onClose();
     }
 }

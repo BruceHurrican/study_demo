@@ -26,20 +26,13 @@ import android.widget.Filter;
  * that can be used by auto-completion widgets.
  */
 class CursorFilter extends Filter {
-    
+
     CursorFilterClient mClient;
-    
-    interface CursorFilterClient {
-        CharSequence convertToString(Cursor cursor);
-        Cursor runQueryOnBackgroundThread(CharSequence constraint);
-        Cursor getCursor();
-        void changeCursor(Cursor cursor);
-    }
 
     CursorFilter(CursorFilterClient client) {
         mClient = client;
     }
-    
+
     @Override
     public CharSequence convertResultToString(Object resultValue) {
         return mClient.convertToString((Cursor) resultValue);
@@ -63,9 +56,19 @@ class CursorFilter extends Filter {
     @Override
     protected void publishResults(CharSequence constraint, FilterResults results) {
         Cursor oldCursor = mClient.getCursor();
-        
+
         if (results.values != null && results.values != oldCursor) {
             mClient.changeCursor((Cursor) results.values);
         }
+    }
+
+    interface CursorFilterClient {
+        CharSequence convertToString(Cursor cursor);
+
+        Cursor runQueryOnBackgroundThread(CharSequence constraint);
+
+        Cursor getCursor();
+
+        void changeCursor(Cursor cursor);
     }
 }

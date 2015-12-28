@@ -27,12 +27,12 @@ import android.graphics.drawable.Drawable;
 class ActionBarDrawerToggleJellybeanMR2 {
     private static final String TAG = "ActionBarDrawerToggleImplJellybeanMR2";
 
-    private static final int[] THEME_ATTRS = new int[] {
+    private static final int[] THEME_ATTRS = new int[]{
             R.attr.homeAsUpIndicator
     };
 
     public static Object setActionBarUpIndicator(Object info, Activity activity,
-            Drawable drawable, int contentDescRes) {
+                                                 Drawable drawable, int contentDescRes) {
         final ActionBar actionBar = activity.getActionBar();
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(drawable);
@@ -42,7 +42,7 @@ class ActionBarDrawerToggleJellybeanMR2 {
     }
 
     public static Object setActionBarDescription(Object info, Activity activity,
-            int contentDescRes) {
+                                                 int contentDescRes) {
         final ActionBar actionBar = activity.getActionBar();
         if (actionBar != null) {
             actionBar.setHomeActionContentDescription(contentDescRes);

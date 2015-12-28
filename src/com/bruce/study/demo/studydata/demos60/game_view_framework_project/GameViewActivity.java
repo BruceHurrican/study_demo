@@ -23,7 +23,7 @@ import com.bruce.study.demo.base.BaseActivity;
  * 游戏框架View 练习
  * Created by BruceHurrican on 2015/7/19.
  */
-public class GameViewActivity extends BaseActivity{
+public class GameViewActivity extends BaseActivity {
     @Override
     public String getTAG() {
         return null;

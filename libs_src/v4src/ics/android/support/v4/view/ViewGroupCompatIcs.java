@@ -25,7 +25,7 @@ import android.view.accessibility.AccessibilityEvent;
  */
 class ViewGroupCompatIcs {
     public static boolean onRequestSendAccessibilityEvent(ViewGroup group, View child,
-            AccessibilityEvent event) {
+                                                          AccessibilityEvent event) {
         return group.onRequestSendAccessibilityEvent(child, event);
     }
 }

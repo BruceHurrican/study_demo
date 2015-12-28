@@ -48,11 +48,10 @@ import java.util.HashMap;
  * Created by BruceHurrican on 2015/8/22.
  */
 public class SVGParser {
-    private SVGParser() {
-    }
-
     static final String TAG = "SVGAndroid";
 
+    private SVGParser() {
+    }
 
     /**
      * Parse SVG data from an input stream.
@@ -790,6 +789,9 @@ public class SVGParser {
         HashMap<String, Shader> gradientMap = new HashMap<String, Shader>();
         HashMap<String, Gradient> gradientRefMap = new HashMap<String, Gradient>();
         Gradient gradient = null;
+        private boolean hidden = false;
+        private int hiddenLevel = 0;
+        private boolean boundsMode = false;
 
         private SVGHandler(Picture picture) {
             this.picture = picture;
@@ -801,6 +803,21 @@ public class SVGParser {
             this(picture);
             this.targetWidth = targetWidth;
             this.targetHeight = targetHeight;
+        }
+
+        private static final void prepareScaledCanvas(Canvas canvas, float imageWidth, float imageHeight) {
+            final float scaleX = canvas.getWidth() / imageWidth;
+            final float scaleY = canvas.getHeight() / imageHeight;
+
+            if (scaleX > scaleY) {
+                final float dx = ((scaleX - scaleY) * imageWidth) / 2;
+                canvas.translate(dx, 0);
+                canvas.scale(scaleY, scaleY);
+            } else {
+                final float dy = ((scaleY - scaleX) * imageHeight) / 2;
+                canvas.translate(0, dy);
+                canvas.scale(scaleX, scaleX);
+            }
         }
 
         public void setColorSwap(Integer searchColor, Integer replaceColor) {
@@ -947,10 +964,6 @@ public class SVGParser {
             }
         }
 
-        private boolean hidden = false;
-        private int hiddenLevel = 0;
-        private boolean boundsMode = false;
-
         private void doLimits(float x, float y) {
             if (x < limits.left) {
                 limits.left = x;
@@ -1012,22 +1025,6 @@ public class SVGParser {
                 return canvas;
             }
         }
-
-        private static final void prepareScaledCanvas(Canvas canvas, float imageWidth, float imageHeight) {
-            final float scaleX = canvas.getWidth() / imageWidth;
-            final float scaleY = canvas.getHeight() / imageHeight;
-
-            if (scaleX > scaleY) {
-                final float dx = ((scaleX - scaleY) * imageWidth) / 2;
-                canvas.translate(dx, 0);
-                canvas.scale(scaleY, scaleY);
-            } else {
-                final float dy = ((scaleY - scaleX) * imageHeight) / 2;
-                canvas.translate(0, dy);
-                canvas.scale(scaleX, scaleX);
-            }
-        }
-
 
         @Override
         public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException {

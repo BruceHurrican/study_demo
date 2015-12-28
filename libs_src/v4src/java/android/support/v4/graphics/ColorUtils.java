@@ -26,7 +26,8 @@ public class ColorUtils {
     private static final int MIN_ALPHA_SEARCH_MAX_ITERATIONS = 10;
     private static final int MIN_ALPHA_SEARCH_PRECISION = 10;
 
-    private ColorUtils() {}
+    private ColorUtils() {
+    }
 
     /**
      * Composite two potentially translucent colors over each other and returns the result.
@@ -57,7 +58,7 @@ public class ColorUtils {
 
     /**
      * Returns the luminance of a color.
-     *
+     * <p>
      * Formula defined here: http://www.w3.org/TR/2008/REC-WCAG20-20081211/#relativeluminancedef
      */
     public static double calculateLuminance(int color) {
@@ -107,7 +108,7 @@ public class ColorUtils {
      * @return the alpha value in the range 0-255, or -1 if no value could be calculated.
      */
     public static int calculateMinimumAlpha(int foreground, int background,
-            float minContrastRatio) {
+                                            float minContrastRatio) {
         if (Color.alpha(background) != 255) {
             throw new IllegalArgumentException("background can not be translucent");
         }
@@ -204,7 +205,7 @@ public class ColorUtils {
      * </ul>
      *
      * @param color the ARGB color to convert. The alpha component is ignored.
-     * @param hsl 3 element array which holds the resulting HSL components.
+     * @param hsl   3 element array which holds the resulting HSL components.
      */
     public static void colorToHSL(int color, float[] hsl) {
         RGBToHSL(Color.red(color), Color.green(color), Color.blue(color), hsl);

@@ -35,10 +35,11 @@ import com.bruce.study.demo.R;
  * Created by BruceHurrican on 2015/6/7.
  */
 public class LoadingView extends FrameLayout {
+    private static final int ANIMATION_DURATION = 500;
+    public float factor = 1.2f;
     private ShapeLoadingView shapeLoadingView;
     private ImageView indicationIm;
     private TextView loadTextView;
-    private static final int ANIMATION_DURATION = 500;
     private String loadText;
     private float mDistance = 200;
 
@@ -52,15 +53,6 @@ public class LoadingView extends FrameLayout {
 
     }
 
-    private void init(Context context, AttributeSet attrs) {
-
-        TypedArray typedArray = context
-                .obtainStyledAttributes(attrs, R.styleable.LoadingView);
-        loadText = typedArray.getString(R.styleable.LoadingView_loadingText);
-
-        typedArray.recycle();
-    }
-
 
     public LoadingView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
@@ -72,6 +64,15 @@ public class LoadingView extends FrameLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context,attrs);
     }*/
+
+    private void init(Context context, AttributeSet attrs) {
+
+        TypedArray typedArray = context
+                .obtainStyledAttributes(attrs, R.styleable.LoadingView);
+        loadText = typedArray.getString(R.styleable.LoadingView_loadingText);
+
+        typedArray.recycle();
+    }
 
     public int dip2px(float dipValue) {
         final float scale = getContext().getResources().getDisplayMetrics().density;
@@ -101,8 +102,6 @@ public class LoadingView extends FrameLayout {
     public void setLoadingText(CharSequence loadingText) {
         loadTextView.setText(loadingText);
     }
-
-    public float factor = 1.2f;
 
     /**
      * 上抛

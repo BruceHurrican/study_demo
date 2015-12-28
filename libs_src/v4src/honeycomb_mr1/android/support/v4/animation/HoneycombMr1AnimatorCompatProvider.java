@@ -37,6 +37,14 @@ class HoneycombMr1AnimatorCompatProvider implements AnimatorProvider {
         return new HoneycombValueAnimatorCompat(ValueAnimator.ofFloat(0f, 1f));
     }
 
+    @Override
+    public void clearInterpolator(View view) {
+        if (mDefaultInterpolator == null) {
+            mDefaultInterpolator = new ValueAnimator().getInterpolator();
+        }
+        view.animate().setInterpolator(mDefaultInterpolator);
+    }
+
     static class HoneycombValueAnimatorCompat implements ValueAnimatorCompat {
 
         final Animator mWrapped;
@@ -121,13 +129,5 @@ class HoneycombMr1AnimatorCompatProvider implements AnimatorProvider {
         public void onAnimationRepeat(Animator animation) {
             mWrapped.onAnimationRepeat(mValueAnimatorCompat);
         }
-    }
-
-    @Override
-    public void clearInterpolator(View view) {
-        if (mDefaultInterpolator == null) {
-            mDefaultInterpolator = new ValueAnimator().getInterpolator();
-        }
-        view.animate().setInterpolator(mDefaultInterpolator);
     }
 }

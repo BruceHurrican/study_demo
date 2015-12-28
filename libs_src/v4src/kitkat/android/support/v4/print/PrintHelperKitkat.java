@@ -38,12 +38,6 @@ import java.io.InputStream;
  * Kitkat specific PrintManager API implementation.
  */
 class PrintHelperKitkat {
-    private static final String LOG_TAG = "PrintHelperKitkat";
-    // will be <= 300 dpi on A4 (8.3×11.7) paper (worst case of 150 dpi)
-    private final static int MAX_PRINT_SIZE = 3500;
-    final Context mContext;
-    BitmapFactory.Options mDecodeOptions = null;
-    private final Object mLock = new Object();
     /**
      * image will be scaled but leave white space
      */
@@ -52,17 +46,14 @@ class PrintHelperKitkat {
      * image will fill the paper and be cropped (default)
      */
     public static final int SCALE_MODE_FILL = 2;
-
     /**
      * select landscape (default)
      */
     public static final int ORIENTATION_LANDSCAPE = 1;
-
     /**
      * select portrait
      */
     public static final int ORIENTATION_PORTRAIT = 2;
-
     /**
      * this is a black and white image
      */
@@ -71,15 +62,14 @@ class PrintHelperKitkat {
      * this is a color image (default)
      */
     public static final int COLOR_MODE_COLOR = 2;
-
-    public interface OnPrintFinishCallback {
-        public void onFinish();
-    }
-
+    private static final String LOG_TAG = "PrintHelperKitkat";
+    // will be <= 300 dpi on A4 (8.3×11.7) paper (worst case of 150 dpi)
+    private final static int MAX_PRINT_SIZE = 3500;
+    final Context mContext;
+    private final Object mLock = new Object();
+    BitmapFactory.Options mDecodeOptions = null;
     int mScaleMode = SCALE_MODE_FILL;
-
     int mColorMode = COLOR_MODE_COLOR;
-
     int mOrientation = ORIENTATION_LANDSCAPE;
 
     PrintHelperKitkat(Context context) {
@@ -87,8 +77,18 @@ class PrintHelperKitkat {
     }
 
     /**
+     * Returns the scale mode with which the image will fill the paper.
+     *
+     * @return The scale Mode: {@link #SCALE_MODE_FIT} or
+     * {@link #SCALE_MODE_FILL}
+     */
+    public int getScaleMode() {
+        return mScaleMode;
+    }
+
+    /**
      * Selects whether the image will fill the paper and be cropped
-     * <p/>
+     * <p>
      * {@link #SCALE_MODE_FIT}
      * or whether the image will be scaled but leave white space
      * {@link #SCALE_MODE_FILL}.
@@ -101,13 +101,34 @@ class PrintHelperKitkat {
     }
 
     /**
-     * Returns the scale mode with which the image will fill the paper.
+     * Gets the page orientation with which the image will be printed.
      *
-     * @return The scale Mode: {@link #SCALE_MODE_FIT} or
-     * {@link #SCALE_MODE_FILL}
+     * @return The preferred orientation which is one of
+     * {@link #ORIENTATION_LANDSCAPE} or {@link #ORIENTATION_PORTRAIT}
      */
-    public int getScaleMode() {
-        return mScaleMode;
+    public int getOrientation() {
+        return mOrientation;
+    }
+
+    /**
+     * Sets whether to select landscape (default), {@link #ORIENTATION_LANDSCAPE}
+     * or portrait {@link #ORIENTATION_PORTRAIT}
+     *
+     * @param orientation The page orientation which is one of
+     *                    {@link #ORIENTATION_LANDSCAPE} or {@link #ORIENTATION_PORTRAIT}.
+     */
+    public void setOrientation(int orientation) {
+        mOrientation = orientation;
+    }
+
+    /**
+     * Gets the color mode with which the image will be printed.
+     *
+     * @return The color mode which is one of {@link #COLOR_MODE_COLOR}
+     * and {@link #COLOR_MODE_MONOCHROME}.
+     */
+    public int getColorMode() {
+        return mColorMode;
     }
 
     /**
@@ -123,44 +144,14 @@ class PrintHelperKitkat {
     }
 
     /**
-     * Sets whether to select landscape (default), {@link #ORIENTATION_LANDSCAPE}
-     * or portrait {@link #ORIENTATION_PORTRAIT}
-     * @param orientation The page orientation which is one of
-     *                    {@link #ORIENTATION_LANDSCAPE} or {@link #ORIENTATION_PORTRAIT}.
-     */
-    public void setOrientation(int orientation) {
-        mOrientation = orientation;
-    }
-
-    /**
-     * Gets the page orientation with which the image will be printed.
-     *
-     * @return The preferred orientation which is one of
-     * {@link #ORIENTATION_LANDSCAPE} or {@link #ORIENTATION_PORTRAIT}
-     */
-    public int getOrientation() {
-        return mOrientation;
-    }
-
-    /**
-     * Gets the color mode with which the image will be printed.
-     *
-     * @return The color mode which is one of {@link #COLOR_MODE_COLOR}
-     * and {@link #COLOR_MODE_MONOCHROME}.
-     */
-    public int getColorMode() {
-        return mColorMode;
-    }
-
-    /**
      * Prints a bitmap.
      *
-     * @param jobName The print job name.
-     * @param bitmap  The bitmap to print.
+     * @param jobName  The print job name.
+     * @param bitmap   The bitmap to print.
      * @param callback Optional callback to observe when printing is finished.
      */
     public void printBitmap(final String jobName, final Bitmap bitmap,
-            final OnPrintFinishCallback callback) {
+                            final OnPrintFinishCallback callback) {
         if (bitmap == null) {
             return;
         }
@@ -295,17 +286,17 @@ class PrintHelperKitkat {
      *
      * @param jobName   The print job name.
      * @param imageFile The <code>Uri</code> pointing to an image to print.
-     * @param callback Optional callback to observe when printing is finished.
+     * @param callback  Optional callback to observe when printing is finished.
      * @throws FileNotFoundException if <code>Uri</code> is not pointing to a valid image.
      */
     public void printBitmap(final String jobName, final Uri imageFile,
-            final OnPrintFinishCallback callback) throws FileNotFoundException {
+                            final OnPrintFinishCallback callback) throws FileNotFoundException {
         final int fittingMode = mScaleMode;
 
         PrintDocumentAdapter printDocumentAdapter = new PrintDocumentAdapter() {
-            private PrintAttributes mAttributes;
             AsyncTask<Uri, Boolean, Bitmap> mLoadBitmap;
             Bitmap mBitmap = null;
+            private PrintAttributes mAttributes;
 
             @Override
             public void onLayout(final PrintAttributes oldPrintAttributes,
@@ -571,5 +562,9 @@ class PrintHelperKitkat {
         c.setBitmap(null);
 
         return grayscale;
+    }
+
+    public interface OnPrintFinishCallback {
+        public void onFinish();
     }
 }

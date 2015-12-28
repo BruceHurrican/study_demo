@@ -34,6 +34,11 @@ import java.util.List;
  * Created by BruceHurrican on 2015/7/11.
  */
 public final class PublicUtil {
+    private static final int kSystemRootStateUnknow = -1;
+    private static final int kSystemRootStateDisable = 0;
+    private static final int kSystemRootStateEnable = 1;
+    private static int systemRootState = kSystemRootStateUnknow;
+
     private PublicUtil() {
     }
 
@@ -125,11 +130,6 @@ public final class PublicUtil {
         }
         return stringBuilder.toString();
     }
-
-    private static final int kSystemRootStateUnknow = -1;
-    private static final int kSystemRootStateDisable = 0;
-    private static final int kSystemRootStateEnable = 1;
-    private static int systemRootState = kSystemRootStateUnknow;
 
     /**
      * 判断手机是否已经root

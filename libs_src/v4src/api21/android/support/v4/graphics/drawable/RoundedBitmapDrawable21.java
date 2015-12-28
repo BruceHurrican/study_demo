@@ -49,7 +49,7 @@ class RoundedBitmapDrawable21 extends RoundedBitmapDrawable {
 
     @Override
     void gravityCompatApply(int gravity, int bitmapWidth, int bitmapHeight,
-            Rect bounds, Rect outRect) {
+                            Rect bounds, Rect outRect) {
         Gravity.apply(gravity, bitmapWidth, bitmapHeight,
                 bounds, outRect, View.LAYOUT_DIRECTION_LTR);
     }

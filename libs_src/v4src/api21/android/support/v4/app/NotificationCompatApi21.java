@@ -52,75 +52,6 @@ class NotificationCompatApi21 {
     private static final String KEY_PARTICIPANTS = "participants";
     private static final String KEY_TIMESTAMP = "timestamp";
 
-    public static class Builder implements NotificationBuilderWithBuilderAccessor,
-            NotificationBuilderWithActions {
-        private Notification.Builder b;
-
-        public Builder(Context context, Notification n,
-                CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
-                RemoteViews tickerView, int number,
-                PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-                int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
-                boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
-                String category, ArrayList<String> people, Bundle extras, int color,
-                int visibility, Notification publicVersion, String groupKey, boolean groupSummary,
-                String sortKey) {
-            b = new Notification.Builder(context)
-                    .setWhen(n.when)
-                    .setShowWhen(showWhen)
-                    .setSmallIcon(n.icon, n.iconLevel)
-                    .setContent(n.contentView)
-                    .setTicker(n.tickerText, tickerView)
-                    .setSound(n.sound, n.audioStreamType)
-                    .setVibrate(n.vibrate)
-                    .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
-                    .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
-                    .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
-                    .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
-                    .setDefaults(n.defaults)
-                    .setContentTitle(contentTitle)
-                    .setContentText(contentText)
-                    .setSubText(subText)
-                    .setContentInfo(contentInfo)
-                    .setContentIntent(contentIntent)
-                    .setDeleteIntent(n.deleteIntent)
-                    .setFullScreenIntent(fullScreenIntent,
-                            (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
-                    .setLargeIcon(largeIcon)
-                    .setNumber(number)
-                    .setUsesChronometer(useChronometer)
-                    .setPriority(priority)
-                    .setProgress(progressMax, progress, progressIndeterminate)
-                    .setLocalOnly(localOnly)
-                    .setExtras(extras)
-                    .setGroup(groupKey)
-                    .setGroupSummary(groupSummary)
-                    .setSortKey(sortKey)
-                    .setCategory(category)
-                    .setColor(color)
-                    .setVisibility(visibility)
-                    .setPublicVersion(publicVersion);
-            for (String person: people) {
-                b.addPerson(person);
-            }
-        }
-
-        @Override
-        public void addAction(NotificationCompatBase.Action action) {
-            NotificationCompatApi20.addAction(b, action);
-        }
-
-        @Override
-        public Notification.Builder getBuilder() {
-            return b;
-        }
-
-        @Override
-        public Notification build() {
-            return b.build();
-        }
-    }
-
     public static String getCategory(Notification notif) {
         return notif.category;
     }
@@ -219,5 +150,74 @@ class NotificationCompatApi21 {
                 remoteInput.getChoices(),
                 remoteInput.getAllowFreeFormInput(),
                 remoteInput.getExtras());
+    }
+
+    public static class Builder implements NotificationBuilderWithBuilderAccessor,
+            NotificationBuilderWithActions {
+        private Notification.Builder b;
+
+        public Builder(Context context, Notification n,
+                       CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
+                       RemoteViews tickerView, int number,
+                       PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
+                       int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
+                       boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
+                       String category, ArrayList<String> people, Bundle extras, int color,
+                       int visibility, Notification publicVersion, String groupKey, boolean groupSummary,
+                       String sortKey) {
+            b = new Notification.Builder(context)
+                    .setWhen(n.when)
+                    .setShowWhen(showWhen)
+                    .setSmallIcon(n.icon, n.iconLevel)
+                    .setContent(n.contentView)
+                    .setTicker(n.tickerText, tickerView)
+                    .setSound(n.sound, n.audioStreamType)
+                    .setVibrate(n.vibrate)
+                    .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
+                    .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
+                    .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
+                    .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
+                    .setDefaults(n.defaults)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText)
+                    .setSubText(subText)
+                    .setContentInfo(contentInfo)
+                    .setContentIntent(contentIntent)
+                    .setDeleteIntent(n.deleteIntent)
+                    .setFullScreenIntent(fullScreenIntent,
+                            (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
+                    .setLargeIcon(largeIcon)
+                    .setNumber(number)
+                    .setUsesChronometer(useChronometer)
+                    .setPriority(priority)
+                    .setProgress(progressMax, progress, progressIndeterminate)
+                    .setLocalOnly(localOnly)
+                    .setExtras(extras)
+                    .setGroup(groupKey)
+                    .setGroupSummary(groupSummary)
+                    .setSortKey(sortKey)
+                    .setCategory(category)
+                    .setColor(color)
+                    .setVisibility(visibility)
+                    .setPublicVersion(publicVersion);
+            for (String person : people) {
+                b.addPerson(person);
+            }
+        }
+
+        @Override
+        public void addAction(NotificationCompatBase.Action action) {
+            NotificationCompatApi20.addAction(b, action);
+        }
+
+        @Override
+        public Notification.Builder getBuilder() {
+            return b;
+        }
+
+        @Override
+        public Notification build() {
+            return b.build();
+        }
     }
 }

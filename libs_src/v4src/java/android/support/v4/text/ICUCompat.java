@@ -22,6 +22,46 @@ import java.util.Locale;
 
 public class ICUCompat {
 
+    private static final ICUCompatImpl IMPL;
+
+    static {
+        final int version = Build.VERSION.SDK_INT;
+        if (version >= 21) {
+            IMPL = new ICUCompatImplLollipop();
+        } else if (version >= 14) {
+            IMPL = new ICUCompatImplIcs();
+        } else {
+            IMPL = new ICUCompatImplBase();
+        }
+    }
+
+    /**
+     * Returns the script for a given Locale.
+     * <p>
+     * If the locale isn't already in its maximal form, likely subtags for the provided locale
+     * ID are added before we determine the script. For further details, see the following CLDR
+     * technical report :
+     * <p>
+     * http://www.unicode.org/reports/tr35/#Likely_Subtags
+     * <p>
+     * If locale is already in the maximal form, or there is no data available for maximization,
+     * it will be just returned. For example, "und-Zzzz" cannot be maximized, since there is no
+     * reasonable maximization.
+     * <p>
+     * Examples:
+     * <p>
+     * "en" maximizes to "en_Latn_US"
+     * "de" maximizes to "de_Latn_US"
+     * "sr" maximizes to "sr_Cyrl_RS"
+     * "sh" maximizes to "sr_Latn_RS" (Note this will not reverse.)
+     * "zh_Hani" maximizes to "zh_Hans_CN" (Note this will not reverse.)
+     *
+     * @return
+     */
+    public static String maximizeAndGetScript(Locale locale) {
+        return IMPL.maximizeAndGetScript(locale);
+    }
+
     interface ICUCompatImpl {
         public String maximizeAndGetScript(Locale locale);
     }
@@ -45,45 +85,5 @@ public class ICUCompat {
         public String maximizeAndGetScript(Locale locale) {
             return ICUCompatApi23.maximizeAndGetScript(locale);
         }
-    }
-
-    private static final ICUCompatImpl IMPL;
-
-    static {
-        final int version = Build.VERSION.SDK_INT;
-        if (version >= 21) {
-            IMPL = new ICUCompatImplLollipop();
-        } else if (version >= 14) {
-            IMPL = new ICUCompatImplIcs();
-        } else {
-            IMPL = new ICUCompatImplBase();
-        }
-    }
-
-    /**
-     * Returns the script for a given Locale.
-     *
-     * If the locale isn't already in its maximal form, likely subtags for the provided locale
-     * ID are added before we determine the script. For further details, see the following CLDR
-     * technical report :
-     *
-     * http://www.unicode.org/reports/tr35/#Likely_Subtags
-     *
-     * If locale is already in the maximal form, or there is no data available for maximization,
-     * it will be just returned. For example, "und-Zzzz" cannot be maximized, since there is no
-     * reasonable maximization.
-     *
-     * Examples:
-     *
-     * "en" maximizes to "en_Latn_US"
-     * "de" maximizes to "de_Latn_US"
-     * "sr" maximizes to "sr_Cyrl_RS"
-     * "sh" maximizes to "sr_Latn_RS" (Note this will not reverse.)
-     * "zh_Hani" maximizes to "zh_Hans_CN" (Note this will not reverse.)
-     *
-     * @return
-     */
-    public static String maximizeAndGetScript(Locale locale) {
-        return IMPL.maximizeAndGetScript(locale);
     }
 }

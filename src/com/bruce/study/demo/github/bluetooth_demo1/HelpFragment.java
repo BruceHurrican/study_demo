@@ -35,24 +35,24 @@ import java.util.Set;
  * A simple {@link android.support.v4.app.Fragment} subclass
  * Created by BruceHurrican on 2015/10/9.
  */
-public class HelpFragment extends BaseFragment implements View.OnClickListener{
+public class HelpFragment extends BaseFragment implements View.OnClickListener {
+    private static final int REQUEST_ENABLE_BT = 2;
+    private static Callbacks sDummyCallbacks = new Callbacks() {
+        @Override
+        public void onButtonSelected(int id) {
+            // do noting
+        }
+    };
+    BluetoothAdapter mBluetoothAdapter = null;
+    Button btn_client, btn_server;
+    TextView logger;
     private Callbacks mCallbacks = sDummyCallbacks;
+    public HelpFragment() {
+    }
 
     @Override
     public String getTAG() {
         return "HelpFragment -->";
-    }
-
-    public interface Callbacks {
-        public void onButtonSelected(int id);
-    }
-
-    BluetoothAdapter mBluetoothAdapter = null;
-    private static final int REQUEST_ENABLE_BT = 2;
-    Button btn_client, btn_server;
-    TextView logger;
-
-    public HelpFragment() {
     }
 
     public void mkmsg(String msg) {
@@ -144,10 +144,7 @@ public class HelpFragment extends BaseFragment implements View.OnClickListener{
         mCallbacks = sDummyCallbacks;
     }
 
-    private static Callbacks sDummyCallbacks = new Callbacks() {
-        @Override
-        public void onButtonSelected(int id) {
-            // do noting
-        }
-    };
+    public interface Callbacks {
+        public void onButtonSelected(int id);
+    }
 }

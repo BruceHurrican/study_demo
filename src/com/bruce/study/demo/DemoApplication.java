@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2015.
  *   This document is just for Bruce's personal study.
@@ -32,6 +31,10 @@ public class DemoApplication extends Application {
     // used in volley_demo
     private static RequestQueue queues;
     private List<Activity> container;
+
+    public static RequestQueue getHttpQueues() {
+        return queues;
+    }
 
     @Override
     public void onCreate() {
@@ -75,9 +78,5 @@ public class DemoApplication extends Application {
             activity.finish();
         }
         android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
-    public static RequestQueue getHttpQueues() {
-        return queues;
     }
 }

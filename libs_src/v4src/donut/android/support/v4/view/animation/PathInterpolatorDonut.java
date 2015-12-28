@@ -57,8 +57,23 @@ class PathInterpolatorDonut implements Interpolator {
     }
 
     public PathInterpolatorDonut(float controlX1, float controlY1,
-            float controlX2, float controlY2) {
+                                 float controlX2, float controlY2) {
         this(createCubic(controlX1, controlY1, controlX2, controlY2));
+    }
+
+    private static Path createQuad(float controlX, float controlY) {
+        final Path path = new Path();
+        path.moveTo(0.0f, 0.0f);
+        path.quadTo(controlX, controlY, 1.0f, 1.0f);
+        return path;
+    }
+
+    private static Path createCubic(float controlX1, float controlY1,
+                                    float controlX2, float controlY2) {
+        final Path path = new Path();
+        path.moveTo(0.0f, 0.0f);
+        path.cubicTo(controlX1, controlY1, controlX2, controlY2, 1.0f, 1.0f);
+        return path;
     }
 
     @Override
@@ -93,20 +108,5 @@ class PathInterpolatorDonut implements Interpolator {
         final float endY = mY[endIndex];
 
         return startY + (fraction * (endY - startY));
-    }
-
-    private static Path createQuad(float controlX, float controlY) {
-        final Path path = new Path();
-        path.moveTo(0.0f, 0.0f);
-        path.quadTo(controlX, controlY, 1.0f, 1.0f);
-        return path;
-    }
-
-    private static Path createCubic(float controlX1, float controlY1,
-            float controlX2, float controlY2) {
-        final Path path = new Path();
-        path.moveTo(0.0f, 0.0f);
-        path.cubicTo(controlX1, controlY1, controlX2, controlY2, 1.0f, 1.0f);
-        return path;
     }
 }

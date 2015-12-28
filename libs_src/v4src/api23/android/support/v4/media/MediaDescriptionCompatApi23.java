@@ -25,7 +25,7 @@ class MediaDescriptionCompatApi23 extends MediaDescriptionCompatApi21 {
 
     static class Builder extends MediaDescriptionCompatApi21.Builder {
         public static void setMediaUri(Object builderObj, Uri mediaUri) {
-            ((MediaDescription.Builder)builderObj).setMediaUri(mediaUri);
+            ((MediaDescription.Builder) builderObj).setMediaUri(mediaUri);
         }
     }
 }

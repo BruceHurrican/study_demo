@@ -22,9 +22,9 @@ package android.support.v4.util;
  * platform.  Unlike a normal array of Objects,
  * there can be gaps in the indices.  It is intended to be more memory efficient
  * than using a HashMap to map Longs to Objects, both because it avoids
-  * auto-boxing keys and its data structure doesn't rely on an extra entry object
-  * for each mapping.
- *
+ * auto-boxing keys and its data structure doesn't rely on an extra entry object
+ * for each mapping.
+ * <p>
  * <p>Note that this container keeps its mappings in an array data structure,
  * using a binary search to find keys.  The implementation is not intended to be appropriate for
  * data structures
@@ -32,7 +32,7 @@ package android.support.v4.util;
  * HashMap, since lookups require a binary search and adds and removes require inserting
  * and deleting entries in the array.  For containers holding up to hundreds of items,
  * the performance difference is not significant, less than 50%.</p>
- *
+ * <p>
  * <p>To help with performance, the container includes an optimization when removing
  * keys: instead of compacting its array immediately, it leaves the removed entry marked
  * as deleted.  The entry can then be re-used for the same key, or compacted later in
@@ -358,7 +358,7 @@ public class LongSparseArray<E> implements Cloneable {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This implementation composes a string by iterating over its mappings. If
      * this map contains itself as a value, the string "(this Map)"
      * will appear in its place.
@@ -371,7 +371,7 @@ public class LongSparseArray<E> implements Cloneable {
 
         StringBuilder buffer = new StringBuilder(mSize * 28);
         buffer.append('{');
-        for (int i=0; i<mSize; i++) {
+        for (int i = 0; i < mSize; i++) {
             if (i > 0) {
                 buffer.append(", ");
             }

@@ -26,13 +26,42 @@ import android.util.Log;
  * introduced after API level 4 in a backwards compatible fashion.
  */
 public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
-    private static final String TAG = "RemoteInput";
-
-    /** Label used to denote the clip data type used for remote input transport */
+    /**
+     * Label used to denote the clip data type used for remote input transport
+     */
     public static final String RESULTS_CLIP_LABEL = RemoteInputCompatJellybean.RESULTS_CLIP_LABEL;
-
-    /** Extra added to a clip data intent object to hold the results bundle. */
+    /**
+     * Extra added to a clip data intent object to hold the results bundle.
+     */
     public static final String EXTRA_RESULTS_DATA = RemoteInputCompatJellybean.EXTRA_RESULTS_DATA;
+    /**
+     * @hide
+     */
+    public static final Factory FACTORY = new Factory() {
+        @Override
+        public RemoteInput build(String resultKey,
+                                 CharSequence label, CharSequence[] choices, boolean allowFreeFormInput,
+                                 Bundle extras) {
+            return new RemoteInput(resultKey, label, choices, allowFreeFormInput, extras);
+        }
+
+        @Override
+        public RemoteInput[] newArray(int size) {
+            return new RemoteInput[size];
+        }
+    };
+    private static final String TAG = "RemoteInput";
+    private static final Impl IMPL;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 20) {
+            IMPL = new ImplApi20();
+        } else if (Build.VERSION.SDK_INT >= 16) {
+            IMPL = new ImplJellybean();
+        } else {
+            IMPL = new ImplBase();
+        }
+    }
 
     private final String mResultKey;
     private final CharSequence mLabel;
@@ -41,12 +70,41 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
     private final Bundle mExtras;
 
     RemoteInput(String resultKey, CharSequence label, CharSequence[] choices,
-            boolean allowFreeFormInput, Bundle extras) {
+                boolean allowFreeFormInput, Bundle extras) {
         this.mResultKey = resultKey;
         this.mLabel = label;
         this.mChoices = choices;
         this.mAllowFreeFormInput = allowFreeFormInput;
         this.mExtras = extras;
+    }
+
+    /**
+     * Get the remote input results bundle from an intent. The returned Bundle will
+     * contain a key/value for every result key populated by remote input collector.
+     * Use the {@link Bundle#getCharSequence(String)} method to retrieve a value.
+     *
+     * @param intent The intent object that fired in response to an action or content intent
+     *               which also had one or more remote input requested.
+     */
+    public static Bundle getResultsFromIntent(Intent intent) {
+        return IMPL.getResultsFromIntent(intent);
+    }
+
+    /**
+     * Populate an intent object with the results gathered from remote input. This method
+     * should only be called by remote input collection services when sending results to a
+     * pending intent.
+     *
+     * @param remoteInputs The remote inputs for which results are being provided
+     * @param intent       The intent to add remote inputs to. The {@link android.content.ClipData}
+     *                     field of the intent will be modified to contain the results.
+     * @param results      A bundle holding the remote input results. This bundle should
+     *                     be populated with keys matching the result keys specified in
+     *                     {@code remoteInputs} with values being the result per key.
+     */
+    public static void addResultsToIntent(RemoteInput[] remoteInputs, Intent intent,
+                                          Bundle results) {
+        IMPL.addResultsToIntent(remoteInputs, intent, results);
     }
 
     /**
@@ -88,6 +146,13 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
         return mExtras;
     }
 
+    interface Impl {
+        Bundle getResultsFromIntent(Intent intent);
+
+        void addResultsToIntent(RemoteInput[] remoteInputs, Intent intent,
+                                Bundle results);
+    }
+
     /**
      * Builder class for {@link android.support.v4.app.RemoteInput} objects.
      */
@@ -100,6 +165,7 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
 
         /**
          * Create a builder object for {@link android.support.v4.app.RemoteInput} objects.
+         *
          * @param resultKey the Bundle key that refers to this input when collected from the user
          */
         public Builder(String resultKey) {
@@ -111,6 +177,7 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
 
         /**
          * Set a label to be displayed to the user when collecting this input.
+         *
          * @param label The label to show to users when they input a response.
          * @return this object for method chaining
          */
@@ -121,9 +188,10 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
 
         /**
          * Specifies choices available to the user to satisfy this input.
+         *
          * @param choices an array of pre-defined choices for users input.
-         *        You must provide a non-null and non-empty array if
-         *        you disabled free form input using {@link #setAllowFreeFormInput}.
+         *                You must provide a non-null and non-empty array if
+         *                you disabled free form input using {@link #setAllowFreeFormInput}.
          * @return this object for method chaining
          */
         public Builder setChoices(CharSequence[] choices) {
@@ -135,9 +203,9 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
          * Specifies whether the user can provide arbitrary values.
          *
          * @param allowFreeFormInput The default is {@code true}.
-         *         If you specify {@code false}, you must provide a non-null
-         *         and non-empty array to {@link #setChoices} or an
-         *         {@link IllegalArgumentException} is thrown.
+         *                           If you specify {@code false}, you must provide a non-null
+         *                           and non-empty array to {@link #setChoices} or an
+         *                           {@link IllegalArgumentException} is thrown.
          * @return this object for method chaining
          */
         public Builder setAllowFreeFormInput(boolean allowFreeFormInput) {
@@ -147,7 +215,7 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
 
         /**
          * Merge additional metadata into this builder.
-         *
+         * <p>
          * <p>Values within the Bundle will replace existing extras values in this Builder.
          *
          * @see RemoteInput#getExtras
@@ -161,7 +229,7 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
 
         /**
          * Get the metadata Bundle used by this Builder.
-         *
+         * <p>
          * <p>The returned Bundle is shared with this Builder.
          */
         public Bundle getExtras() {
@@ -175,41 +243,6 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
         public RemoteInput build() {
             return new RemoteInput(mResultKey, mLabel, mChoices, mAllowFreeFormInput, mExtras);
         }
-    }
-
-    /**
-     * Get the remote input results bundle from an intent. The returned Bundle will
-     * contain a key/value for every result key populated by remote input collector.
-     * Use the {@link Bundle#getCharSequence(String)} method to retrieve a value.
-     * @param intent The intent object that fired in response to an action or content intent
-     *               which also had one or more remote input requested.
-     */
-    public static Bundle getResultsFromIntent(Intent intent) {
-        return IMPL.getResultsFromIntent(intent);
-    }
-
-    /**
-     * Populate an intent object with the results gathered from remote input. This method
-     * should only be called by remote input collection services when sending results to a
-     * pending intent.
-     * @param remoteInputs The remote inputs for which results are being provided
-     * @param intent The intent to add remote inputs to. The {@link android.content.ClipData}
-     *               field of the intent will be modified to contain the results.
-     * @param results A bundle holding the remote input results. This bundle should
-     *                be populated with keys matching the result keys specified in
-     *                {@code remoteInputs} with values being the result per key.
-     */
-    public static void addResultsToIntent(RemoteInput[] remoteInputs, Intent intent,
-            Bundle results) {
-        IMPL.addResultsToIntent(remoteInputs, intent, results);
-    }
-
-    private static final Impl IMPL;
-
-    interface Impl {
-        Bundle getResultsFromIntent(Intent intent);
-        void addResultsToIntent(RemoteInput[] remoteInputs, Intent intent,
-                Bundle results);
     }
 
     static class ImplBase implements Impl {
@@ -248,29 +281,4 @@ public class RemoteInput extends RemoteInputCompatBase.RemoteInput {
             RemoteInputCompatApi20.addResultsToIntent(remoteInputs, intent, results);
         }
     }
-
-    static {
-        if (Build.VERSION.SDK_INT >= 20) {
-            IMPL = new ImplApi20();
-        } else if (Build.VERSION.SDK_INT >= 16) {
-            IMPL = new ImplJellybean();
-        } else {
-            IMPL = new ImplBase();
-        }
-    }
-
-    /** @hide */
-    public static final Factory FACTORY = new Factory() {
-        @Override
-        public RemoteInput build(String resultKey,
-                CharSequence label, CharSequence[] choices, boolean allowFreeFormInput,
-                Bundle extras) {
-            return new RemoteInput(resultKey, label, choices, allowFreeFormInput, extras);
-        }
-
-        @Override
-        public RemoteInput[] newArray(int size) {
-            return new RemoteInput[size];
-        }
-    };
 }

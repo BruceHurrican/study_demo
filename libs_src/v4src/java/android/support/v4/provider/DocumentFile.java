@@ -103,8 +103,8 @@ public abstract class DocumentFile {
      * {@code null} when called on earlier platform versions.
      *
      * @param singleUri the {@link Intent#getData()} from a successful
-     *            {@link Intent#ACTION_OPEN_DOCUMENT} or
-     *            {@link Intent#ACTION_CREATE_DOCUMENT} request.
+     *                  {@link Intent#ACTION_OPEN_DOCUMENT} or
+     *                  {@link Intent#ACTION_CREATE_DOCUMENT} request.
      */
     public static DocumentFile fromSingleUri(Context context, Uri singleUri) {
         final int version = Build.VERSION.SDK_INT;
@@ -122,7 +122,7 @@ public abstract class DocumentFile {
      * {@code null} when called on earlier platform versions.
      *
      * @param treeUri the {@link Intent#getData()} from a successful
-     *            {@link Intent#ACTION_OPEN_DOCUMENT_TREE} request.
+     *                {@link Intent#ACTION_OPEN_DOCUMENT_TREE} request.
      */
     public static DocumentFile fromTreeUri(Context context, Uri treeUri) {
         final int version = Build.VERSION.SDK_INT;
@@ -150,16 +150,16 @@ public abstract class DocumentFile {
     /**
      * Create a new document as a direct child of this directory.
      *
-     * @param mimeType MIME type of new document, such as {@code image/png} or
-     *            {@code audio/flac}
+     * @param mimeType    MIME type of new document, such as {@code image/png} or
+     *                    {@code audio/flac}
      * @param displayName name of new document, without any file extension
-     *            appended; the underlying provider may choose to append the
-     *            extension
+     *                    appended; the underlying provider may choose to append the
+     *                    extension
      * @return file representing newly created document, or null if failed
      * @throws UnsupportedOperationException when working with a single document
-     *             created from {@link #fromSingleUri(Context, Uri)}.
+     *                                       created from {@link #fromSingleUri(Context, Uri)}.
      * @see android.provider.DocumentsContract#createDocument(ContentResolver,
-     *      Uri, String, String)
+     * Uri, String, String)
      */
     public abstract DocumentFile createFile(String mimeType, String displayName);
 
@@ -169,9 +169,9 @@ public abstract class DocumentFile {
      * @param displayName name of new directory
      * @return file representing newly created directory, or null if failed
      * @throws UnsupportedOperationException when working with a single document
-     *             created from {@link #fromSingleUri(Context, Uri)}.
+     *                                       created from {@link #fromSingleUri(Context, Uri)}.
      * @see android.provider.DocumentsContract#createDocument(ContentResolver,
-     *      Uri, String, String)
+     * Uri, String, String)
      */
     public abstract DocumentFile createDirectory(String displayName);
 
@@ -221,7 +221,7 @@ public abstract class DocumentFile {
      * Indicates if this file represents a <em>directory</em>.
      *
      * @return {@code true} if this file is a directory, {@code false}
-     *         otherwise.
+     * otherwise.
      * @see android.provider.DocumentsContract.Document#MIME_TYPE_DIR
      */
     public abstract boolean isDirectory();
@@ -265,7 +265,7 @@ public abstract class DocumentFile {
      * Indicates whether the current context is allowed to write to this file.
      *
      * @return {@code true} if this file can be written, {@code false}
-     *         otherwise.
+     * otherwise.
      * @see android.provider.DocumentsContract.Document#COLUMN_FLAGS
      * @see android.provider.DocumentsContract.Document#FLAG_SUPPORTS_DELETE
      * @see android.provider.DocumentsContract.Document#FLAG_SUPPORTS_WRITE
@@ -281,7 +281,7 @@ public abstract class DocumentFile {
      *
      * @return {@code true} if this file was deleted, {@code false} otherwise.
      * @see android.provider.DocumentsContract#deleteDocument(ContentResolver,
-     *      Uri)
+     * Uri)
      */
     public abstract boolean delete();
 
@@ -298,9 +298,9 @@ public abstract class DocumentFile {
      *
      * @return an array of files or {@code null}.
      * @throws UnsupportedOperationException when working with a single document
-     *             created from {@link #fromSingleUri(Context, Uri)}.
+     *                                       created from {@link #fromSingleUri(Context, Uri)}.
      * @see android.provider.DocumentsContract#buildChildDocumentsUriUsingTree(Uri,
-     *      String)
+     * String)
      */
     public abstract DocumentFile[] listFiles();
 
@@ -310,7 +310,7 @@ public abstract class DocumentFile {
      * found.
      *
      * @throws UnsupportedOperationException when working with a single document
-     *             created from {@link #fromSingleUri(Context, Uri)}.
+     *                                       created from {@link #fromSingleUri(Context, Uri)}.
      */
     public DocumentFile findFile(String displayName) {
         for (DocumentFile doc : listFiles()) {
@@ -337,9 +337,9 @@ public abstract class DocumentFile {
      * @param displayName the new display name.
      * @return true on success.
      * @throws UnsupportedOperationException when working with a single document
-     *             created from {@link #fromSingleUri(Context, Uri)}.
+     *                                       created from {@link #fromSingleUri(Context, Uri)}.
      * @see android.provider.DocumentsContract#renameDocument(ContentResolver,
-     *      Uri, String)
+     * Uri, String)
      */
     public abstract boolean renameTo(String displayName);
 }

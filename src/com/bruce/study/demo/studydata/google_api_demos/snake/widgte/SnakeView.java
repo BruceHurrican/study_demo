@@ -34,34 +34,32 @@ import java.util.Random;
  * Created by BruceHurrican on 2015/10/10.
  */
 public class SnakeView extends TitleView {
-    private static final String TAG = "SnakeView";
-    /**
-     * Current mode of application: READY to run, Running, or you have already
-     * lost. static final ints are used instead of an enum for performance.
-     */
-    private int mMode = READY;
     public static final int PAUSE = 0;
     public static final int READY = 1;
     public static final int RUNNING = 2;
     public static final int LOSE = 3;
-
-    /**
-     * Current direction the snake is headed.
-     */
-    private int mDirection = NORTH;
-    private int mNextDirection = NORTH;
+    private static final String TAG = "SnakeView";
     private static final int NORTH = 1;
     private static final int SOUTH = 2;
     private static final int EAST = 3;
     private static final int WEST = 4;
-
     /**
      * Labels for the drawables that will be loaded into the TileView class
      */
     private static final int RED_STAR = 1;
     private static final int YELLOW_STAR = 2;
     private static final int GREEN_STAR = 3;
-
+    private static final Random RNG = new Random();
+    /**
+     * Current mode of application: READY to run, Running, or you have already
+     * lost. static final ints are used instead of an enum for performance.
+     */
+    private int mMode = READY;
+    /**
+     * Current direction the snake is headed.
+     */
+    private int mDirection = NORTH;
+    private int mNextDirection = NORTH;
     /**
      * used to track the number of apples captured
      * This will decrease as apples are captured.
@@ -88,27 +86,12 @@ public class SnakeView extends TitleView {
      * the secret location the juicy apples the snake craves
      */
     private List<Coordinate> mAppleList = new ArrayList<>(5);
-
-    private static final Random RNG = new Random();
     /**
      * Create a simple handler that we can use to cause animation to happen.
      * We set ourselves as a target and we can use the sleep()
      * function to cause an update/invalidate to occur at a later date.
      */
     private RefreshHandler mRefreshHandler = new RefreshHandler();
-
-    private class RefreshHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            SnakeView.this.update();
-            SnakeView.this.invalidate();
-        }
-
-        public void sleep(long delayMillis) {
-            removeMessages(0);
-            sendMessageDelayed(obtainMessage(0), delayMillis);
-        }
-    }
 
     public SnakeView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -504,6 +487,19 @@ public class SnakeView extends TitleView {
         @Override
         public String toString() {
             return "Coordinate:[" + x + "," + y + "]";
+        }
+    }
+
+    private class RefreshHandler extends Handler {
+        @Override
+        public void handleMessage(Message msg) {
+            SnakeView.this.update();
+            SnakeView.this.invalidate();
+        }
+
+        public void sleep(long delayMillis) {
+            removeMessages(0);
+            sendMessageDelayed(obtainMessage(0), delayMillis);
         }
     }
 }

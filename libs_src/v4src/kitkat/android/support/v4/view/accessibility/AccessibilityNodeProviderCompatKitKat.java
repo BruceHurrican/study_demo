@@ -26,14 +26,6 @@ import java.util.List;
  * KitKat-specific AccessibilityNodeProvider API implementation.
  */
 class AccessibilityNodeProviderCompatKitKat {
-    interface AccessibilityNodeInfoBridge {
-        public Object createAccessibilityNodeInfo(int virtualViewId);
-        public boolean performAction(int virtualViewId, int action, Bundle arguments);
-        public List<Object> findAccessibilityNodeInfosByText(String text,
-            int virtualViewId);
-        public Object findFocus(int focus);
-    }
-
     public static Object newAccessibilityNodeProviderBridge(
             final AccessibilityNodeInfoBridge bridge) {
         return new AccessibilityNodeProvider() {
@@ -48,7 +40,7 @@ class AccessibilityNodeProviderCompatKitKat {
                     String text, int virtualViewId) {
                 // Use some voodoo to avoid creating intermediary instances.
                 return (List<AccessibilityNodeInfo>) (List<?>)
-                    bridge.findAccessibilityNodeInfosByText(text, virtualViewId);
+                        bridge.findAccessibilityNodeInfosByText(text, virtualViewId);
             }
 
             @Override
@@ -61,5 +53,16 @@ class AccessibilityNodeProviderCompatKitKat {
                 return (AccessibilityNodeInfo) bridge.findFocus(focus);
             }
         };
+    }
+
+    interface AccessibilityNodeInfoBridge {
+        public Object createAccessibilityNodeInfo(int virtualViewId);
+
+        public boolean performAction(int virtualViewId, int action, Bundle arguments);
+
+        public List<Object> findAccessibilityNodeInfosByText(String text,
+                                                             int virtualViewId);
+
+        public Object findFocus(int focus);
     }
 }

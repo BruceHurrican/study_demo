@@ -34,10 +34,9 @@ public class TitleView extends View {
     protected static int mYTitleCount;
     protected static int mXOffset;
     protected static int mYOffset;
-
+    private final Paint mPaint = new Paint();
     private Bitmap[] mTitleArray;
     private int[][] mTileGrid;
-    private final Paint mPaint = new Paint();
 
     public TitleView(Context context, AttributeSet attrs) {
         super(context, attrs);

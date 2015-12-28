@@ -20,7 +20,7 @@ import android.media.VolumeProvider;
 
 class VolumeProviderCompatApi21 {
     public static Object createVolumeProvider(int volumeControl, int maxVolume, int currentVolume,
-            final Delegate delegate) {
+                                              final Delegate delegate) {
         return new VolumeProvider(volumeControl, maxVolume, currentVolume) {
             @Override
             public void onSetVolumeTo(int volume) {
@@ -40,6 +40,7 @@ class VolumeProviderCompatApi21 {
 
     public interface Delegate {
         void onSetVolumeTo(int volume);
+
         void onAdjustVolume(int delta);
     }
 }

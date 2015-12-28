@@ -26,8 +26,8 @@ class KeyEventCompatEclair {
     }
 
     public static boolean dispatch(KeyEvent event, KeyEvent.Callback receiver, Object state,
-                Object target) {
-        return event.dispatch(receiver, (KeyEvent.DispatcherState)state, target);
+                                   Object target) {
+        return event.dispatch(receiver, (KeyEvent.DispatcherState) state, target);
     }
 
     public static void startTracking(KeyEvent event) {

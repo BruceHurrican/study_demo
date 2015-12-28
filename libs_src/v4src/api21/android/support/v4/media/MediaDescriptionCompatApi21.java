@@ -66,31 +66,31 @@ public class MediaDescriptionCompatApi21 {
 
 
         public static void setMediaId(Object builderObj, String mediaId) {
-            ((MediaDescription.Builder)builderObj).setMediaId(mediaId);
+            ((MediaDescription.Builder) builderObj).setMediaId(mediaId);
         }
 
         public static void setTitle(Object builderObj, CharSequence title) {
-            ((MediaDescription.Builder)builderObj).setTitle(title);
+            ((MediaDescription.Builder) builderObj).setTitle(title);
         }
 
         public static void setSubtitle(Object builderObj, CharSequence subtitle) {
-            ((MediaDescription.Builder)builderObj).setSubtitle(subtitle);
+            ((MediaDescription.Builder) builderObj).setSubtitle(subtitle);
         }
 
         public static void setDescription(Object builderObj, CharSequence description) {
-            ((MediaDescription.Builder)builderObj).setDescription(description);
+            ((MediaDescription.Builder) builderObj).setDescription(description);
         }
 
         public static void setIconBitmap(Object builderObj, Bitmap iconBitmap) {
-            ((MediaDescription.Builder)builderObj).setIconBitmap(iconBitmap);
+            ((MediaDescription.Builder) builderObj).setIconBitmap(iconBitmap);
         }
 
         public static void setIconUri(Object builderObj, Uri iconUri) {
-            ((MediaDescription.Builder)builderObj).setIconUri(iconUri);
+            ((MediaDescription.Builder) builderObj).setIconUri(iconUri);
         }
 
         public static void setExtras(Object builderObj, Bundle extras) {
-            ((MediaDescription.Builder)builderObj).setExtras(extras);
+            ((MediaDescription.Builder) builderObj).setExtras(extras);
         }
 
         public static Object build(Object builderObj) {

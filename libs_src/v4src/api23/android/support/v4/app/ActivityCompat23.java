@@ -19,12 +19,8 @@ package android.support.v4.app;
 import android.app.Activity;
 
 class ActivityCompatApi23 {
-    public interface RequestPermissionsRequestCodeValidator {
-        public void validateRequestPermissionsRequestCode(int requestCode);
-    }
-
     public static void requestPermissions(Activity activity, String[] permissions,
-            int requestCode) {
+                                          int requestCode) {
         if (activity instanceof RequestPermissionsRequestCodeValidator) {
             ((RequestPermissionsRequestCodeValidator) activity)
                     .validateRequestPermissionsRequestCode(requestCode);
@@ -33,7 +29,11 @@ class ActivityCompatApi23 {
     }
 
     public static boolean shouldShowRequestPermissionRationale(Activity activity,
-            String permission) {
+                                                               String permission) {
         return activity.shouldShowRequestPermissionRationale(permission);
+    }
+
+    public interface RequestPermissionsRequestCodeValidator {
+        public void validateRequestPermissionsRequestCode(int requestCode);
     }
 }

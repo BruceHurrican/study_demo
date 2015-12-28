@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2014 The Android Open Source Project
  *
@@ -65,45 +64,36 @@ import java.util.List;
  * backwards compatible fashion.
  */
 public class MediaSessionCompat {
+    /**
+     * Set this flag on the session to indicate that it can handle media button
+     * events.
+     */
+    public static final int FLAG_HANDLES_MEDIA_BUTTONS = 1 << 0;
+    /**
+     * Set this flag on the session to indicate that it handles transport
+     * control commands through its {@link Callback}.
+     */
+    public static final int FLAG_HANDLES_TRANSPORT_CONTROLS = 1 << 1;
     private final MediaSessionImpl mImpl;
     private final MediaControllerCompat mController;
     private final ArrayList<OnActiveChangeListener>
             mActiveListeners = new ArrayList<OnActiveChangeListener>();
 
     /**
-     * @hide
-     */
-    @IntDef(flag=true, value={FLAG_HANDLES_MEDIA_BUTTONS, FLAG_HANDLES_TRANSPORT_CONTROLS})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface SessionFlags {}
-
-    /**
-     * Set this flag on the session to indicate that it can handle media button
-     * events.
-     */
-    public static final int FLAG_HANDLES_MEDIA_BUTTONS = 1 << 0;
-
-    /**
-     * Set this flag on the session to indicate that it handles transport
-     * control commands through its {@link Callback}.
-     */
-    public static final int FLAG_HANDLES_TRANSPORT_CONTROLS = 1 << 1;
-
-    /**
      * Creates a new session.
      *
-     * @param context The context.
-     * @param tag A short name for debugging purposes.
+     * @param context                  The context.
+     * @param tag                      A short name for debugging purposes.
      * @param mediaButtonEventReceiver The component name for your receiver.
-     *            This must be non-null to support platform versions earlier
-     *            than {@link android.os.Build.VERSION_CODES#LOLLIPOP}.
-     * @param mbrIntent The PendingIntent for your receiver component that
-     *            handles media button events. This is optional and will be used
-     *            on {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2} and
-     *            later instead of the component name.
+     *                                 This must be non-null to support platform versions earlier
+     *                                 than {@link android.os.Build.VERSION_CODES#LOLLIPOP}.
+     * @param mbrIntent                The PendingIntent for your receiver component that
+     *                                 handles media button events. This is optional and will be used
+     *                                 on {@link android.os.Build.VERSION_CODES#JELLY_BEAN_MR2} and
+     *                                 later instead of the component name.
      */
     public MediaSessionCompat(Context context, String tag, ComponentName mediaButtonEventReceiver,
-            PendingIntent mbrIntent) {
+                              PendingIntent mbrIntent) {
         if (context == null) {
             throw new IllegalArgumentException("context must not be null");
         }
@@ -134,6 +124,17 @@ public class MediaSessionCompat {
     }
 
     /**
+     * Obtain a compat wrapper for an existing MediaSession.
+     *
+     * @param mediaSession The {@link android.media.session.MediaSession} to
+     *                     wrap.
+     * @return A compat wrapper for the provided session.
+     */
+    public static MediaSessionCompat obtain(Context context, Object mediaSession) {
+        return new MediaSessionCompat(context, new MediaSessionImplApi21(mediaSession));
+    }
+
+    /**
      * Add a callback to receive updates on for the MediaSession. This includes
      * media button and volume events. The caller's thread will be used to post
      * events.
@@ -150,7 +151,7 @@ public class MediaSessionCompat {
      * receiving events.
      *
      * @param callback The callback to receive updates on.
-     * @param handler The handler that events should be posted on.
+     * @param handler  The handler that events should be posted on.
      */
     public void setCallback(Callback callback, Handler handler) {
         mImpl.setCallback(callback, handler != null ? handler : new Handler());
@@ -221,13 +222,22 @@ public class MediaSessionCompat {
      * keys will not use the volume provider.
      *
      * @param volumeProvider The provider that will handle volume changes. May
-     *            not be null.
+     *                       not be null.
      */
     public void setPlaybackToRemote(VolumeProviderCompat volumeProvider) {
         if (volumeProvider == null) {
             throw new IllegalArgumentException("volumeProvider may not be null!");
         }
         mImpl.setPlaybackToRemote(volumeProvider);
+    }
+
+    /**
+     * Get the current active state of this session.
+     *
+     * @return True if the session is active, false otherwise.
+     */
+    public boolean isActive() {
+        return mImpl.isActive();
     }
 
     /**
@@ -251,20 +261,11 @@ public class MediaSessionCompat {
     }
 
     /**
-     * Get the current active state of this session.
-     *
-     * @return True if the session is active, false otherwise.
-     */
-    public boolean isActive() {
-        return mImpl.isActive();
-    }
-
-    /**
      * Send a proprietary event to all MediaControllers listening to this
      * Session. It's up to the Controller/Session owner to determine the meaning
      * of any events.
      *
-     * @param event The name of the event to send
+     * @param event  The name of the event to send
      * @param extras Any extras included with the event
      */
     public void sendSessionEvent(String event, Bundle extras) {
@@ -295,7 +296,7 @@ public class MediaSessionCompat {
      * the same version of the support library.
      *
      * @return A token that can be used to create a media controller for this
-     *         session.
+     * session.
      */
     public Token getSessionToken() {
         return mImpl.getSessionToken();
@@ -393,7 +394,7 @@ public class MediaSessionCompat {
      * </p>
      *
      * @return The underlying {@link android.media.session.MediaSession} object,
-     *         or null if none.
+     * or null if none.
      */
     public Object getMediaSession() {
         return mImpl.getMediaSession();
@@ -407,7 +408,7 @@ public class MediaSessionCompat {
      * {@link #getMediaSession()} should be used instead.
      *
      * @return The underlying {@link android.media.RemoteControlClient} object,
-     *         or null if none.
+     * or null if none.
      */
     public Object getRemoteControlClient() {
         return mImpl.getRemoteControlClient();
@@ -441,14 +442,55 @@ public class MediaSessionCompat {
     }
 
     /**
-     * Obtain a compat wrapper for an existing MediaSession.
-     *
-     * @param mediaSession The {@link android.media.session.MediaSession} to
-     *            wrap.
-     * @return A compat wrapper for the provided session.
+     * @hide
      */
-    public static MediaSessionCompat obtain(Context context, Object mediaSession) {
-        return new MediaSessionCompat(context, new MediaSessionImplApi21(mediaSession));
+    @IntDef(flag = true, value = {FLAG_HANDLES_MEDIA_BUTTONS, FLAG_HANDLES_TRANSPORT_CONTROLS})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface SessionFlags {
+    }
+
+    public interface OnActiveChangeListener {
+        void onActiveChanged();
+    }
+
+    interface MediaSessionImpl {
+        void setCallback(Callback callback, Handler handler);
+
+        void setFlags(@SessionFlags int flags);
+
+        void setPlaybackToLocal(int stream);
+
+        void setPlaybackToRemote(VolumeProviderCompat volumeProvider);
+
+        boolean isActive();
+
+        void setActive(boolean active);
+
+        void sendSessionEvent(String event, Bundle extras);
+
+        void release();
+
+        Token getSessionToken();
+
+        void setPlaybackState(PlaybackStateCompat state);
+
+        void setMetadata(MediaMetadataCompat metadata);
+
+        void setSessionActivity(PendingIntent pi);
+
+        void setMediaButtonReceiver(PendingIntent mbr);
+
+        void setQueue(List<QueueItem> queue);
+
+        void setQueueTitle(CharSequence title);
+
+        void setRatingType(@RatingCompat.Style int type);
+
+        void setExtras(Bundle extras);
+
+        Object getMediaSession();
+
+        Object getRemoteControlClient();
     }
 
     /**
@@ -474,8 +516,8 @@ public class MediaSessionCompat {
          * required to.
          *
          * @param command The command name.
-         * @param extras Optional parameters for the command, may be null.
-         * @param cb A result receiver to which a result may be sent by the command, may be null.
+         * @param extras  Optional parameters for the command, may be null.
+         * @param cb      A result receiver to which a result may be sent by the command, may be null.
          */
         public void onCommand(String command, Bundle extras, ResultReceiver cb) {
         }
@@ -582,9 +624,9 @@ public class MediaSessionCompat {
          * {@link PlaybackStateCompat.CustomAction} to be performed.
          *
          * @param action The action that was originally sent in the
-         *            {@link PlaybackStateCompat.CustomAction}.
+         *               {@link PlaybackStateCompat.CustomAction}.
          * @param extras Optional extras specified by the
-         *            {@link MediaControllerCompat}.
+         *               {@link MediaControllerCompat}.
          */
         public void onCustomAction(String action, Bundle extras) {
         }
@@ -682,6 +724,24 @@ public class MediaSessionCompat {
      * the session.
      */
     public static final class Token implements Parcelable {
+        public static final Parcelable.Creator<Token> CREATOR
+                = new Parcelable.Creator<Token>() {
+            @Override
+            public Token createFromParcel(Parcel in) {
+                Object inner;
+                if (android.os.Build.VERSION.SDK_INT >= 21) {
+                    inner = in.readParcelable(null);
+                } else {
+                    inner = in.readStrongBinder();
+                }
+                return new Token(inner);
+            }
+
+            @Override
+            public Token[] newArray(int size) {
+                return new Token[size];
+            }
+        };
         private final Object mInner;
 
         Token(Object inner) {
@@ -732,25 +792,6 @@ public class MediaSessionCompat {
         public Object getToken() {
             return mInner;
         }
-
-        public static final Parcelable.Creator<Token> CREATOR
-                = new Parcelable.Creator<Token>() {
-            @Override
-            public Token createFromParcel(Parcel in) {
-                Object inner;
-                if (android.os.Build.VERSION.SDK_INT >= 21) {
-                    inner = in.readParcelable(null);
-                } else {
-                    inner = in.readStrongBinder();
-                }
-                return new Token(inner);
-            }
-
-            @Override
-            public Token[] newArray(int size) {
-                return new Token[size];
-            }
-        };
     }
 
     /**
@@ -762,18 +803,29 @@ public class MediaSessionCompat {
          * This id is reserved. No items can be explicitly asigned this id.
          */
         public static final int UNKNOWN_ID = -1;
+        public static final Creator<MediaSessionCompat.QueueItem>
+                CREATOR = new Creator<MediaSessionCompat.QueueItem>() {
 
+            @Override
+            public MediaSessionCompat.QueueItem createFromParcel(Parcel p) {
+                return new MediaSessionCompat.QueueItem(p);
+            }
+
+            @Override
+            public MediaSessionCompat.QueueItem[] newArray(int size) {
+                return new MediaSessionCompat.QueueItem[size];
+            }
+        };
         private final MediaDescriptionCompat mDescription;
         private final long mId;
-
         private Object mItem;
 
         /**
          * Create a new {@link MediaSessionCompat.QueueItem}.
          *
          * @param description The {@link MediaDescriptionCompat} for this item.
-         * @param id An identifier for this item. It must be unique within the
-         *            play queue and cannot be {@link #UNKNOWN_ID}.
+         * @param id          An identifier for this item. It must be unique within the
+         *                    play queue and cannot be {@link #UNKNOWN_ID}.
          */
         public QueueItem(MediaDescriptionCompat description, long id) {
             this(null, description, id);
@@ -794,6 +846,21 @@ public class MediaSessionCompat {
         private QueueItem(Parcel in) {
             mDescription = MediaDescriptionCompat.CREATOR.createFromParcel(in);
             mId = in.readLong();
+        }
+
+        /**
+         * Obtain a compat wrapper for an existing QueueItem.
+         *
+         * @param queueItem The {@link android.media.session.MediaSession.QueueItem} to
+         *                  wrap.
+         * @return A compat wrapper for the provided item.
+         */
+        public static QueueItem obtain(Object queueItem) {
+            Object descriptionObj = MediaSessionCompatApi21.QueueItem.getDescription(queueItem);
+            MediaDescriptionCompat description = MediaDescriptionCompat.fromMediaDescription(
+                    descriptionObj);
+            long id = MediaSessionCompatApi21.QueueItem.getQueueId(queueItem);
+            return new QueueItem(queueItem, description, id);
         }
 
         /**
@@ -829,7 +896,7 @@ public class MediaSessionCompat {
          * is returned.
          *
          * @return The underlying
-         *         {@link android.media.session.MediaSession.QueueItem} or null.
+         * {@link android.media.session.MediaSession.QueueItem} or null.
          */
         public Object getQueueItem() {
             if (mItem != null || android.os.Build.VERSION.SDK_INT < 21) {
@@ -839,35 +906,6 @@ public class MediaSessionCompat {
                     mId);
             return mItem;
         }
-
-        /**
-         * Obtain a compat wrapper for an existing QueueItem.
-         *
-         * @param queueItem The {@link android.media.session.MediaSession.QueueItem} to
-         *            wrap.
-         * @return A compat wrapper for the provided item.
-         */
-        public static QueueItem obtain(Object queueItem) {
-            Object descriptionObj = MediaSessionCompatApi21.QueueItem.getDescription(queueItem);
-            MediaDescriptionCompat description = MediaDescriptionCompat.fromMediaDescription(
-                    descriptionObj);
-            long id = MediaSessionCompatApi21.QueueItem.getQueueId(queueItem);
-            return new QueueItem(queueItem, description, id);
-        }
-
-        public static final Creator<MediaSessionCompat.QueueItem>
-                CREATOR = new Creator<MediaSessionCompat.QueueItem>() {
-
-                        @Override
-                    public MediaSessionCompat.QueueItem createFromParcel(Parcel p) {
-                        return new MediaSessionCompat.QueueItem(p);
-                    }
-
-                        @Override
-                    public MediaSessionCompat.QueueItem[] newArray(int size) {
-                        return new MediaSessionCompat.QueueItem[size];
-                    }
-                };
 
         @Override
         public String toString() {
@@ -883,16 +921,6 @@ public class MediaSessionCompat {
      * {@link android.os.Build.VERSION_CODES#LOLLIPOP}.
      */
     static final class ResultReceiverWrapper implements Parcelable {
-        private ResultReceiver mResultReceiver;
-
-        public ResultReceiverWrapper(ResultReceiver resultReceiver) {
-            mResultReceiver = resultReceiver;
-        }
-
-        ResultReceiverWrapper(Parcel in) {
-            mResultReceiver = ResultReceiver.CREATOR.createFromParcel(in);
-        }
-
         public static final Creator<ResultReceiverWrapper>
                 CREATOR = new Creator<ResultReceiverWrapper>() {
             @Override
@@ -905,6 +933,15 @@ public class MediaSessionCompat {
                 return new ResultReceiverWrapper[size];
             }
         };
+        private ResultReceiver mResultReceiver;
+
+        public ResultReceiverWrapper(ResultReceiver resultReceiver) {
+            mResultReceiver = resultReceiver;
+        }
+
+        ResultReceiverWrapper(Parcel in) {
+            mResultReceiver = ResultReceiver.CREATOR.createFromParcel(in);
+        }
 
         @Override
         public int describeContents() {
@@ -915,37 +952,6 @@ public class MediaSessionCompat {
         public void writeToParcel(Parcel dest, int flags) {
             mResultReceiver.writeToParcel(dest, flags);
         }
-    }
-
-    public interface OnActiveChangeListener {
-        void onActiveChanged();
-    }
-
-    interface MediaSessionImpl {
-        void setCallback(Callback callback, Handler handler);
-        void setFlags(@SessionFlags int flags);
-        void setPlaybackToLocal(int stream);
-        void setPlaybackToRemote(VolumeProviderCompat volumeProvider);
-        void setActive(boolean active);
-        boolean isActive();
-        void sendSessionEvent(String event, Bundle extras);
-        void release();
-        Token getSessionToken();
-        void setPlaybackState(PlaybackStateCompat state);
-        void setMetadata(MediaMetadataCompat metadata);
-
-        void setSessionActivity(PendingIntent pi);
-
-        void setMediaButtonReceiver(PendingIntent mbr);
-        void setQueue(List<QueueItem> queue);
-        void setQueueTitle(CharSequence title);
-
-        void setRatingType(@RatingCompat.Style int type);
-        void setExtras(Bundle extras);
-
-        Object getMediaSession();
-
-        Object getRemoteControlClient();
     }
 
     static class MediaSessionImplBase implements MediaSessionImpl {
@@ -970,14 +976,18 @@ public class MediaSessionCompat {
         private boolean mIsMbrRegistered = false;
         private Callback mCallback;
 
-        private @SessionFlags int mFlags;
+        private
+        @SessionFlags
+        int mFlags;
 
         private MediaMetadataCompat mMetadata;
         private PlaybackStateCompat mState;
         private PendingIntent mSessionActivity;
         private List<QueueItem> mQueue;
         private CharSequence mQueueTitle;
-        private @RatingCompat.Style int mRatingType;
+        private
+        @RatingCompat.Style
+        int mRatingType;
         private Bundle mExtras;
 
         private int mVolumeType;
@@ -999,7 +1009,7 @@ public class MediaSessionCompat {
         };
 
         public MediaSessionImplBase(Context context, String tag, ComponentName mbrComponent,
-                PendingIntent mbr) {
+                                    PendingIntent mbr) {
             if (mbrComponent == null) {
                 throw new IllegalArgumentException(
                         "MediaButtonReceiver component may not be null.");
@@ -1154,6 +1164,11 @@ public class MediaSessionCompat {
         }
 
         @Override
+        public boolean isActive() {
+            return mIsActive;
+        }
+
+        @Override
         public void setActive(boolean active) {
             if (active == mIsActive) {
                 return;
@@ -1163,11 +1178,6 @@ public class MediaSessionCompat {
                 setMetadata(mMetadata);
                 setPlaybackState(mState);
             }
-        }
-
-        @Override
-        public boolean isActive() {
-            return mIsActive;
         }
 
         @Override
@@ -1429,7 +1439,8 @@ public class MediaSessionCompat {
             for (int i = size - 1; i >= 0; i--) {
                 IMediaControllerCallback cb = mControllerCallbacks.getBroadcastItem(i);
                 try {
-                    cb.onSessionDestroyed();;
+                    cb.onSessionDestroyed();
+                    ;
                 } catch (RemoteException e) {
                 }
             }
@@ -1495,6 +1506,18 @@ public class MediaSessionCompat {
                 }
             }
             mControllerCallbacks.finishBroadcast();
+        }
+
+        private static final class Command {
+            public final String command;
+            public final Bundle extras;
+            public final ResultReceiver stub;
+
+            public Command(String command, Bundle extras, ResultReceiver stub) {
+                this.command = command;
+                this.extras = extras;
+                this.stub = stub;
+            }
         }
 
         class MediaSessionStub extends IMediaSession.Stub {
@@ -1704,18 +1727,6 @@ public class MediaSessionCompat {
             @Override
             public boolean isTransportControlEnabled() {
                 return (mFlags & FLAG_HANDLES_TRANSPORT_CONTROLS) != 0;
-            }
-        }
-
-        private static final class Command {
-            public final String command;
-            public final Bundle extras;
-            public final ResultReceiver stub;
-
-            public Command(String command, Bundle extras, ResultReceiver stub) {
-                this.command = command;
-                this.extras = extras;
-                this.stub = stub;
             }
         }
 
@@ -1936,13 +1947,13 @@ public class MediaSessionCompat {
         }
 
         @Override
-        public void setActive(boolean active) {
-            MediaSessionCompatApi21.setActive(mSessionObj, active);
+        public boolean isActive() {
+            return MediaSessionCompatApi21.isActive(mSessionObj);
         }
 
         @Override
-        public boolean isActive() {
-            return MediaSessionCompatApi21.isActive(mSessionObj);
+        public void setActive(boolean active) {
+            MediaSessionCompatApi21.setActive(mSessionObj, active);
         }
 
         @Override

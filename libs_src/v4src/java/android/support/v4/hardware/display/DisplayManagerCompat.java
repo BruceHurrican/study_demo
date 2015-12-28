@@ -27,9 +27,6 @@ import java.util.WeakHashMap;
  * introduced after API level 4 in a backwards compatible fashion.
  */
 public abstract class DisplayManagerCompat {
-    private static final WeakHashMap<Context, DisplayManagerCompat> sInstances =
-            new WeakHashMap<Context, DisplayManagerCompat>();
-
     /**
      * Display category: Presentation displays.
      * <p>
@@ -43,6 +40,8 @@ public abstract class DisplayManagerCompat {
      */
     public static final String DISPLAY_CATEGORY_PRESENTATION =
             "android.hardware.display.category.PRESENTATION";
+    private static final WeakHashMap<Context, DisplayManagerCompat> sInstances =
+            new WeakHashMap<Context, DisplayManagerCompat>();
 
     DisplayManagerCompat() {
     }
@@ -68,7 +67,7 @@ public abstract class DisplayManagerCompat {
 
     /**
      * Gets information about a logical display.
-     *
+     * <p>
      * The display metrics may be adjusted to provide compatibility
      * for legacy applications.
      *
@@ -97,7 +96,6 @@ public abstract class DisplayManagerCompat {
      *
      * @param category The requested display category or null to return all displays.
      * @return An array containing all displays sorted by order of preference.
-     *
      * @see #DISPLAY_CATEGORY_PRESENTATION
      */
     public abstract Display[] getDisplays(String category);
@@ -106,7 +104,7 @@ public abstract class DisplayManagerCompat {
         private final WindowManager mWindowManager;
 
         public LegacyImpl(Context context) {
-            mWindowManager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
+            mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         }
 
         @Override
@@ -120,7 +118,7 @@ public abstract class DisplayManagerCompat {
 
         @Override
         public Display[] getDisplays() {
-            return new Display[] { mWindowManager.getDefaultDisplay() };
+            return new Display[]{mWindowManager.getDefaultDisplay()};
         }
 
         @Override

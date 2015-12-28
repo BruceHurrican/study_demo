@@ -23,6 +23,18 @@ import android.os.Parcelable;
  * {@link MediaSessionCompat}.
  */
 public class ParcelableVolumeInfo implements Parcelable {
+    public static final Parcelable.Creator<ParcelableVolumeInfo> CREATOR
+            = new Parcelable.Creator<ParcelableVolumeInfo>() {
+        @Override
+        public ParcelableVolumeInfo createFromParcel(Parcel in) {
+            return new ParcelableVolumeInfo(in);
+        }
+
+        @Override
+        public ParcelableVolumeInfo[] newArray(int size) {
+            return new ParcelableVolumeInfo[size];
+        }
+    };
     public int volumeType;
     public int audioStream;
     public int controlType;
@@ -30,8 +42,8 @@ public class ParcelableVolumeInfo implements Parcelable {
     public int currentVolume;
 
     public ParcelableVolumeInfo(int volumeType, int audioStream, int controlType,
-            int maxVolume,
-            int currentVolume) {
+                                int maxVolume,
+                                int currentVolume) {
         this.volumeType = volumeType;
         this.audioStream = audioStream;
         this.controlType = controlType;
@@ -60,18 +72,4 @@ public class ParcelableVolumeInfo implements Parcelable {
         dest.writeInt(currentVolume);
         dest.writeInt(audioStream);
     }
-
-
-    public static final Parcelable.Creator<ParcelableVolumeInfo> CREATOR
-            = new Parcelable.Creator<ParcelableVolumeInfo>() {
-        @Override
-        public ParcelableVolumeInfo createFromParcel(Parcel in) {
-            return new ParcelableVolumeInfo(in);
-        }
-
-        @Override
-        public ParcelableVolumeInfo[] newArray(int size) {
-            return new ParcelableVolumeInfo[size];
-        }
-    };
 }

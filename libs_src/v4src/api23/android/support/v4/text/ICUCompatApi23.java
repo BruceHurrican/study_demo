@@ -33,7 +33,7 @@ public class ICUCompatApi23 {
             // This class should always exist on API-23 since it's CTS tested.
             final Class<?> clazz = Class.forName("libcore.icu.ICU");
             sAddLikelySubtagsMethod = clazz.getMethod("addLikelySubtags",
-                    new Class[]{ Locale.class });
+                    new Class[]{Locale.class});
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -42,7 +42,7 @@ public class ICUCompatApi23 {
 
     public static String maximizeAndGetScript(Locale locale) {
         try {
-            final Object[] args = new Object[] { locale };
+            final Object[] args = new Object[]{locale};
             return ((Locale) sAddLikelySubtagsMethod.invoke(null, args)).getScript();
         } catch (InvocationTargetException e) {
             Log.w(TAG, e);

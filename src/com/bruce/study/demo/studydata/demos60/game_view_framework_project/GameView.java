@@ -44,7 +44,6 @@ public class GameView extends View {
     }
 
 
-
     /**
      * 重写父类绘图函数
      *
@@ -73,19 +72,19 @@ public class GameView extends View {
         if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
             // “上”按键被点击，让文本的Y坐标变小
             textY -= 2;
-            Logs.d(TAG,"“上”按键被点击");
+            Logs.d(TAG, "“上”按键被点击");
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
             // “下”按键被点击，让文本的Y坐标变大
             textY += 2;
-            Logs.d(TAG,"“下”按键被点击");
+            Logs.d(TAG, "“下”按键被点击");
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
             // “左”按键被点击，让文本的X坐标变小
             textX -= 2;
-            Logs.d(TAG,"“左”按键被点击");
+            Logs.d(TAG, "“左”按键被点击");
         } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
             // “右”按键被点击，让文本的X坐标变大
             textX += 2;
-            Logs.d(TAG,"“右”按键被点击");
+            Logs.d(TAG, "“右”按键被点击");
         }
         invalidate(); // 重绘画布
         return super.onKeyDown(keyCode, event);

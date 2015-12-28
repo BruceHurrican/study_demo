@@ -23,45 +23,45 @@ import java.util.List;
 
 class PlaybackStateCompatApi21 {
     public static int getState(Object stateObj) {
-        return ((PlaybackState)stateObj).getState();
+        return ((PlaybackState) stateObj).getState();
     }
 
     public static long getPosition(Object stateObj) {
-        return ((PlaybackState)stateObj).getPosition();
+        return ((PlaybackState) stateObj).getPosition();
     }
 
     public static long getBufferedPosition(Object stateObj) {
-        return ((PlaybackState)stateObj).getBufferedPosition();
+        return ((PlaybackState) stateObj).getBufferedPosition();
     }
 
     public static float getPlaybackSpeed(Object stateObj) {
-        return ((PlaybackState)stateObj).getPlaybackSpeed();
+        return ((PlaybackState) stateObj).getPlaybackSpeed();
     }
 
     public static long getActions(Object stateObj) {
-        return ((PlaybackState)stateObj).getActions();
+        return ((PlaybackState) stateObj).getActions();
     }
 
     public static CharSequence getErrorMessage(Object stateObj) {
-        return ((PlaybackState)stateObj).getErrorMessage();
+        return ((PlaybackState) stateObj).getErrorMessage();
     }
 
     public static long getLastPositionUpdateTime(Object stateObj) {
-        return ((PlaybackState)stateObj).getLastPositionUpdateTime();
+        return ((PlaybackState) stateObj).getLastPositionUpdateTime();
     }
 
     public static List<Object> getCustomActions(Object stateObj) {
-        return (List)((PlaybackState)stateObj).getCustomActions();
+        return (List) ((PlaybackState) stateObj).getCustomActions();
     }
 
     public static long getActiveQueueItemId(Object stateObj) {
-        return ((PlaybackState)stateObj).getActiveQueueItemId();
+        return ((PlaybackState) stateObj).getActiveQueueItemId();
     }
 
     public static Object newInstance(int state, long position, long bufferedPosition,
-            float speed, long actions, CharSequence errorMessage, long updateTime,
-            List<Object> customActions,
-            long activeItemId) {
+                                     float speed, long actions, CharSequence errorMessage, long updateTime,
+                                     List<Object> customActions,
+                                     long activeItemId) {
         PlaybackState.Builder stateObj = new PlaybackState.Builder();
         stateObj.setState(state, position, speed, updateTime);
         stateObj.setBufferedPosition(bufferedPosition);
@@ -76,22 +76,23 @@ class PlaybackStateCompatApi21 {
 
     static final class CustomAction {
         public static String getAction(Object customActionObj) {
-            return ((PlaybackState.CustomAction)customActionObj).getAction();
+            return ((PlaybackState.CustomAction) customActionObj).getAction();
         }
 
         public static CharSequence getName(Object customActionObj) {
-            return ((PlaybackState.CustomAction)customActionObj).getName();
+            return ((PlaybackState.CustomAction) customActionObj).getName();
         }
 
         public static int getIcon(Object customActionObj) {
-            return ((PlaybackState.CustomAction)customActionObj).getIcon();
+            return ((PlaybackState.CustomAction) customActionObj).getIcon();
         }
+
         public static Bundle getExtras(Object customActionObj) {
-            return ((PlaybackState.CustomAction)customActionObj).getExtras();
+            return ((PlaybackState.CustomAction) customActionObj).getExtras();
         }
 
         public static Object newInstance(String action, CharSequence name,
-                int icon, Bundle extras) {
+                                         int icon, Bundle extras) {
             PlaybackState.CustomAction.Builder customActionObj =
                     new PlaybackState.CustomAction.Builder(action, name, icon);
             customActionObj.setExtras(extras);

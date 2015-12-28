@@ -28,8 +28,6 @@ import java.io.IOException;
  * level 4 in a backwards compatible fashion.
  */
 public class EnvironmentCompat {
-    private static final String TAG = "EnvironmentCompat";
-
     /**
      * Unknown storage state, such as when a path isn't backed by known storage
      * media.
@@ -37,20 +35,21 @@ public class EnvironmentCompat {
      * @see #getStorageState(File)
      */
     public static final String MEDIA_UNKNOWN = "unknown";
+    private static final String TAG = "EnvironmentCompat";
 
     /**
      * Returns the current state of the storage device that provides the given
      * path.
      *
      * @return one of {@link #MEDIA_UNKNOWN}, {@link Environment#MEDIA_REMOVED},
-     *         {@link Environment#MEDIA_UNMOUNTED},
-     *         {@link Environment#MEDIA_CHECKING},
-     *         {@link Environment#MEDIA_NOFS},
-     *         {@link Environment#MEDIA_MOUNTED},
-     *         {@link Environment#MEDIA_MOUNTED_READ_ONLY},
-     *         {@link Environment#MEDIA_SHARED},
-     *         {@link Environment#MEDIA_BAD_REMOVAL}, or
-     *         {@link Environment#MEDIA_UNMOUNTABLE}.
+     * {@link Environment#MEDIA_UNMOUNTED},
+     * {@link Environment#MEDIA_CHECKING},
+     * {@link Environment#MEDIA_NOFS},
+     * {@link Environment#MEDIA_MOUNTED},
+     * {@link Environment#MEDIA_MOUNTED_READ_ONLY},
+     * {@link Environment#MEDIA_SHARED},
+     * {@link Environment#MEDIA_BAD_REMOVAL}, or
+     * {@link Environment#MEDIA_UNMOUNTABLE}.
      */
     public static String getStorageState(File path) {
         final int version = Build.VERSION.SDK_INT;

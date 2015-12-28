@@ -38,7 +38,7 @@ class ViewCompatJB {
     }
 
     public static void postInvalidateOnAnimation(View view, int left, int top,
-            int right, int bottom) {
+                                                 int right, int bottom) {
         view.postInvalidate(left, top, right, bottom);
     }
 

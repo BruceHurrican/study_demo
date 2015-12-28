@@ -29,7 +29,7 @@ public class AsyncTaskCompat {
      * Executes the task with the specified parameters, allowing multiple tasks to run in parallel
      * on a pool of threads managed by {@link android.os.AsyncTask}.
      *
-     * @param task The {@link android.os.AsyncTask} to execute.
+     * @param task   The {@link android.os.AsyncTask} to execute.
      * @param params The parameters of the task.
      * @return the instance of AsyncTask.
      */

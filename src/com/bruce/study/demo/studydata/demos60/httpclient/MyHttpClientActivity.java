@@ -64,7 +64,7 @@ public class MyHttpClientActivity extends BaseActivity {
 
     @Override
     public void handleWorkerMessage(Message msg) {
-        if (msg.what == 0x01){
+        if (msg.what == 0x01) {
             logD("workhandler 成功执行");
             getNetInfo();
         }
@@ -72,7 +72,7 @@ public class MyHttpClientActivity extends BaseActivity {
 
     @Override
     public void handleUIMessage(Message msg) {
-        if (msg.what == 0x02){
+        if (msg.what == 0x02) {
             logD("UIHandler 成功执行");
             tv_info.setText(EncodingUtils.getString(byteArrayBuffer.toByteArray(), "UTF-8"));
         }

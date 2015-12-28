@@ -47,32 +47,8 @@ public class ColorUtilsTest extends AndroidTestCase {
         sEntryList.add(new TestEntry(0x311B92).setHsl(251.09f, 0.687f, 0.339f));
     }
 
-    public void testToHSL() {
-        for (TestEntry entry : sEntryList) {
-            testColorToHSL(entry.rgb, entry.hsl);
-        }
-    }
-
-    public void testFromHSL() {
-        for (TestEntry entry : sEntryList) {
-            testHSLToColor(entry.hsl, entry.rgb);
-        }
-    }
-
-    public void testToHslLimits() {
-        final float[] hsl = new float[3];
-
-        for (TestEntry entry : sEntryList) {
-            ColorUtils.colorToHSL(entry.rgb, hsl);
-
-            assertTrue(hsl[0] >= 0f && hsl[0] <= 360f);
-            assertTrue(hsl[1] >= 0f && hsl[1] <= 1f);
-            assertTrue(hsl[2] >= 0f && hsl[2] <= 1f);
-        }
-    }
-
     private static void assertClose(String message, float expected, float actual,
-            float allowedOffset) {
+                                    float allowedOffset) {
         StringBuilder sb = new StringBuilder(message);
         sb.append(". Expected: ").append(expected).append(". Actual: ").append(actual);
 
@@ -80,7 +56,7 @@ public class ColorUtilsTest extends AndroidTestCase {
     }
 
     private static void assertClose(String message, int expected, int actual,
-            int allowedOffset) {
+                                    int allowedOffset) {
         StringBuilder sb = new StringBuilder(message);
         sb.append(". Expected: ").append(expected).append(". Actual: ").append(actual);
 
@@ -108,6 +84,30 @@ public class ColorUtilsTest extends AndroidTestCase {
                 Color.green(expectedRgb), Color.green(actualRgb), ALLOWED_OFFSET_RGB_COMPONENT);
         assertClose("Blue not within offset",
                 Color.blue(expectedRgb), Color.blue(actualRgb), ALLOWED_OFFSET_RGB_COMPONENT);
+    }
+
+    public void testToHSL() {
+        for (TestEntry entry : sEntryList) {
+            testColorToHSL(entry.rgb, entry.hsl);
+        }
+    }
+
+    public void testFromHSL() {
+        for (TestEntry entry : sEntryList) {
+            testHSLToColor(entry.hsl, entry.rgb);
+        }
+    }
+
+    public void testToHslLimits() {
+        final float[] hsl = new float[3];
+
+        for (TestEntry entry : sEntryList) {
+            ColorUtils.colorToHSL(entry.rgb, hsl);
+
+            assertTrue(hsl[0] >= 0f && hsl[0] <= 360f);
+            assertTrue(hsl[1] >= 0f && hsl[1] <= 1f);
+            assertTrue(hsl[2] >= 0f && hsl[2] <= 1f);
+        }
     }
 
     private static class TestEntry {

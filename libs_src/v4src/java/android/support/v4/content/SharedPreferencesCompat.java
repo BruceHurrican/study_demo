@@ -25,27 +25,6 @@ public class SharedPreferencesCompat {
     public static class EditorCompat {
 
         private static EditorCompat sInstance;
-
-        private interface Helper {
-            void apply(@NonNull SharedPreferences.Editor editor);
-        }
-
-        private static class EditorHelperBaseImpl implements Helper {
-
-            @Override
-            public void apply(@NonNull SharedPreferences.Editor editor) {
-                editor.commit();
-            }
-        }
-
-        private static class EditorHelperApi9Impl implements Helper {
-
-            @Override
-            public void apply(@NonNull SharedPreferences.Editor editor) {
-                EditorCompatGingerbread.apply(editor);
-            }
-        }
-
         private final Helper mHelper;
 
         private EditorCompat() {
@@ -65,6 +44,26 @@ public class SharedPreferencesCompat {
 
         public void apply(@NonNull SharedPreferences.Editor editor) {
             mHelper.apply(editor);
+        }
+
+        private interface Helper {
+            void apply(@NonNull SharedPreferences.Editor editor);
+        }
+
+        private static class EditorHelperBaseImpl implements Helper {
+
+            @Override
+            public void apply(@NonNull SharedPreferences.Editor editor) {
+                editor.commit();
+            }
+        }
+
+        private static class EditorHelperApi9Impl implements Helper {
+
+            @Override
+            public void apply(@NonNull SharedPreferences.Editor editor) {
+                EditorCompatGingerbread.apply(editor);
+            }
         }
     }
 

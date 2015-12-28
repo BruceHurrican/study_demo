@@ -29,7 +29,7 @@ class DocumentsContractApi21 {
     private static final String TAG = "DocumentFile";
 
     public static Uri createFile(Context context, Uri self, String mimeType,
-            String displayName) {
+                                 String displayName) {
         return DocumentsContract.createDocument(context.getContentResolver(), self, mimeType,
                 displayName);
     }
@@ -51,8 +51,8 @@ class DocumentsContractApi21 {
 
         Cursor c = null;
         try {
-            c = resolver.query(childrenUri, new String[] {
-                    DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
+            c = resolver.query(childrenUri, new String[]{
+                    DocumentsContract.Document.COLUMN_DOCUMENT_ID}, null, null, null);
             while (c.moveToNext()) {
                 final String documentId = c.getString(0);
                 final Uri documentUri = DocumentsContract.buildDocumentUriUsingTree(self,

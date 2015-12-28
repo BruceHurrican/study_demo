@@ -22,7 +22,7 @@ import android.view.animation.Interpolator;
 /**
  * Base implementation for path interpolator compatibility.
  */
-class PathInterpolatorCompatBase  {
+class PathInterpolatorCompatBase {
 
     private PathInterpolatorCompatBase() {
         // prevent instantiation
@@ -37,7 +37,7 @@ class PathInterpolatorCompatBase  {
     }
 
     public static Interpolator create(float controlX1, float controlY1,
-            float controlX2, float controlY2) {
+                                      float controlX2, float controlY2) {
         return new PathInterpolatorDonut(controlX1, controlY1, controlX2, controlY2);
     }
 }

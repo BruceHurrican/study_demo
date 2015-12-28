@@ -30,6 +30,7 @@ class AccessibilityRecordCompatIcsMr1 {
     public static int getMaxScrollY(Object record) {
         return ((AccessibilityRecord) record).getMaxScrollY();
     }
+
     public static void setMaxScrollX(Object record, int maxScrollX) {
         ((AccessibilityRecord) record).setMaxScrollX(maxScrollX);
     }

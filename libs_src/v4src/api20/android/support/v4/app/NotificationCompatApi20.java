@@ -28,76 +28,6 @@ import android.widget.RemoteViews;
 import java.util.ArrayList;
 
 class NotificationCompatApi20 {
-    public static class Builder implements NotificationBuilderWithBuilderAccessor,
-            NotificationBuilderWithActions {
-        private Notification.Builder b;
-        private Bundle mExtras;
-
-        public Builder(Context context, Notification n,
-                CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
-                RemoteViews tickerView, int number,
-                PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
-                int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
-                boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
-                ArrayList<String> people, Bundle extras, String groupKey, boolean groupSummary,
-                String sortKey) {
-            b = new Notification.Builder(context)
-                .setWhen(n.when)
-                .setShowWhen(showWhen)
-                .setSmallIcon(n.icon, n.iconLevel)
-                .setContent(n.contentView)
-                .setTicker(n.tickerText, tickerView)
-                .setSound(n.sound, n.audioStreamType)
-                .setVibrate(n.vibrate)
-                .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
-                .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
-                .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
-                .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
-                .setDefaults(n.defaults)
-                .setContentTitle(contentTitle)
-                .setContentText(contentText)
-                .setSubText(subText)
-                .setContentInfo(contentInfo)
-                .setContentIntent(contentIntent)
-                .setDeleteIntent(n.deleteIntent)
-                .setFullScreenIntent(fullScreenIntent,
-                        (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
-                .setLargeIcon(largeIcon)
-                .setNumber(number)
-                .setUsesChronometer(useChronometer)
-                .setPriority(priority)
-                .setProgress(progressMax, progress, progressIndeterminate)
-                .setLocalOnly(localOnly)
-                .setGroup(groupKey)
-                .setGroupSummary(groupSummary)
-                .setSortKey(sortKey);
-            mExtras = new Bundle();
-            if (extras != null) {
-                mExtras.putAll(extras);
-            }
-            if (people != null && !people.isEmpty()) {
-                mExtras.putStringArray(Notification.EXTRA_PEOPLE,
-                        people.toArray(new String[people.size()]));
-            }
-        }
-
-        @Override
-        public void addAction(NotificationCompatBase.Action action) {
-            NotificationCompatApi20.addAction(b, action);
-        }
-
-        @Override
-        public Notification.Builder getBuilder() {
-            return b;
-        }
-
-        @Override
-        public Notification build() {
-            b.setExtras(mExtras);
-            return b.build();
-        }
-    }
-
     public static void addAction(Notification.Builder b, NotificationCompatBase.Action action) {
         Notification.Action.Builder actionBuilder = new Notification.Action.Builder(
                 action.getIcon(), action.getTitle(), action.getActionIntent());
@@ -114,8 +44,8 @@ class NotificationCompatApi20 {
     }
 
     public static NotificationCompatBase.Action getAction(Notification notif,
-            int actionIndex, NotificationCompatBase.Action.Factory actionFactory,
-            RemoteInputCompatBase.RemoteInput.Factory remoteInputFactory) {
+                                                          int actionIndex, NotificationCompatBase.Action.Factory actionFactory,
+                                                          RemoteInputCompatBase.RemoteInput.Factory remoteInputFactory) {
         return getActionCompatFromAction(notif.actions[actionIndex], actionFactory, remoteInputFactory);
     }
 
@@ -195,5 +125,75 @@ class NotificationCompatApi20 {
 
     public static String getSortKey(Notification notif) {
         return notif.getSortKey();
+    }
+
+    public static class Builder implements NotificationBuilderWithBuilderAccessor,
+            NotificationBuilderWithActions {
+        private Notification.Builder b;
+        private Bundle mExtras;
+
+        public Builder(Context context, Notification n,
+                       CharSequence contentTitle, CharSequence contentText, CharSequence contentInfo,
+                       RemoteViews tickerView, int number,
+                       PendingIntent contentIntent, PendingIntent fullScreenIntent, Bitmap largeIcon,
+                       int progressMax, int progress, boolean progressIndeterminate, boolean showWhen,
+                       boolean useChronometer, int priority, CharSequence subText, boolean localOnly,
+                       ArrayList<String> people, Bundle extras, String groupKey, boolean groupSummary,
+                       String sortKey) {
+            b = new Notification.Builder(context)
+                    .setWhen(n.when)
+                    .setShowWhen(showWhen)
+                    .setSmallIcon(n.icon, n.iconLevel)
+                    .setContent(n.contentView)
+                    .setTicker(n.tickerText, tickerView)
+                    .setSound(n.sound, n.audioStreamType)
+                    .setVibrate(n.vibrate)
+                    .setLights(n.ledARGB, n.ledOnMS, n.ledOffMS)
+                    .setOngoing((n.flags & Notification.FLAG_ONGOING_EVENT) != 0)
+                    .setOnlyAlertOnce((n.flags & Notification.FLAG_ONLY_ALERT_ONCE) != 0)
+                    .setAutoCancel((n.flags & Notification.FLAG_AUTO_CANCEL) != 0)
+                    .setDefaults(n.defaults)
+                    .setContentTitle(contentTitle)
+                    .setContentText(contentText)
+                    .setSubText(subText)
+                    .setContentInfo(contentInfo)
+                    .setContentIntent(contentIntent)
+                    .setDeleteIntent(n.deleteIntent)
+                    .setFullScreenIntent(fullScreenIntent,
+                            (n.flags & Notification.FLAG_HIGH_PRIORITY) != 0)
+                    .setLargeIcon(largeIcon)
+                    .setNumber(number)
+                    .setUsesChronometer(useChronometer)
+                    .setPriority(priority)
+                    .setProgress(progressMax, progress, progressIndeterminate)
+                    .setLocalOnly(localOnly)
+                    .setGroup(groupKey)
+                    .setGroupSummary(groupSummary)
+                    .setSortKey(sortKey);
+            mExtras = new Bundle();
+            if (extras != null) {
+                mExtras.putAll(extras);
+            }
+            if (people != null && !people.isEmpty()) {
+                mExtras.putStringArray(Notification.EXTRA_PEOPLE,
+                        people.toArray(new String[people.size()]));
+            }
+        }
+
+        @Override
+        public void addAction(NotificationCompatBase.Action action) {
+            NotificationCompatApi20.addAction(b, action);
+        }
+
+        @Override
+        public Notification.Builder getBuilder() {
+            return b;
+        }
+
+        @Override
+        public Notification build() {
+            b.setExtras(mExtras);
+            return b.build();
+        }
     }
 }

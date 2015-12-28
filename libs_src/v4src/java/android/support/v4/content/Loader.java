@@ -43,64 +43,6 @@ public class Loader<D> {
     boolean mProcessingChange = false;
 
     /**
-     * An implementation of a ContentObserver that takes care of connecting
-     * it to the Loader to have the loader re-load its data when the observer
-     * is told it has changed.  You do not normally need to use this yourself;
-     * it is used for you by {@link CursorLoader} to take care of executing
-     * an update when the cursor's backing data changes.
-     */
-    public final class ForceLoadContentObserver extends ContentObserver {
-        public ForceLoadContentObserver() {
-            super(new Handler());
-        }
-
-        @Override
-        public boolean deliverSelfNotifications() {
-            return true;
-        }
-
-        @Override
-        public void onChange(boolean selfChange) {
-            onContentChanged();
-        }
-    }
-
-    /**
-     * Interface that is implemented to discover when a Loader has finished
-     * loading its data.  You do not normally need to implement this yourself;
-     * it is used in the implementation of {@link android.support.v4.app.LoaderManager}
-     * to find out when a Loader it is managing has completed so that this can
-     * be reported to its client.  This interface should only be used if a
-     * Loader is not being used in conjunction with LoaderManager.
-     */
-    public interface OnLoadCompleteListener<D> {
-        /**
-         * Called on the thread that created the Loader when the load is complete.
-         *
-         * @param loader the loader that completed the load
-         * @param data the result of the load
-         */
-        public void onLoadComplete(Loader<D> loader, D data);
-    }
-
-    /**
-     * Interface that is implemented to discover when a Loader has been canceled
-     * before it finished loading its data.  You do not normally need to implement
-     * this yourself; it is used in the implementation of {@link android.support.v4.app.LoaderManager}
-     * to find out when a Loader it is managing has been canceled so that it
-     * can schedule the next Loader.  This interface should only be used if a
-     * Loader is not being used in conjunction with LoaderManager.
-     */
-    public interface OnLoadCanceledListener<D> {
-        /**
-         * Called on the thread that created the Loader when the load is canceled.
-         *
-         * @param loader the loader that canceled the load
-         */
-        public void onLoadCanceled(Loader<D> loader);
-    }
-
-    /**
      * Stores away the application context associated with context.
      * Since Loaders can be used across multiple activities it's dangerous to
      * store the context directly; always use {@link #getContext()} to retrieve
@@ -116,7 +58,7 @@ public class Loader<D> {
 
     /**
      * Sends the result of the load to the registered listener. Should only be called by subclasses.
-     *
+     * <p>
      * Must be called from the process's main thread.
      *
      * @param data the result of the load
@@ -130,7 +72,7 @@ public class Loader<D> {
     /**
      * Informs the registered {@link OnLoadCanceledListener} that the load has been canceled.
      * Should only be called by subclasses.
-     *
+     * <p>
      * Must be called from the process's main thread.
      */
     public void deliverCancellation() {
@@ -157,7 +99,7 @@ public class Loader<D> {
      * Registers a class that will receive callbacks when a load is complete.
      * The callback will be called on the process's main thread so it's safe to
      * pass the results to widgets.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public void registerListener(int id, OnLoadCompleteListener<D> listener) {
@@ -170,7 +112,7 @@ public class Loader<D> {
 
     /**
      * Remove a listener that was previously added with {@link #registerListener}.
-     *
+     * <p>
      * Must be called from the process's main thread.
      */
     public void unregisterListener(OnLoadCompleteListener<D> listener) {
@@ -187,7 +129,7 @@ public class Loader<D> {
      * Registers a listener that will receive callbacks when a load is canceled.
      * The callback will be called on the process's main thread so it's safe to
      * pass the results to widgets.
-     *
+     * <p>
      * Must be called from the process's main thread.
      *
      * @param listener The listener to register.
@@ -202,7 +144,7 @@ public class Loader<D> {
     /**
      * Unregisters a listener that was previously added with
      * {@link #registerOnLoadCanceledListener}.
-     *
+     * <p>
      * Must be called from the process's main thread.
      *
      * @param listener The listener to unregister.
@@ -250,7 +192,7 @@ public class Loader<D> {
      * is being started.  When using a Loader with {@link android.support.v4.app.LoaderManager},
      * you <em>must not</em> call this method yourself, or you will conflict
      * with its management of the Loader.
-     *
+     * <p>
      * Starts an asynchronous load of the Loader's data. When the result
      * is ready the callbacks will be called on the process's main thread.
      * If a previous load has been completed and is still valid
@@ -258,11 +200,11 @@ public class Loader<D> {
      * The loader will monitor the source of
      * the data set and may deliver future callbacks if the source changes.
      * Calling {@link #stopLoading} will stop the delivery of callbacks.
-     *
+     * <p>
      * <p>This updates the Loader's internal state so that
      * {@link #isStarted()} and {@link #isReset()} will return the correct
      * values, and then calls the implementation's {@link #onStartLoading()}.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public final void startLoading() {
@@ -283,7 +225,7 @@ public class Loader<D> {
     /**
      * Attempt to cancel the current load task.
      * Must be called on the main thread of the process.
-     *
+     * <p>
      * <p>Cancellation is not an immediate operation, since the load is performed
      * in a background thread.  If there is currently a load in progress, this
      * method requests that the load be canceled, and notes this is the case;
@@ -322,7 +264,7 @@ public class Loader<D> {
      * loaded data set and load a new one.  This simply calls through to the
      * implementation's {@link #onForceLoad()}.  You generally should only call this
      * when the loader is started -- that is, {@link #isStarted()} returns true.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public void forceLoad() {
@@ -342,18 +284,18 @@ public class Loader<D> {
      * is being stopped.  When using a Loader with {@link android.support.v4.app.LoaderManager},
      * you <em>must not</em> call this method yourself, or you will conflict
      * with its management of the Loader.
-     *
+     * <p>
      * <p>Stops delivery of updates until the next time {@link #startLoading()} is called.
      * Implementations should <em>not</em> invalidate their data at this point --
      * clients are still free to use the last data the loader reported.  They will,
      * however, typically stop reporting new data if the data changes; they can
      * still monitor for changes, but must not report them to the client until and
      * if {@link #startLoading()} is later called.
-     *
+     * <p>
      * <p>This updates the Loader's internal state so that
      * {@link #isStarted()} will return the correct
      * value, and then calls the implementation's {@link #onStopLoading()}.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public void stopLoading() {
@@ -376,7 +318,7 @@ public class Loader<D> {
      * a Loader with {@link android.support.v4.app.LoaderManager},
      * you <em>must not</em> call this method yourself, or you will conflict
      * with its management of the Loader.
-     *
+     * <p>
      * Tell the Loader that it is being abandoned.  This is called prior
      * to {@link #reset} to have it retain its current data but not report
      * any new data.
@@ -385,7 +327,7 @@ public class Loader<D> {
         mAbandoned = true;
         onAbandon();
     }
-    
+
     /**
      * Subclasses implement this to take care of being abandoned.  This is
      * an optional intermediate state prior to {@link #onReset()} -- it means that
@@ -397,23 +339,23 @@ public class Loader<D> {
      */
     protected void onAbandon() {
     }
-    
+
     /**
      * This function will normally be called for you automatically by
      * {@link android.support.v4.app.LoaderManager} when destroying a Loader.  When using
      * a Loader with {@link android.support.v4.app.LoaderManager},
      * you <em>must not</em> call this method yourself, or you will conflict
      * with its management of the Loader.
-     *
+     * <p>
      * Resets the state of the Loader.  The Loader should at this point free
      * all of its resources, since it may never be called again; however, its
      * {@link #startLoading()} may later be called at which point it must be
      * able to start running again.
-     *
+     * <p>
      * <p>This updates the Loader's internal state so that
      * {@link #isStarted()} and {@link #isReset()} will return the correct
      * values, and then calls the implementation's {@link #onReset()}.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public void reset() {
@@ -475,7 +417,7 @@ public class Loader<D> {
      * default implementation checks to see if the loader is currently started;
      * if so, it simply calls {@link #forceLoad()}; otherwise, it sets a flag
      * so that {@link #takeContentChanged()} returns true.
-     *
+     * <p>
      * <p>Must be called from the process's main thread.
      */
     public void onContentChanged() {
@@ -514,21 +456,89 @@ public class Loader<D> {
      * Print the Loader's state into the given stream.
      *
      * @param prefix Text to print at the front of each line.
-     * @param fd The raw file descriptor that the dump is being sent to.
+     * @param fd     The raw file descriptor that the dump is being sent to.
      * @param writer A PrintWriter to which the dump is to be set.
-     * @param args Additional arguments to the dump request.
+     * @param args   Additional arguments to the dump request.
      */
     public void dump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
-        writer.print(prefix); writer.print("mId="); writer.print(mId);
-                writer.print(" mListener="); writer.println(mListener);
+        writer.print(prefix);
+        writer.print("mId=");
+        writer.print(mId);
+        writer.print(" mListener=");
+        writer.println(mListener);
         if (mStarted || mContentChanged || mProcessingChange) {
-            writer.print(prefix); writer.print("mStarted="); writer.print(mStarted);
-                    writer.print(" mContentChanged="); writer.print(mContentChanged);
-                    writer.print(" mProcessingChange="); writer.println(mProcessingChange);
+            writer.print(prefix);
+            writer.print("mStarted=");
+            writer.print(mStarted);
+            writer.print(" mContentChanged=");
+            writer.print(mContentChanged);
+            writer.print(" mProcessingChange=");
+            writer.println(mProcessingChange);
         }
         if (mAbandoned || mReset) {
-            writer.print(prefix); writer.print("mAbandoned="); writer.print(mAbandoned);
-                    writer.print(" mReset="); writer.println(mReset);
+            writer.print(prefix);
+            writer.print("mAbandoned=");
+            writer.print(mAbandoned);
+            writer.print(" mReset=");
+            writer.println(mReset);
+        }
+    }
+
+    /**
+     * Interface that is implemented to discover when a Loader has finished
+     * loading its data.  You do not normally need to implement this yourself;
+     * it is used in the implementation of {@link android.support.v4.app.LoaderManager}
+     * to find out when a Loader it is managing has completed so that this can
+     * be reported to its client.  This interface should only be used if a
+     * Loader is not being used in conjunction with LoaderManager.
+     */
+    public interface OnLoadCompleteListener<D> {
+        /**
+         * Called on the thread that created the Loader when the load is complete.
+         *
+         * @param loader the loader that completed the load
+         * @param data   the result of the load
+         */
+        public void onLoadComplete(Loader<D> loader, D data);
+    }
+
+    /**
+     * Interface that is implemented to discover when a Loader has been canceled
+     * before it finished loading its data.  You do not normally need to implement
+     * this yourself; it is used in the implementation of {@link android.support.v4.app.LoaderManager}
+     * to find out when a Loader it is managing has been canceled so that it
+     * can schedule the next Loader.  This interface should only be used if a
+     * Loader is not being used in conjunction with LoaderManager.
+     */
+    public interface OnLoadCanceledListener<D> {
+        /**
+         * Called on the thread that created the Loader when the load is canceled.
+         *
+         * @param loader the loader that canceled the load
+         */
+        public void onLoadCanceled(Loader<D> loader);
+    }
+
+    /**
+     * An implementation of a ContentObserver that takes care of connecting
+     * it to the Loader to have the loader re-load its data when the observer
+     * is told it has changed.  You do not normally need to use this yourself;
+     * it is used for you by {@link CursorLoader} to take care of executing
+     * an update when the cursor's backing data changes.
+     */
+    public final class ForceLoadContentObserver extends ContentObserver {
+        public ForceLoadContentObserver() {
+            super(new Handler());
+        }
+
+        @Override
+        public boolean deliverSelfNotifications() {
+            return true;
+        }
+
+        @Override
+        public void onChange(boolean selfChange) {
+            onContentChanged();
         }
     }
 }

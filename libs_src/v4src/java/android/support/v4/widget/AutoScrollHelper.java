@@ -132,58 +132,6 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
 
     private static final int HORIZONTAL = 0;
     private static final int VERTICAL = 1;
-
-    /** Scroller used to control acceleration toward maximum velocity. */
-    private final ClampedScroller mScroller = new ClampedScroller();
-
-    /** Interpolator used to scale velocity with touch position. */
-    private final Interpolator mEdgeInterpolator = new AccelerateInterpolator();
-
-    /** The view to auto-scroll. Might not be the source of touch events. */
-    private final View mTarget;
-
-    /** Runnable used to animate scrolling. */
-    private Runnable mRunnable;
-
-    /** Edge insets used to activate auto-scrolling. */
-    private float[] mRelativeEdges = new float[] { RELATIVE_UNSPECIFIED, RELATIVE_UNSPECIFIED };
-
-    /** Clamping values for edge insets used to activate auto-scrolling. */
-    private float[] mMaximumEdges = new float[] { NO_MAX, NO_MAX };
-
-    /** The type of edge being used. */
-    private int mEdgeType;
-
-    /** Delay after entering an activation edge before auto-scrolling begins. */
-    private int mActivationDelay;
-
-    /** Relative scrolling velocity at maximum edge distance. */
-    private float[] mRelativeVelocity = new float[] { RELATIVE_UNSPECIFIED, RELATIVE_UNSPECIFIED };
-
-    /** Clamping values used for scrolling velocity. */
-    private float[] mMinimumVelocity = new float[] { NO_MIN, NO_MIN };
-
-    /** Clamping values used for scrolling velocity. */
-    private float[] mMaximumVelocity = new float[] { NO_MAX, NO_MAX };
-
-    /** Whether to start activation immediately. */
-    private boolean mAlreadyDelayed;
-
-    /** Whether to reset the scroller start time on the next animation. */
-    private boolean mNeedsReset;
-
-    /** Whether to send a cancel motion event to the target view. */
-    private boolean mNeedsCancel;
-
-    /** Whether the auto-scroller is actively scrolling. */
-    private boolean mAnimating;
-
-    /** Whether the auto-scroller is enabled. */
-    private boolean mEnabled;
-
-    /** Whether the auto-scroller consumes events when scrolling. */
-    private boolean mExclusive;
-
     // Default values.
     private static final int DEFAULT_EDGE_TYPE = EDGE_TYPE_INSIDE_EXTEND;
     private static final int DEFAULT_MINIMUM_VELOCITY_DIPS = 315;
@@ -194,6 +142,74 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
     private static final int DEFAULT_ACTIVATION_DELAY = ViewConfiguration.getTapTimeout();
     private static final int DEFAULT_RAMP_UP_DURATION = 500;
     private static final int DEFAULT_RAMP_DOWN_DURATION = 500;
+    /**
+     * Scroller used to control acceleration toward maximum velocity.
+     */
+    private final ClampedScroller mScroller = new ClampedScroller();
+    /**
+     * Interpolator used to scale velocity with touch position.
+     */
+    private final Interpolator mEdgeInterpolator = new AccelerateInterpolator();
+    /**
+     * The view to auto-scroll. Might not be the source of touch events.
+     */
+    private final View mTarget;
+    /**
+     * Runnable used to animate scrolling.
+     */
+    private Runnable mRunnable;
+    /**
+     * Edge insets used to activate auto-scrolling.
+     */
+    private float[] mRelativeEdges = new float[]{RELATIVE_UNSPECIFIED, RELATIVE_UNSPECIFIED};
+    /**
+     * Clamping values for edge insets used to activate auto-scrolling.
+     */
+    private float[] mMaximumEdges = new float[]{NO_MAX, NO_MAX};
+    /**
+     * The type of edge being used.
+     */
+    private int mEdgeType;
+    /**
+     * Delay after entering an activation edge before auto-scrolling begins.
+     */
+    private int mActivationDelay;
+    /**
+     * Relative scrolling velocity at maximum edge distance.
+     */
+    private float[] mRelativeVelocity = new float[]{RELATIVE_UNSPECIFIED, RELATIVE_UNSPECIFIED};
+    /**
+     * Clamping values used for scrolling velocity.
+     */
+    private float[] mMinimumVelocity = new float[]{NO_MIN, NO_MIN};
+    /**
+     * Clamping values used for scrolling velocity.
+     */
+    private float[] mMaximumVelocity = new float[]{NO_MAX, NO_MAX};
+    /**
+     * Whether to start activation immediately.
+     */
+    private boolean mAlreadyDelayed;
+    /**
+     * Whether to reset the scroller start time on the next animation.
+     */
+    private boolean mNeedsReset;
+    /**
+     * Whether to send a cancel motion event to the target view.
+     */
+    private boolean mNeedsCancel;
+    /**
+     * Whether the auto-scroller is actively scrolling.
+     */
+    private boolean mAnimating;
+    /**
+     * Whether the auto-scroller is enabled.
+     */
+    private boolean mEnabled;
+    /**
+     * Whether the auto-scroller consumes events when scrolling.
+     */
+    private boolean mExclusive;
 
     /**
      * Creates a new helper for scrolling the specified target view.
@@ -224,6 +240,33 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
         setRampDownDuration(DEFAULT_RAMP_DOWN_DURATION);
     }
 
+    private static int constrain(int value, int min, int max) {
+        if (value > max) {
+            return max;
+        } else if (value < min) {
+            return min;
+        } else {
+            return value;
+        }
+    }
+
+    private static float constrain(float value, float min, float max) {
+        if (value > max) {
+            return max;
+        } else if (value < min) {
+            return min;
+        } else {
+            return value;
+        }
+    }
+
+    /**
+     * @return True if this helper is enabled and responding to touch events.
+     */
+    public boolean isEnabled() {
+        return mEnabled;
+    }
+
     /**
      * Sets whether the scroll helper is enabled and should respond to touch
      * events.
@@ -241,10 +284,15 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
     }
 
     /**
-     * @return True if this helper is enabled and responding to touch events.
+     * Indicates whether the scroll helper handles touch events exclusively
+     * during scrolling.
+     *
+     * @return True if exclusive handling of touch events during scrolling is
+     * enabled, false otherwise.
+     * @see #setExclusive(boolean)
      */
-    public boolean isEnabled() {
-        return mEnabled;
+    public boolean isExclusive() {
+        return mExclusive;
     }
 
     /**
@@ -256,24 +304,12 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * currently scrolling and false otherwise.
      *
      * @param exclusive True to exclusively handle touch events during scrolling,
-     *            false to allow the target view to receive all touch events.
+     *                  false to allow the target view to receive all touch events.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setExclusive(boolean exclusive) {
         mExclusive = exclusive;
         return this;
-    }
-
-    /**
-     * Indicates whether the scroll helper handles touch events exclusively
-     * during scrolling.
-     *
-     * @return True if exclusive handling of touch events during scrolling is
-     *         enabled, false otherwise.
-     * @see #setExclusive(boolean)
-     */
-    public boolean isExclusive() {
-        return mExclusive;
     }
 
     /**
@@ -285,9 +321,9 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * relative velocity.
      *
      * @param horizontalMax The maximum horizontal scrolling velocity, or
-     *            {@link #NO_MAX} to leave the relative value unconstrained.
-     * @param verticalMax The maximum vertical scrolling velocity, or
-     *            {@link #NO_MAX} to leave the relative value unconstrained.
+     *                      {@link #NO_MAX} to leave the relative value unconstrained.
+     * @param verticalMax   The maximum vertical scrolling velocity, or
+     *                      {@link #NO_MAX} to leave the relative value unconstrained.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setMaximumVelocity(float horizontalMax, float verticalMax) {
@@ -303,9 +339,9 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * velocity will be used to clamp the calculated relative velocity.
      *
      * @param horizontalMin The minimum horizontal scrolling velocity, or
-     *            {@link #NO_MIN} to leave the relative value unconstrained.
-     * @param verticalMin The minimum vertical scrolling velocity, or
-     *            {@link #NO_MIN} to leave the relative value unconstrained.
+     *                      {@link #NO_MIN} to leave the relative value unconstrained.
+     * @param verticalMin   The minimum vertical scrolling velocity, or
+     *                      {@link #NO_MIN} to leave the relative value unconstrained.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setMinimumVelocity(float horizontalMin, float verticalMin) {
@@ -322,11 +358,11 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * velocity will be used to clamp the calculated relative velocity.
      *
      * @param horizontal The target horizontal velocity as a fraction of the
-     *            host view width per second, or {@link #RELATIVE_UNSPECIFIED}
-     *            to ignore.
-     * @param vertical The target vertical velocity as a fraction of the host
-     *            view height per second, or {@link #RELATIVE_UNSPECIFIED} to
-     *            ignore.
+     *                   host view width per second, or {@link #RELATIVE_UNSPECIFIED}
+     *                   to ignore.
+     * @param vertical   The target vertical velocity as a fraction of the host
+     *                   view height per second, or {@link #RELATIVE_UNSPECIFIED} to
+     *                   ignore.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setRelativeVelocity(float horizontal, float vertical) {
@@ -362,11 +398,11 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * be used to constrain the calculated relative edge size.
      *
      * @param horizontal The horizontal edge size as a fraction of the host view
-     *            width, or {@link #RELATIVE_UNSPECIFIED} to always use the
-     *            maximum value.
-     * @param vertical The vertical edge size as a fraction of the host view
-     *            height, or {@link #RELATIVE_UNSPECIFIED} to always use the
-     *            maximum value.
+     *                   width, or {@link #RELATIVE_UNSPECIFIED} to always use the
+     *                   maximum value.
+     * @param vertical   The vertical edge size as a fraction of the host view
+     *                   height, or {@link #RELATIVE_UNSPECIFIED} to always use the
+     *                   maximum value.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setRelativeEdges(float horizontal, float vertical) {
@@ -384,11 +420,11 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * size.
      *
      * @param horizontalMax The maximum horizontal edge size in pixels, or
-     *            {@link #NO_MAX} to use the unconstrained calculated relative
-     *            value.
-     * @param verticalMax The maximum vertical edge size in pixels, or
-     *            {@link #NO_MAX} to use the unconstrained calculated relative
-     *            value.
+     *                      {@link #NO_MAX} to use the unconstrained calculated relative
+     *                      value.
+     * @param verticalMax   The maximum vertical edge size in pixels, or
+     *                      {@link #NO_MAX} to use the unconstrained calculated relative
+     *                      value.
      * @return The scroll helper, which may used to chain setter calls.
      */
     public AutoScrollHelper setMaximumEdges(float horizontalMax, float verticalMax) {
@@ -573,9 +609,9 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * horizontally in a certain direction.
      *
      * @param direction Negative to check scrolling left, positive to check
-     *            scrolling right.
+     *                  scrolling right.
      * @return true if the target view is able to horizontally scroll in the
-     *         specified direction.
+     * specified direction.
      */
     public abstract boolean canTargetScrollHorizontally(int direction);
 
@@ -584,9 +620,9 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * vertically in a certain direction.
      *
      * @param direction Negative to check scrolling up, positive to check
-     *            scrolling down.
+     *                  scrolling down.
      * @return true if the target view is able to vertically scroll in the
-     *         specified direction.
+     * specified direction.
      */
     public abstract boolean canTargetScrollVertically(int direction);
 
@@ -596,10 +632,10 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
      * interpolator.
      *
      * @param relativeValue The size of the inset relative to the total size.
-     * @param size Total size.
-     * @param maxValue The maximum size of the inset, used to clamp (relative *
-     *            total).
-     * @param current Touch position within within the total size.
+     * @param size          Total size.
+     * @param maxValue      The maximum size of the inset, used to clamp (relative *
+     *                      total).
+     * @param current       Touch position within within the total size.
      * @return Interpolated value of the touch position within the edge.
      */
     private float getEdgeValue(float relativeValue, float size, float maxValue, float current) {
@@ -649,26 +685,6 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
         return 0;
     }
 
-    private static int constrain(int value, int min, int max) {
-        if (value > max) {
-            return max;
-        } else if (value < min) {
-            return min;
-        } else {
-            return value;
-        }
-    }
-
-    private static float constrain(float value, float min, float max) {
-        if (value > max) {
-            return max;
-        } else if (value < min) {
-            return min;
-        } else {
-            return value;
-        }
-    }
-
     /**
      * Sends a {@link MotionEvent#ACTION_CANCEL} event to the target view,
      * canceling any ongoing touch events.
@@ -679,40 +695,6 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
                 eventTime, eventTime, MotionEvent.ACTION_CANCEL, 0, 0, 0);
         mTarget.onTouchEvent(cancel);
         cancel.recycle();
-    }
-
-    private class ScrollAnimationRunnable implements Runnable {
-        @Override
-        public void run() {
-            if (!mAnimating) {
-                return;
-            }
-
-            if (mNeedsReset) {
-                mNeedsReset = false;
-                mScroller.start();
-            }
-
-            final ClampedScroller scroller = mScroller;
-            if (scroller.isFinished() || !shouldAnimate()) {
-                mAnimating = false;
-                return;
-            }
-
-            if (mNeedsCancel) {
-                mNeedsCancel = false;
-                cancelTargetTouch();
-            }
-
-            scroller.computeScrollDelta();
-
-            final int deltaX = scroller.getDeltaX();
-            final int deltaY = scroller.getDeltaY();
-            scrollTargetBy(deltaX,  deltaY);
-
-            // Keep going until the scroller has permanently stopped.
-            ViewCompat.postOnAnimation(mTarget, this);
-        }
     }
 
     /**
@@ -862,6 +844,40 @@ public abstract class AutoScrollHelper implements View.OnTouchListener {
          */
         public int getDeltaY() {
             return mDeltaY;
+        }
+    }
+
+    private class ScrollAnimationRunnable implements Runnable {
+        @Override
+        public void run() {
+            if (!mAnimating) {
+                return;
+            }
+
+            if (mNeedsReset) {
+                mNeedsReset = false;
+                mScroller.start();
+            }
+
+            final ClampedScroller scroller = mScroller;
+            if (scroller.isFinished() || !shouldAnimate()) {
+                mAnimating = false;
+                return;
+            }
+
+            if (mNeedsCancel) {
+                mNeedsCancel = false;
+                cancelTargetTouch();
+            }
+
+            scroller.computeScrollDelta();
+
+            final int deltaX = scroller.getDeltaX();
+            final int deltaY = scroller.getDeltaY();
+            scrollTargetBy(deltaX, deltaY);
+
+            // Keep going until the scroller has permanently stopped.
+            ViewCompat.postOnAnimation(mTarget, this);
         }
     }
 }

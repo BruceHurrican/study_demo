@@ -29,6 +29,118 @@ import java.util.List;
  */
 public class AccessibilityNodeProviderCompat {
 
+    private static final AccessibilityNodeProviderImpl IMPL;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 19) { // KitKat
+            IMPL = new AccessibilityNodeProviderKitKatImpl();
+        } else if (Build.VERSION.SDK_INT >= 16) { // JellyBean
+            IMPL = new AccessibilityNodeProviderJellyBeanImpl();
+        } else {
+            IMPL = new AccessibilityNodeProviderStubImpl();
+        }
+    }
+
+    private final Object mProvider;
+
+    /**
+     * Creates a new instance.
+     */
+    public AccessibilityNodeProviderCompat() {
+        mProvider = IMPL.newAccessibilityNodeProviderBridge(this);
+    }
+
+    /**
+     * Creates a new instance wrapping an
+     * {@link android.view.accessibility.AccessibilityNodeProvider}.
+     *
+     * @param provider The provider.
+     */
+    public AccessibilityNodeProviderCompat(Object provider) {
+        mProvider = provider;
+    }
+
+    /**
+     * @return The wrapped {@link android.view.accessibility.AccessibilityNodeProvider}.
+     */
+    public Object getProvider() {
+        return mProvider;
+    }
+
+    /**
+     * Returns an {@link AccessibilityNodeInfoCompat} representing a virtual view,
+     * i.e. a descendant of the host View, with the given <code>virtualViewId</code>
+     * or the host View itself if <code>virtualViewId</code> equals to {@link View#NO_ID}.
+     * <p>
+     * A virtual descendant is an imaginary View that is reported as a part of the view
+     * hierarchy for accessibility purposes. This enables custom views that draw complex
+     * content to report them selves as a tree of virtual views, thus conveying their
+     * logical structure.
+     * </p>
+     * <p>
+     * The implementer is responsible for obtaining an accessibility node info from the
+     * pool of reusable instances and setting the desired properties of the node info
+     * before returning it.
+     * </p>
+     *
+     * @param virtualViewId A client defined virtual view id.
+     * @return A populated {@link AccessibilityNodeInfoCompat} for a virtual descendant
+     * or the host View.
+     * @see AccessibilityNodeInfoCompat
+     */
+    public AccessibilityNodeInfoCompat createAccessibilityNodeInfo(int virtualViewId) {
+        return null;
+    }
+
+    /**
+     * Performs an accessibility action on a virtual view, i.e. a descendant of the
+     * host View, with the given <code>virtualViewId</code> or the host View itself
+     * if <code>virtualViewId</code> equals to {@link View#NO_ID}.
+     *
+     * @param virtualViewId A client defined virtual view id.
+     * @param action        The action to perform.
+     * @param arguments     Optional arguments.
+     * @return True if the action was performed.
+     * @see #createAccessibilityNodeInfo(int)
+     * @see AccessibilityNodeInfoCompat
+     */
+    public boolean performAction(int virtualViewId, int action, Bundle arguments) {
+        return false;
+    }
+
+    /**
+     * Finds {@link AccessibilityNodeInfoCompat}s by text. The match is case insensitive
+     * containment. The search is relative to the virtual view, i.e. a descendant of the
+     * host View, with the given <code>virtualViewId</code> or the host View itself
+     * <code>virtualViewId</code> equals to {@link View#NO_ID}.
+     *
+     * @param virtualViewId A client defined virtual view id which defined
+     *                      the root of the tree in which to perform the search.
+     * @param text          The searched text.
+     * @return A list of node info.
+     * @see #createAccessibilityNodeInfo(int)
+     * @see AccessibilityNodeInfoCompat
+     */
+    public List<AccessibilityNodeInfoCompat> findAccessibilityNodeInfosByText(String text,
+                                                                              int virtualViewId) {
+        return null;
+    }
+
+    /**
+     * Find the virtual view, i.e. a descendant of the host View, that has the
+     * specified focus type.
+     *
+     * @param focus The focus to find. One of
+     *              {@link AccessibilityNodeInfoCompat#FOCUS_INPUT} or
+     *              {@link AccessibilityNodeInfoCompat#FOCUS_ACCESSIBILITY}.
+     * @return The node info of the focused view or null.
+     * @see AccessibilityNodeInfoCompat#FOCUS_INPUT
+     * @see AccessibilityNodeInfoCompat#FOCUS_ACCESSIBILITY
+     */
+    public AccessibilityNodeInfoCompat findFocus(int focus) {
+        return null;
+    }
+
     interface AccessibilityNodeProviderImpl {
         public Object newAccessibilityNodeProviderBridge(AccessibilityNodeProviderCompat compat);
     }
@@ -48,15 +160,15 @@ public class AccessibilityNodeProviderCompat {
                     new AccessibilityNodeProviderCompatJellyBean.AccessibilityNodeInfoBridge() {
                         @Override
                         public boolean performAction(int virtualViewId, int action,
-                                Bundle arguments) {
+                                                     Bundle arguments) {
                             return compat.performAction(virtualViewId, action, arguments);
                         }
 
                         @Override
                         public List<Object> findAccessibilityNodeInfosByText(
-                                            String text, int virtualViewId) {
+                                String text, int virtualViewId) {
                             List<AccessibilityNodeInfoCompat> compatInfos =
-                                compat.findAccessibilityNodeInfosByText(text, virtualViewId);
+                                    compat.findAccessibilityNodeInfosByText(text, virtualViewId);
                             List<Object> infos = new ArrayList<Object>();
                             final int infoCount = compatInfos.size();
                             for (int i = 0; i < infoCount; i++) {
@@ -129,120 +241,5 @@ public class AccessibilityNodeProviderCompat {
                         }
                     });
         }
-    }
-
-    private static final AccessibilityNodeProviderImpl IMPL;
-
-    private final Object mProvider;
-
-    static {
-        if (Build.VERSION.SDK_INT >= 19) { // KitKat
-            IMPL = new AccessibilityNodeProviderKitKatImpl();
-        } else if (Build.VERSION.SDK_INT >= 16) { // JellyBean
-            IMPL = new AccessibilityNodeProviderJellyBeanImpl();
-        } else {
-            IMPL = new AccessibilityNodeProviderStubImpl();
-        }
-    }
-
-    /**
-     * Creates a new instance.
-     */
-    public AccessibilityNodeProviderCompat() {
-        mProvider = IMPL.newAccessibilityNodeProviderBridge(this);
-    }
-
-    /**
-     * Creates a new instance wrapping an
-     * {@link android.view.accessibility.AccessibilityNodeProvider}.
-     *
-     * @param provider The provider.
-     */
-    public AccessibilityNodeProviderCompat(Object provider) {
-        mProvider = provider;
-    }
-
-    /**
-     * @return The wrapped {@link android.view.accessibility.AccessibilityNodeProvider}.
-     */
-    public Object getProvider() {
-        return mProvider;
-    }
-
-    /**
-     * Returns an {@link AccessibilityNodeInfoCompat} representing a virtual view,
-     * i.e. a descendant of the host View, with the given <code>virtualViewId</code>
-     * or the host View itself if <code>virtualViewId</code> equals to {@link View#NO_ID}.
-     * <p>
-     * A virtual descendant is an imaginary View that is reported as a part of the view
-     * hierarchy for accessibility purposes. This enables custom views that draw complex
-     * content to report them selves as a tree of virtual views, thus conveying their
-     * logical structure.
-     * </p>
-     * <p>
-     * The implementer is responsible for obtaining an accessibility node info from the
-     * pool of reusable instances and setting the desired properties of the node info
-     * before returning it.
-     * </p>
-     *
-     * @param virtualViewId A client defined virtual view id.
-     * @return A populated {@link AccessibilityNodeInfoCompat} for a virtual descendant
-     *     or the host View.
-     *
-     * @see AccessibilityNodeInfoCompat
-     */
-    public AccessibilityNodeInfoCompat createAccessibilityNodeInfo(int virtualViewId) {
-        return null;
-    }
-
-    /**
-     * Performs an accessibility action on a virtual view, i.e. a descendant of the
-     * host View, with the given <code>virtualViewId</code> or the host View itself
-     * if <code>virtualViewId</code> equals to {@link View#NO_ID}.
-     *
-     * @param virtualViewId A client defined virtual view id.
-     * @param action The action to perform.
-     * @param arguments Optional arguments.
-     * @return True if the action was performed.
-     *
-     * @see #createAccessibilityNodeInfo(int)
-     * @see AccessibilityNodeInfoCompat
-     */
-    public boolean performAction(int virtualViewId, int action, Bundle arguments) {
-        return false;
-    }
-
-    /**
-     * Finds {@link AccessibilityNodeInfoCompat}s by text. The match is case insensitive
-     * containment. The search is relative to the virtual view, i.e. a descendant of the
-     * host View, with the given <code>virtualViewId</code> or the host View itself
-     * <code>virtualViewId</code> equals to {@link View#NO_ID}.
-     *
-     * @param virtualViewId A client defined virtual view id which defined
-     *     the root of the tree in which to perform the search.
-     * @param text The searched text.
-     * @return A list of node info.
-     *
-     * @see #createAccessibilityNodeInfo(int)
-     * @see AccessibilityNodeInfoCompat
-     */
-    public List<AccessibilityNodeInfoCompat> findAccessibilityNodeInfosByText(String text,
-            int virtualViewId) {
-        return null;
-    }
-
-    /**
-     * Find the virtual view, i.e. a descendant of the host View, that has the
-     * specified focus type.
-     *
-     * @param focus The focus to find. One of
-     *            {@link AccessibilityNodeInfoCompat#FOCUS_INPUT} or
-     *            {@link AccessibilityNodeInfoCompat#FOCUS_ACCESSIBILITY}.
-     * @return The node info of the focused view or null.
-     * @see AccessibilityNodeInfoCompat#FOCUS_INPUT
-     * @see AccessibilityNodeInfoCompat#FOCUS_ACCESSIBILITY
-     */
-    public AccessibilityNodeInfoCompat findFocus(int focus) {
-        return null;
     }
 }

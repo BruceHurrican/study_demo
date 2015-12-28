@@ -38,6 +38,24 @@ import com.bruce.study.demo.base.BaseFragment;
 public class ShakeFragment extends BaseFragment {
     private SensorManager sensorManager;
     private Vibrator vibrator;
+    private SensorEventListener myListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            int sensorType = event.sensor.getType();
+            float[] values = event.values;
+            if (sensorType == Sensor.TYPE_ACCELEROMETER) {
+                if (Math.abs(values[0]) > 14 || Math.abs(values[1]) > 14 || Math.abs(values[2]) > 14) {
+                    vibrator.vibrate(200);
+                    showToastShort("手机摇一摇");
+                }
+            }
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
 
     @Override
     public String getTAG() {
@@ -76,23 +94,4 @@ public class ShakeFragment extends BaseFragment {
         }
         super.onPause();
     }
-
-    private SensorEventListener myListener = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            int sensorType = event.sensor.getType();
-            float[] values = event.values;
-            if (sensorType == Sensor.TYPE_ACCELEROMETER) {
-                if (Math.abs(values[0]) > 14 || Math.abs(values[1]) > 14 || Math.abs(values[2]) > 14) {
-                    vibrator.vibrate(200);
-                    showToastShort("手机摇一摇");
-                }
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
 }

@@ -21,7 +21,7 @@ import android.widget.EdgeEffect;
 
 /**
  * Stub implementation that contains a real EdgeEffect on ICS.
- *
+ * <p>
  * This class is an implementation detail for EdgeEffectCompat
  * and should not be used directly.
  */

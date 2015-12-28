@@ -24,10 +24,45 @@ import android.view.ViewConfiguration;
  */
 public class ViewConfigurationCompat {
     /**
+     * Select the correct implementation to use for the current platform.
+     */
+    static final ViewConfigurationVersionImpl IMPL;
+
+    static {
+        if (android.os.Build.VERSION.SDK_INT >= 14) {
+            IMPL = new IcsViewConfigurationVersionImpl();
+        } else if (android.os.Build.VERSION.SDK_INT >= 11) {
+            IMPL = new HoneycombViewConfigurationVersionImpl();
+        } else if (android.os.Build.VERSION.SDK_INT >= 8) {
+            IMPL = new FroyoViewConfigurationVersionImpl();
+        } else {
+            IMPL = new BaseViewConfigurationVersionImpl();
+        }
+    }
+
+    /**
+     * Call {@link ViewConfiguration#getScaledPagingTouchSlop()}.
+     * If running on a pre-{@link android.os.Build.VERSION_CODES#FROYO} device,
+     * returns {@link ViewConfiguration#getScaledTouchSlop()}.
+     */
+    public static int getScaledPagingTouchSlop(ViewConfiguration config) {
+        return IMPL.getScaledPagingTouchSlop(config);
+    }
+
+    /**
+     * Report if the device has a permanent menu key available to the user, in a backwards
+     * compatible way.
+     */
+    public static boolean hasPermanentMenuKey(ViewConfiguration config) {
+        return IMPL.hasPermanentMenuKey(config);
+    }
+
+    /**
      * Interface for the full API.
      */
     interface ViewConfigurationVersionImpl {
         public int getScaledPagingTouchSlop(ViewConfiguration config);
+
         public boolean hasPermanentMenuKey(ViewConfiguration config);
     }
 
@@ -57,6 +92,8 @@ public class ViewConfigurationCompat {
         }
     }
 
+    // -------------------------------------------------------------------
+
     /**
      * Interface implementation for devices with at least v11 APIs.
      */
@@ -76,40 +113,5 @@ public class ViewConfigurationCompat {
         public boolean hasPermanentMenuKey(ViewConfiguration config) {
             return ViewConfigurationCompatICS.hasPermanentMenuKey(config);
         }
-    }
-
-    /**
-     * Select the correct implementation to use for the current platform.
-     */
-    static final ViewConfigurationVersionImpl IMPL;
-    static {
-        if (android.os.Build.VERSION.SDK_INT >= 14) {
-            IMPL = new IcsViewConfigurationVersionImpl();
-        } else if (android.os.Build.VERSION.SDK_INT >= 11) {
-            IMPL = new HoneycombViewConfigurationVersionImpl();
-        } else if (android.os.Build.VERSION.SDK_INT >= 8) {
-            IMPL = new FroyoViewConfigurationVersionImpl();
-        } else {
-            IMPL = new BaseViewConfigurationVersionImpl();
-        }
-    }
-
-    // -------------------------------------------------------------------
-
-    /**
-     * Call {@link ViewConfiguration#getScaledPagingTouchSlop()}.
-     * If running on a pre-{@link android.os.Build.VERSION_CODES#FROYO} device,
-     * returns {@link ViewConfiguration#getScaledTouchSlop()}.
-     */
-    public static int getScaledPagingTouchSlop(ViewConfiguration config) {
-        return IMPL.getScaledPagingTouchSlop(config);
-    }
-
-    /**
-     * Report if the device has a permanent menu key available to the user, in a backwards
-     * compatible way.
-     */
-    public static boolean hasPermanentMenuKey(ViewConfiguration config) {
-        return IMPL.hasPermanentMenuKey(config);
     }
 }

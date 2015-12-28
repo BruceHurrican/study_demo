@@ -28,128 +28,30 @@ import android.view.View;
  */
 public class AccessibilityServiceInfoCompat {
 
-    static interface AccessibilityServiceInfoVersionImpl {
-        public String getId(AccessibilityServiceInfo info);
-        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info);
-        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info);
-        public String getDescription(AccessibilityServiceInfo info);
-        public String getSettingsActivityName(AccessibilityServiceInfo info);
-        public int getCapabilities(AccessibilityServiceInfo info);
-    }
-
-    static class AccessibilityServiceInfoStubImpl implements AccessibilityServiceInfoVersionImpl {
-
-        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info) {
-            return false;
-        }
-
-        public String getDescription(AccessibilityServiceInfo info) {
-            return null;
-        }
-
-        public String getId(AccessibilityServiceInfo info) {
-            return null;
-        }
-
-        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info) {
-            return null;
-        }
-
-        public String getSettingsActivityName(AccessibilityServiceInfo info) {
-            return null;
-        }
-
-        public int getCapabilities(AccessibilityServiceInfo info) {
-            return 0;
-        }
-    }
-
-    static class AccessibilityServiceInfoIcsImpl extends AccessibilityServiceInfoStubImpl {
-
-        @Override
-        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatIcs.getCanRetrieveWindowContent(info);
-        }
-
-        @Override
-        public String getDescription(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatIcs.getDescription(info);
-        }
-
-        @Override
-        public String getId(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatIcs.getId(info);
-        }
-
-        @Override
-        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatIcs.getResolveInfo(info);
-        }
-
-        @Override
-        public String getSettingsActivityName(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatIcs.getSettingsActivityName(info);
-        }
-
-        @Override
-        public int getCapabilities(AccessibilityServiceInfo info) {
-            if (getCanRetrieveWindowContent(info)) {
-                return CAPABILITY_CAN_RETRIEVE_WINDOW_CONTENT;
-            }
-            return 0;
-        }
-    }
-
-    static class AccessibilityServiceInfoJellyBeanMr2 extends AccessibilityServiceInfoIcsImpl {
-        @Override
-        public int getCapabilities(AccessibilityServiceInfo info) {
-            return AccessibilityServiceInfoCompatJellyBeanMr2.getCapabilities(info);
-        }
-    }
-
-    static {
-        if (Build.VERSION.SDK_INT >= 18) { // JellyBean MR2
-            IMPL = new AccessibilityServiceInfoJellyBeanMr2();
-        } else if (Build.VERSION.SDK_INT >= 14) { // ICS
-            IMPL = new AccessibilityServiceInfoIcsImpl();
-        } else {
-            IMPL = new AccessibilityServiceInfoStubImpl();
-        }
-    }
-
-    // Capabilities
-
-    private static final AccessibilityServiceInfoVersionImpl IMPL;
-
     /**
      * Capability: This accessibility service can retrieve the active window content.
      */
     public static final int CAPABILITY_CAN_RETRIEVE_WINDOW_CONTENT = 0x00000001;
-
     /**
      * Capability: This accessibility service can request touch exploration mode in which
      * touched items are spoken aloud and the UI can be explored via gestures.
      */
     public static final int CAPABILITY_CAN_REQUEST_TOUCH_EXPLORATION = 0x00000002;
-
     /**
      * Capability: This accessibility service can request enhanced web accessibility
      * enhancements. For example, installing scripts to make app content more accessible.
      */
     public static final int CAPABILITY_CAN_REQUEST_ENHANCED_WEB_ACCESSIBILITY = 0x00000004;
-
     /**
      * Capability: This accessibility service can filter the key event stream.
      */
     public static final int CAPABILITY_CAN_FILTER_KEY_EVENTS = 0x00000008;
-
-    // Feedback types
-
     /**
      * Denotes braille feedback.
      */
     public static final int FEEDBACK_BRAILLE = 0x0000020;
 
+    // Capabilities
     /**
      * Mask for all feedback types.
      *
@@ -161,16 +63,12 @@ public class AccessibilityServiceInfoCompat {
      * @see FEEDBACK_BRAILLE
      */
     public static final int FEEDBACK_ALL_MASK = 0xFFFFFFFF;
-
-    // Flags
-
     /**
      * If an {@link AccessibilityService} is the default for a given type.
      * Default service is invoked only if no package specific one exists. In case of
      * more than one package specific service only the earlier registered is notified.
      */
     public static final int DEFAULT = 0x0000001;
-
     /**
      * If this flag is set the system will regard views that are not important
      * for accessibility in addition to the ones that are important for accessibility.
@@ -202,7 +100,6 @@ public class AccessibilityServiceInfoCompat {
      * </p>
      */
     public static final int FLAG_INCLUDE_NOT_IMPORTANT_VIEWS = 0x0000002;
-
     /**
      * This flag requests that the system gets into touch exploration mode.
      * In this mode a single finger moving on the screen behaves as a mouse
@@ -228,7 +125,6 @@ public class AccessibilityServiceInfoCompat {
      * </p>
      */
     public static final int FLAG_REQUEST_TOUCH_EXPLORATION_MODE = 0x0000004;
-
     /**
      * This flag requests from the system to enable web accessibility enhancing
      * extensions. Such extensions aim to provide improved accessibility support
@@ -247,6 +143,7 @@ public class AccessibilityServiceInfoCompat {
      */
     public static final int FLAG_REQUEST_ENHANCED_WEB_ACCESSIBILITY = 0x00000008;
 
+    // Feedback types
     /**
      * This flag requests that the AccessibilityNodeInfos obtained
      * by an {@link AccessibilityService} contain the id of the source view.
@@ -255,7 +152,6 @@ public class AccessibilityServiceInfoCompat {
      * useful for UI test automation. This flag is not set by default.
      */
     public static final int FLAG_REPORT_VIEW_IDS = 0x00000010;
-
     /**
      * This flag requests from the system to filter key events. If this flag
      * is set the accessibility service will receive the key events before
@@ -273,6 +169,19 @@ public class AccessibilityServiceInfoCompat {
      * </p>
      */
     public static final int FLAG_REQUEST_FILTER_KEY_EVENTS = 0x00000020;
+
+    // Flags
+    private static final AccessibilityServiceInfoVersionImpl IMPL;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 18) { // JellyBean MR2
+            IMPL = new AccessibilityServiceInfoJellyBeanMr2();
+        } else if (Build.VERSION.SDK_INT >= 14) { // ICS
+            IMPL = new AccessibilityServiceInfoIcsImpl();
+        } else {
+            IMPL = new AccessibilityServiceInfoStubImpl();
+        }
+    }
 
     /*
      * Hide constructor
@@ -416,7 +325,6 @@ public class AccessibilityServiceInfoCompat {
      *
      * @param info The service info whose capabilities to get.
      * @return The capability bit mask.
-     *
      * @see #CAPABILITY_CAN_RETRIEVE_WINDOW_CONTENT
      * @see #CAPABILITY_CAN_REQUEST_TOUCH_EXPLORATION
      * @see #CAPABILITY_CAN_REQUEST_ENHANCED_WEB_ACCESSIBILITY
@@ -446,6 +354,90 @@ public class AccessibilityServiceInfoCompat {
                 return "CAPABILITY_CAN_FILTER_KEY_EVENTS";
             default:
                 return "UNKNOWN";
+        }
+    }
+
+    static interface AccessibilityServiceInfoVersionImpl {
+        public String getId(AccessibilityServiceInfo info);
+
+        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info);
+
+        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info);
+
+        public String getDescription(AccessibilityServiceInfo info);
+
+        public String getSettingsActivityName(AccessibilityServiceInfo info);
+
+        public int getCapabilities(AccessibilityServiceInfo info);
+    }
+
+    static class AccessibilityServiceInfoStubImpl implements AccessibilityServiceInfoVersionImpl {
+
+        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info) {
+            return false;
+        }
+
+        public String getDescription(AccessibilityServiceInfo info) {
+            return null;
+        }
+
+        public String getId(AccessibilityServiceInfo info) {
+            return null;
+        }
+
+        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info) {
+            return null;
+        }
+
+        public String getSettingsActivityName(AccessibilityServiceInfo info) {
+            return null;
+        }
+
+        public int getCapabilities(AccessibilityServiceInfo info) {
+            return 0;
+        }
+    }
+
+    static class AccessibilityServiceInfoIcsImpl extends AccessibilityServiceInfoStubImpl {
+
+        @Override
+        public boolean getCanRetrieveWindowContent(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatIcs.getCanRetrieveWindowContent(info);
+        }
+
+        @Override
+        public String getDescription(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatIcs.getDescription(info);
+        }
+
+        @Override
+        public String getId(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatIcs.getId(info);
+        }
+
+        @Override
+        public ResolveInfo getResolveInfo(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatIcs.getResolveInfo(info);
+        }
+
+        @Override
+        public String getSettingsActivityName(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatIcs.getSettingsActivityName(info);
+        }
+
+        @Override
+        public int getCapabilities(AccessibilityServiceInfo info) {
+            if (getCanRetrieveWindowContent(info)) {
+                return CAPABILITY_CAN_RETRIEVE_WINDOW_CONTENT;
+            }
+            return 0;
+        }
+    }
+
+    static class AccessibilityServiceInfoJellyBeanMr2 extends AccessibilityServiceInfoIcsImpl {
+        @Override
+        public int getCapabilities(AccessibilityServiceInfo info) {
+            return AccessibilityServiceInfoCompatJellyBeanMr2.getCapabilities(info);
         }
     }
 }

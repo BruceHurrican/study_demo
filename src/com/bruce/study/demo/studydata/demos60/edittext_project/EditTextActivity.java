@@ -26,7 +26,7 @@ import com.bruce.study.demo.R;
  * EditText 练习
  * Created by BruceHurrican on 2015/6/28.
  */
-public class EditTextActivity extends Activity{
+public class EditTextActivity extends Activity {
     private TextView tv_edittextproject;
     private EditText et_edittextproject;
 

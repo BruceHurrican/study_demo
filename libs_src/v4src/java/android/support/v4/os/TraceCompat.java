@@ -18,7 +18,7 @@ import android.os.Build;
 /**
  * Writes trace events to the system trace buffer.  These trace events can be
  * collected and visualized using the Systrace tool.
- *
+ * <p>
  * <p>This tracing mechanism is independent of the method tracing mechanism
  * offered by {@link android.os.Debug#startMethodTracing}.  In particular, it enables
  * tracing of events that occur across multiple processes.
@@ -30,13 +30,13 @@ public class TraceCompat {
     /**
      * Writes a trace message to indicate that a given section of code has begun. This call must
      * be followed by a corresponding call to {@link #endSection()} on the same thread.
-     *
+     * <p>
      * <p class="note"> At this time the vertical bar character '|', newline character '\n', and
      * null character '\0' are used internally by the tracing mechanism.  If sectionName contains
      * these characters they will be replaced with a space character in the trace.
      *
      * @param sectionName The name of the code section to appear in the trace.  This may be at
-     * most 127 Unicode code units long.
+     *                    most 127 Unicode code units long.
      */
 
     public static void beginSection(String sectionName) {

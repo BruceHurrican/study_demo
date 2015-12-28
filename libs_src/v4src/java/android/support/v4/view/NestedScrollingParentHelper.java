@@ -23,13 +23,13 @@ import android.view.ViewGroup;
 /**
  * Helper class for implementing nested scrolling parent views compatible with Android platform
  * versions earlier than Android 5.0 Lollipop (API 21).
- *
+ * <p>
  * <p>{@link android.view.ViewGroup ViewGroup} subclasses should instantiate a final instance
  * of this class as a field at construction. For each <code>ViewGroup</code> method that has
  * a matching method signature in this class, delegate the operation to the helper instance
  * in an overriden method implementation. This implements the standard framework policy
  * for nested scrolling.</p>
- *
+ * <p>
  * <p>Views invoking nested scrolling functionality should always do so from the relevant
  * {@link ViewCompat}, {@link ViewGroupCompat} or {@link ViewParentCompat} compatibility
  * shim static methods. This ensures interoperability with nested scrolling views on Android
@@ -49,7 +49,7 @@ public class NestedScrollingParentHelper {
     /**
      * Called when a nested scrolling operation initiated by a descendant view is accepted
      * by this ViewGroup.
-     *
+     * <p>
      * <p>This is a delegate method. Call it from your {@link android.view.ViewGroup ViewGroup}
      * subclass method/{@link NestedScrollingParent} interface method with the same signature
      * to implement the standard policy.</p>
@@ -60,7 +60,7 @@ public class NestedScrollingParentHelper {
 
     /**
      * Return the current axes of nested scrolling for this ViewGroup.
-     *
+     * <p>
      * <p>This is a delegate method. Call it from your {@link android.view.ViewGroup ViewGroup}
      * subclass method/{@link NestedScrollingParent} interface method with the same signature
      * to implement the standard policy.</p>
@@ -71,7 +71,7 @@ public class NestedScrollingParentHelper {
 
     /**
      * React to a nested scroll operation ending.
-     *
+     * <p>
      * <p>This is a delegate method. Call it from your {@link android.view.ViewGroup ViewGroup}
      * subclass method/{@link NestedScrollingParent} interface method with the same signature
      * to implement the standard policy.</p>

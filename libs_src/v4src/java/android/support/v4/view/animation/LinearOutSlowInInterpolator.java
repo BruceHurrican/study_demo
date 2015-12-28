@@ -18,7 +18,7 @@ package android.support.v4.view.animation;
 
 /**
  * Interpolator corresponding to {@link android.R.interpolator#linear_out_slow_in}.
- *
+ * <p>
  * Uses a lookup table for the Bezier curve from (0,0) to (1,1) with control points:
  * P0 (0, 0)
  * P1 (0, 0)
@@ -31,7 +31,7 @@ public class LinearOutSlowInInterpolator extends LookupTableInterpolator {
      * Lookup table values sampled with x at regular intervals between 0 and 1 for a total of
      * 201 points.
      */
-    private static final float[] VALUES = new float[] {
+    private static final float[] VALUES = new float[]{
             0.0000f, 0.0222f, 0.0424f, 0.0613f, 0.0793f, 0.0966f, 0.1132f,
             0.1293f, 0.1449f, 0.1600f, 0.1747f, 0.1890f, 0.2029f, 0.2165f,
             0.2298f, 0.2428f, 0.2555f, 0.2680f, 0.2802f, 0.2921f, 0.3038f,

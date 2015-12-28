@@ -20,7 +20,7 @@ import android.view.View;
 
 /**
  * Listener for applying window insets on a view in a custom way.
- *
+ * <p>
  * <p>Apps may choose to implement this interface if they want to apply custom policy
  * to the way that window insets are treated for a view. If an OnApplyWindowInsetsListener
  * is set, it's
@@ -35,7 +35,7 @@ public interface OnApplyWindowInsetsListener {
      * on a View, this listener method will be called instead of the view's own
      * {@code onApplyWindowInsets} method.
      *
-     * @param v The view applying window insets
+     * @param v      The view applying window insets
      * @param insets The insets to apply
      * @return The insets supplied, minus any insets that were consumed
      */

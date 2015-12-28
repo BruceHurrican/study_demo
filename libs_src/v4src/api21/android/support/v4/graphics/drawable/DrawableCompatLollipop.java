@@ -32,8 +32,8 @@ class DrawableCompatLollipop {
     }
 
     public static void setHotspotBounds(Drawable drawable, int left, int top,
-            int right, int bottom) {
-        drawable.setHotspotBounds( left, top, right, bottom);
+                                        int right, int bottom) {
+        drawable.setHotspotBounds(left, top, right, bottom);
     }
 
     public static void setTint(Drawable drawable, int tint) {

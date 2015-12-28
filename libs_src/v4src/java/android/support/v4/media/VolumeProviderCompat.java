@@ -32,37 +32,26 @@ import java.lang.annotation.RetentionPolicy;
 public abstract class VolumeProviderCompat {
 
     /**
-     * @hide
-     */
-    @IntDef({VOLUME_CONTROL_FIXED, VOLUME_CONTROL_RELATIVE, VOLUME_CONTROL_ABSOLUTE})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ControlType {}
-
-    /**
      * The volume is fixed and can not be modified. Requests to change volume
      * should be ignored.
      */
     public static final int VOLUME_CONTROL_FIXED = 0;
-
     /**
      * The volume control uses relative adjustment via
      * {@link #onAdjustVolume(int)}. Attempts to set the volume to a specific
      * value should be ignored.
      */
     public static final int VOLUME_CONTROL_RELATIVE = 1;
-
     /**
      * The volume control uses an absolute value. It may be adjusted using
      * {@link #onAdjustVolume(int)} or set directly using
      * {@link #onSetVolumeTo(int)}.
      */
     public static final int VOLUME_CONTROL_ABSOLUTE = 2;
-
     private final int mControlType;
     private final int mMaxVolume;
     private int mCurrentVolume;
     private Callback mCallback;
-
     private Object mVolumeProviderObj;
 
     /**
@@ -70,8 +59,8 @@ public abstract class VolumeProviderCompat {
      * the type of volume control and the maximum volume that can be used.
      *
      * @param volumeControl The method for controlling volume that is used by
-     *            this provider.
-     * @param maxVolume The maximum allowed volume.
+     *                      this provider.
+     * @param maxVolume     The maximum allowed volume.
      * @param currentVolume The current volume.
      */
     public VolumeProviderCompat(@ControlType int volumeControl, int maxVolume, int currentVolume) {
@@ -87,6 +76,23 @@ public abstract class VolumeProviderCompat {
      */
     public final int getCurrentVolume() {
         return mCurrentVolume;
+    }
+
+    /**
+     * Set the current volume and notify the system that the volume has been
+     * changed.
+     *
+     * @param currentVolume The current volume of the output.
+     */
+    public final void setCurrentVolume(int currentVolume) {
+        mCurrentVolume = currentVolume;
+        Object volumeProviderObj = getVolumeProvider();
+        if (volumeProviderObj != null) {
+            VolumeProviderCompatApi21.setCurrentVolume(volumeProviderObj, currentVolume);
+        }
+        if (mCallback != null) {
+            mCallback.onVolumeChanged(this);
+        }
     }
 
     /**
@@ -106,23 +112,6 @@ public abstract class VolumeProviderCompat {
      */
     public final int getMaxVolume() {
         return mMaxVolume;
-    }
-
-    /**
-     * Set the current volume and notify the system that the volume has been
-     * changed.
-     *
-     * @param currentVolume The current volume of the output.
-     */
-    public final void setCurrentVolume(int currentVolume) {
-        mCurrentVolume = currentVolume;
-        Object volumeProviderObj = getVolumeProvider();
-        if (volumeProviderObj != null) {
-            VolumeProviderCompatApi21.setCurrentVolume(volumeProviderObj, currentVolume);
-        }
-        if (mCallback != null) {
-            mCallback.onVolumeChanged(this);
-        }
     }
 
     /**
@@ -167,17 +156,25 @@ public abstract class VolumeProviderCompat {
         mVolumeProviderObj = VolumeProviderCompatApi21.createVolumeProvider(
                 mControlType, mMaxVolume, mCurrentVolume, new VolumeProviderCompatApi21.Delegate() {
 
-            @Override
-            public void onSetVolumeTo(int volume) {
-                VolumeProviderCompat.this.onSetVolumeTo(volume);
-            }
+                    @Override
+                    public void onSetVolumeTo(int volume) {
+                        VolumeProviderCompat.this.onSetVolumeTo(volume);
+                    }
 
-            @Override
-            public void onAdjustVolume(int direction) {
-                VolumeProviderCompat.this.onAdjustVolume(direction);
-            }
-        });
+                    @Override
+                    public void onAdjustVolume(int direction) {
+                        VolumeProviderCompat.this.onAdjustVolume(direction);
+                    }
+                });
         return mVolumeProviderObj;
+    }
+
+    /**
+     * @hide
+     */
+    @IntDef({VOLUME_CONTROL_FIXED, VOLUME_CONTROL_RELATIVE, VOLUME_CONTROL_ABSOLUTE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ControlType {
     }
 
     /**

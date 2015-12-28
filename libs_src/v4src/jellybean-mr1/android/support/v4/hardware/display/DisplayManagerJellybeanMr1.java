@@ -25,14 +25,14 @@ final class DisplayManagerJellybeanMr1 {
     }
 
     public static Display getDisplay(Object displayManagerObj, int displayId) {
-        return ((android.hardware.display.DisplayManager)displayManagerObj).getDisplay(displayId);
+        return ((android.hardware.display.DisplayManager) displayManagerObj).getDisplay(displayId);
     }
 
     public static Display[] getDisplays(Object displayManagerObj) {
-        return ((android.hardware.display.DisplayManager)displayManagerObj).getDisplays();
+        return ((android.hardware.display.DisplayManager) displayManagerObj).getDisplays();
     }
 
     public static Display[] getDisplays(Object displayManagerObj, String category) {
-        return ((android.hardware.display.DisplayManager)displayManagerObj).getDisplays(category);
+        return ((android.hardware.display.DisplayManager) displayManagerObj).getDisplays(category);
     }
 }

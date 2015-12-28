@@ -43,15 +43,6 @@ public class Space extends View {
     }
 
     /**
-     * Draw nothing.
-     *
-     * @param canvas an unused parameter.
-     */
-    @Override
-    public void draw(Canvas canvas) {
-    }
-
-    /**
      * Compare to: {@link View#getDefaultSize(int, int)}
      * If mode is AT_MOST, return the child size instead of the parent size
      * (unless it is too big).
@@ -73,6 +64,15 @@ public class Space extends View {
                 break;
         }
         return result;
+    }
+
+    /**
+     * Draw nothing.
+     *
+     * @param canvas an unused parameter.
+     */
+    @Override
+    public void draw(Canvas canvas) {
     }
 
     @Override

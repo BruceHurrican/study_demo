@@ -21,7 +21,7 @@ import android.view.View;
 class ViewPropertyAnimatorCompatKK {
 
     public static void setUpdateListener(final View view,
-            final ViewPropertyAnimatorUpdateListener listener) {
+                                         final ViewPropertyAnimatorUpdateListener listener) {
         view.animate().setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {

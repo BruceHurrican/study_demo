@@ -29,19 +29,6 @@ import android.view.accessibility.AccessibilityNodeProvider;
  */
 class AccessibilityDelegateCompatJellyBean {
 
-    public interface AccessibilityDelegateBridgeJellyBean {
-        public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event);
-        public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event);
-        public void onInitializeAccessibilityNodeInfo(View host, Object info);
-        public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event);
-        public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child,
-            AccessibilityEvent event);
-        public void sendAccessibilityEvent(View host, int eventType);
-        public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event);
-        public Object getAccessibilityNodeProvider(View host);
-        public boolean performAccessibilityAction(View host, int action, Bundle args);
-    }
-
     public static Object newAccessibilityDelegateBridge(
             final AccessibilityDelegateBridgeJellyBean bridge) {
         return new AccessibilityDelegate() {
@@ -68,7 +55,7 @@ class AccessibilityDelegateCompatJellyBean {
 
             @Override
             public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child,
-                    AccessibilityEvent event) {
+                                                           AccessibilityEvent event) {
                 return bridge.onRequestSendAccessibilityEvent(host, child, event);
             }
 
@@ -95,12 +82,33 @@ class AccessibilityDelegateCompatJellyBean {
     }
 
     public static Object getAccessibilityNodeProvider(Object delegate,
-            View host) {
+                                                      View host) {
         return ((AccessibilityDelegate) delegate).getAccessibilityNodeProvider(host);
     }
 
     public static boolean performAccessibilityAction(Object delegate, View host, int action,
-            Bundle args) {
+                                                     Bundle args) {
         return ((AccessibilityDelegate) delegate).performAccessibilityAction(host, action, args);
+    }
+
+    public interface AccessibilityDelegateBridgeJellyBean {
+        public boolean dispatchPopulateAccessibilityEvent(View host, AccessibilityEvent event);
+
+        public void onInitializeAccessibilityEvent(View host, AccessibilityEvent event);
+
+        public void onInitializeAccessibilityNodeInfo(View host, Object info);
+
+        public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event);
+
+        public boolean onRequestSendAccessibilityEvent(ViewGroup host, View child,
+                                                       AccessibilityEvent event);
+
+        public void sendAccessibilityEvent(View host, int eventType);
+
+        public void sendAccessibilityEventUnchecked(View host, AccessibilityEvent event);
+
+        public Object getAccessibilityNodeProvider(View host);
+
+        public boolean performAccessibilityAction(View host, int action, Bundle args);
     }
 }

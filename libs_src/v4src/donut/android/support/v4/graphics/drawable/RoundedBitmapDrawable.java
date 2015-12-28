@@ -35,22 +35,39 @@ public abstract class RoundedBitmapDrawable extends Drawable {
     private static final int DEFAULT_PAINT_FLAGS =
             Paint.FILTER_BITMAP_FLAG | Paint.ANTI_ALIAS_FLAG;
     final Bitmap mBitmap;
-    private int mTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
-    private int mGravity = Gravity.FILL;
+    final Rect mDstRect = new Rect();   // Gravity.apply() sets this
     private final Paint mPaint = new Paint(DEFAULT_PAINT_FLAGS);
     private final BitmapShader mBitmapShader;
     private final Matrix mShaderMatrix = new Matrix();
-    private float mCornerRadius;
-
-    final Rect mDstRect = new Rect();   // Gravity.apply() sets this
     private final RectF mDstRectF = new RectF();
-
+    private int mTargetDensity = DisplayMetrics.DENSITY_DEFAULT;
+    private int mGravity = Gravity.FILL;
+    private float mCornerRadius;
     private boolean mApplyGravity = true;
     private boolean mIsCircular;
 
     // These are scaled to match the target density.
     private int mBitmapWidth;
     private int mBitmapHeight;
+
+    RoundedBitmapDrawable(Resources res, Bitmap bitmap) {
+        if (res != null) {
+            mTargetDensity = res.getDisplayMetrics().densityDpi;
+        }
+
+        mBitmap = bitmap;
+        if (mBitmap != null) {
+            computeBitmapSize();
+            mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        } else {
+            mBitmapWidth = mBitmapHeight = -1;
+            mBitmapShader = null;
+        }
+    }
+
+    private static boolean isGreaterThanZero(float toCompare) {
+        return toCompare > 0.05f;
+    }
 
     /**
      * Returns the paint used to render this drawable.
@@ -77,7 +94,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * specified canvas.
      *
      * @param canvas The Canvas from which the density scale must be obtained.
-     *
      * @see android.graphics.Bitmap#setDensity(int)
      * @see android.graphics.Bitmap#getDensity()
      */
@@ -89,7 +105,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Set the density scale at which this drawable will be rendered.
      *
      * @param metrics The DisplayMetrics indicating the density scale for this drawable.
-     *
      * @see android.graphics.Bitmap#setDensity(int)
      * @see android.graphics.Bitmap#getDensity()
      */
@@ -101,7 +116,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Set the density at which this drawable will be rendered.
      *
      * @param density The density scale for this drawable.
-     *
      * @see android.graphics.Bitmap#setDensity(int)
      * @see android.graphics.Bitmap#getDensity()
      */
@@ -119,7 +133,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Get the gravity used to position/stretch the bitmap within its bounds.
      *
      * @return the gravity applied to the bitmap
-     *
      * @see android.view.Gravity
      */
     public int getGravity() {
@@ -130,7 +143,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Set the gravity used to position/stretch the bitmap within its bounds.
      *
      * @param gravity the gravity
-     *
      * @see android.view.Gravity
      */
     public void setGravity(int gravity) {
@@ -144,12 +156,11 @@ public abstract class RoundedBitmapDrawable extends Drawable {
     /**
      * Enables or disables the mipmap hint for this drawable's bitmap.
      * See {@link Bitmap#setHasMipMap(boolean)} for more information.
-     *
+     * <p>
      * If the bitmap is null, or the current API version does not support setting a mipmap hint,
      * calling this method has no effect.
      *
      * @param mipMap True if the bitmap should use mipmaps, false otherwise.
-     *
      * @see #hasMipMap()
      */
     public void setMipMap(boolean mipMap) {
@@ -160,8 +171,7 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Indicates whether the mipmap hint is enabled on this drawable's bitmap.
      *
      * @return True if the mipmap hint is set, false otherwise. If the bitmap
-     *         is null, this method always returns false.
-     *
+     * is null, this method always returns false.
      * @see #setMipMap(boolean)
      */
     public boolean hasMipMap() {
@@ -173,7 +183,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * the edges of the bitmap only so it applies only when the drawable is rotated.
      *
      * @param aa True if the bitmap should be anti-aliased, false otherwise.
-     *
      * @see #hasAntiAlias()
      */
     public void setAntiAlias(boolean aa) {
@@ -185,7 +194,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
      * Indicates whether anti-aliasing is enabled for this drawable.
      *
      * @return True if anti-aliasing is enabled, false otherwise.
-     *
      * @see #setAntiAlias(boolean)
      */
     public boolean hasAntiAlias() {
@@ -205,7 +213,7 @@ public abstract class RoundedBitmapDrawable extends Drawable {
     }
 
     void gravityCompatApply(int gravity, int bitmapWidth, int bitmapHeight,
-            Rect bounds, Rect outRect) {
+                            Rect bounds, Rect outRect) {
         throw new UnsupportedOperationException();
     }
 
@@ -229,7 +237,7 @@ public abstract class RoundedBitmapDrawable extends Drawable {
 
             if (mBitmapShader != null) {
                 // setup shader matrix
-                mShaderMatrix.setTranslate(mDstRectF.left,mDstRectF.top);
+                mShaderMatrix.setTranslate(mDstRectF.left, mDstRectF.top);
                 mShaderMatrix.preScale(
                         mDstRectF.width() / mBitmap.getWidth(),
                         mDstRectF.height() / mBitmap.getHeight());
@@ -256,6 +264,10 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         }
     }
 
+    public int getAlpha() {
+        return mPaint.getAlpha();
+    }
+
     @Override
     public void setAlpha(int alpha) {
         final int oldAlpha = mPaint.getAlpha();
@@ -265,8 +277,8 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         }
     }
 
-    public int getAlpha() {
-        return mPaint.getAlpha();
+    public ColorFilter getColorFilter() {
+        return mPaint.getColorFilter();
     }
 
     @Override
@@ -275,8 +287,16 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         invalidateSelf();
     }
 
-    public ColorFilter getColorFilter() {
-        return mPaint.getColorFilter();
+    private void updateCircularCornerRadius() {
+        final int minCircularSize = Math.min(mBitmapHeight, mBitmapWidth);
+        mCornerRadius = minCircularSize / 2;
+    }
+
+    /**
+     * @return <code>true</code> if the image is circular, else <code>false</code>.
+     */
+    public boolean isCircular() {
+        return mIsCircular;
     }
 
     /**
@@ -295,16 +315,20 @@ public abstract class RoundedBitmapDrawable extends Drawable {
         }
     }
 
-    private void updateCircularCornerRadius() {
-        final int minCircularSize = Math.min(mBitmapHeight, mBitmapWidth);
-        mCornerRadius = minCircularSize / 2;
+    @Override
+    protected void onBoundsChange(Rect bounds) {
+        super.onBoundsChange(bounds);
+        if (mIsCircular) {
+            updateCircularCornerRadius();
+        }
+        mApplyGravity = true;
     }
 
     /**
-     * @return <code>true</code> if the image is circular, else <code>false</code>.
+     * @return The corner radius applied when drawing the bitmap.
      */
-    public boolean isCircular() {
-        return mIsCircular;
+    public float getCornerRadius() {
+        return mCornerRadius;
     }
 
     /**
@@ -322,22 +346,6 @@ public abstract class RoundedBitmapDrawable extends Drawable {
 
         mCornerRadius = cornerRadius;
         invalidateSelf();
-    }
-
-    @Override
-    protected void onBoundsChange(Rect bounds) {
-        super.onBoundsChange(bounds);
-        if (mIsCircular) {
-            updateCircularCornerRadius();
-        }
-        mApplyGravity = true;
-    }
-
-    /**
-     * @return The corner radius applied when drawing the bitmap.
-     */
-    public float getCornerRadius() {
-        return mCornerRadius;
     }
 
     @Override
@@ -361,24 +369,5 @@ public abstract class RoundedBitmapDrawable extends Drawable {
                 || mPaint.getAlpha() < 255
                 || isGreaterThanZero(mCornerRadius))
                 ? PixelFormat.TRANSLUCENT : PixelFormat.OPAQUE;
-    }
-
-    RoundedBitmapDrawable(Resources res, Bitmap bitmap) {
-        if (res != null) {
-            mTargetDensity = res.getDisplayMetrics().densityDpi;
-        }
-
-        mBitmap = bitmap;
-        if (mBitmap != null) {
-            computeBitmapSize();
-            mBitmapShader = new BitmapShader(mBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        } else {
-            mBitmapWidth = mBitmapHeight = -1;
-            mBitmapShader = null;
-        }
-    }
-
-    private static boolean isGreaterThanZero(float toCompare) {
-        return toCompare > 0.05f;
     }
 }

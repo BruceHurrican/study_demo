@@ -31,12 +31,12 @@ abstract public class AnimatorCompatHelper {
         }
     }
 
-    public static ValueAnimatorCompat emptyValueAnimator() {
-        return IMPL.emptyValueAnimator();
-    }
-
     AnimatorCompatHelper() {
 
+    }
+
+    public static ValueAnimatorCompat emptyValueAnimator() {
+        return IMPL.emptyValueAnimator();
     }
 
     public static void clearInterpolator(View view) {

@@ -51,11 +51,6 @@ public class MyView extends LinearLayout implements Runnable {
         init();
     }
 
-    private void init() {
-        setWillNotDraw(false);
-        paint.setColor(Color.GREEN);
-    }
-
     public MyView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -65,6 +60,11 @@ public class MyView extends LinearLayout implements Runnable {
     public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+    }
+
+    private void init() {
+        setWillNotDraw(false);
+        paint.setColor(Color.GREEN);
     }
 
     @Override

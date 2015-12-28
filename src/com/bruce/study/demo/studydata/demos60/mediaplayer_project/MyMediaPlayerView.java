@@ -35,13 +35,13 @@ import java.io.IOException;
  */
 public class MyMediaPlayerView extends SurfaceView implements SurfaceHolder.Callback, Runnable {
     public static final String TAG = "MyMediaPlayerView -->";
-    private SurfaceHolder surfaceHolder;
-    private Paint paint;
-    private boolean flag;
     // 声明音乐的状态常量
     private final int MEDIA_PLAYER_PAUSE = 0; // 暂停
     private final int MEDIA_PLAYER_PLAY = 1; // 播放中
     private final int MEDIA_PLAYER_STOP = 2; // 停止
+    private SurfaceHolder surfaceHolder;
+    private Paint paint;
+    private boolean flag;
     private int mediaState = 0; // 音乐的当前状态
     private MediaPlayer mediaPlayer; // 声明一个音乐播放器
     private int currentTime; // 当前音乐播放的时间点

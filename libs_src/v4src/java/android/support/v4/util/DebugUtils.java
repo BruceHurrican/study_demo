@@ -33,7 +33,7 @@ public class DebugUtils {
                 simpleName = cls.getClass().getName();
                 int end = simpleName.lastIndexOf('.');
                 if (end > 0) {
-                    simpleName = simpleName.substring(end+1);
+                    simpleName = simpleName.substring(end + 1);
                 }
             }
             out.append(simpleName);

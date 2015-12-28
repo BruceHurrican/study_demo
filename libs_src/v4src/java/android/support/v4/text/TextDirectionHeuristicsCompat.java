@@ -23,7 +23,6 @@ import java.nio.CharBuffer;
 
 /**
  * Some objects that implement TextDirectionHeuristic.
- *
  */
 public class TextDirectionHeuristicsCompat {
 
@@ -104,6 +103,16 @@ public class TextDirectionHeuristicsCompat {
     }
 
     /**
+     * Interface for an algorithm to guess the direction of a paragraph of text.
+     */
+    private static interface TextDirectionAlgorithm {
+        /**
+         * Returns whether the range of text is RTL according to the algorithm.
+         */
+        int checkRtl(CharSequence cs, int start, int count);
+    }
+
+    /**
      * Computes the text direction based on an algorithm.  Subclasses implement
      * {@link #defaultIsRtl} to handle cases where the algorithm cannot determine the
      * direction from the text alone.
@@ -137,7 +146,7 @@ public class TextDirectionHeuristicsCompat {
         }
 
         private boolean doCheck(CharSequence cs, int start, int count) {
-            switch(mAlgorithm.checkRtl(cs, start, count)) {
+            switch (mAlgorithm.checkRtl(cs, start, count)) {
                 case STATE_TRUE:
                     return true;
                 case STATE_FALSE:
@@ -164,20 +173,15 @@ public class TextDirectionHeuristicsCompat {
     }
 
     /**
-     * Interface for an algorithm to guess the direction of a paragraph of text.
-     */
-    private static interface TextDirectionAlgorithm {
-        /**
-         * Returns whether the range of text is RTL according to the algorithm.
-         */
-        int checkRtl(CharSequence cs, int start, int count);
-    }
-
-    /**
      * Algorithm that uses the first strong directional character to determine the paragraph
      * direction. This is the standard Unicode Bidirectional algorithm.
      */
     private static class FirstStrong implements TextDirectionAlgorithm {
+        public static final FirstStrong INSTANCE = new FirstStrong();
+
+        private FirstStrong() {
+        }
+
         @Override
         public int checkRtl(CharSequence cs, int start, int count) {
             int result = STATE_UNKNOWN;
@@ -186,11 +190,6 @@ public class TextDirectionHeuristicsCompat {
             }
             return result;
         }
-
-        private FirstStrong() {
-        }
-
-        public static final FirstStrong INSTANCE = new FirstStrong();
     }
 
     /**
@@ -199,7 +198,13 @@ public class TextDirectionHeuristicsCompat {
      * direction of text.
      */
     private static class AnyStrong implements TextDirectionAlgorithm {
+        public static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
+        public static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
         private final boolean mLookForRtl;
+
+        private AnyStrong(boolean lookForRtl) {
+            this.mLookForRtl = lookForRtl;
+        }
 
         @Override
         public int checkRtl(CharSequence cs, int start, int count) {
@@ -227,19 +232,15 @@ public class TextDirectionHeuristicsCompat {
             }
             return STATE_UNKNOWN;
         }
-
-        private AnyStrong(boolean lookForRtl) {
-            this.mLookForRtl = lookForRtl;
-        }
-
-        public static final AnyStrong INSTANCE_RTL = new AnyStrong(true);
-        public static final AnyStrong INSTANCE_LTR = new AnyStrong(false);
     }
 
     /**
      * Algorithm that uses the Locale direction to force the direction of a paragraph.
      */
     private static class TextDirectionHeuristicLocale extends TextDirectionHeuristicImpl {
+
+        public static final TextDirectionHeuristicLocale INSTANCE =
+                new TextDirectionHeuristicLocale();
 
         public TextDirectionHeuristicLocale() {
             super(null);
@@ -250,8 +251,5 @@ public class TextDirectionHeuristicsCompat {
             final int dir = TextUtilsCompat.getLayoutDirectionFromLocale(java.util.Locale.getDefault());
             return (dir == ViewCompat.LAYOUT_DIRECTION_RTL);
         }
-
-        public static final TextDirectionHeuristicLocale INSTANCE =
-                new TextDirectionHeuristicLocale();
     }
 }

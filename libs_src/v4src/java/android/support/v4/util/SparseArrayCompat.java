@@ -44,10 +44,10 @@ public class SparseArrayCompat<E> implements Cloneable {
      */
     public SparseArrayCompat(int initialCapacity) {
         if (initialCapacity == 0) {
-            mKeys =  ContainerHelpers.EMPTY_INTS;
-            mValues =  ContainerHelpers.EMPTY_OBJECTS;
+            mKeys = ContainerHelpers.EMPTY_INTS;
+            mValues = ContainerHelpers.EMPTY_OBJECTS;
         } else {
-            initialCapacity =  ContainerHelpers.idealIntArraySize(initialCapacity);
+            initialCapacity = ContainerHelpers.idealIntArraySize(initialCapacity);
             mKeys = new int[initialCapacity];
             mValues = new Object[initialCapacity];
         }
@@ -82,7 +82,7 @@ public class SparseArrayCompat<E> implements Cloneable {
      */
     @SuppressWarnings("unchecked")
     public E get(int key, E valueIfKeyNotFound) {
-        int i =  ContainerHelpers.binarySearch(mKeys, mSize, key);
+        int i = ContainerHelpers.binarySearch(mKeys, mSize, key);
 
         if (i < 0 || mValues[i] == DELETED) {
             return valueIfKeyNotFound;
@@ -95,7 +95,7 @@ public class SparseArrayCompat<E> implements Cloneable {
      * Removes the mapping from the specified key, if there was any.
      */
     public void delete(int key) {
-        int i =  ContainerHelpers.binarySearch(mKeys, mSize, key);
+        int i = ContainerHelpers.binarySearch(mKeys, mSize, key);
 
         if (i >= 0) {
             if (mValues[i] != DELETED) {
@@ -126,7 +126,7 @@ public class SparseArrayCompat<E> implements Cloneable {
      * Remove a range of mappings as a batch.
      *
      * @param index Index to begin at
-     * @param size Number of mappings to remove
+     * @param size  Number of mappings to remove
      */
     public void removeAtRange(int index, int size) {
         final int end = Math.min(mSize, index + size);
@@ -169,7 +169,7 @@ public class SparseArrayCompat<E> implements Cloneable {
      * was one.
      */
     public void put(int key, E value) {
-        int i =  ContainerHelpers.binarySearch(mKeys, mSize, key);
+        int i = ContainerHelpers.binarySearch(mKeys, mSize, key);
 
         if (i >= 0) {
             mValues[i] = value;
@@ -186,11 +186,11 @@ public class SparseArrayCompat<E> implements Cloneable {
                 gc();
 
                 // Search again because indices may have changed.
-                i = ~ ContainerHelpers.binarySearch(mKeys, mSize, key);
+                i = ~ContainerHelpers.binarySearch(mKeys, mSize, key);
             }
 
             if (mSize >= mKeys.length) {
-                int n =  ContainerHelpers.idealIntArraySize(mSize + 1);
+                int n = ContainerHelpers.idealIntArraySize(mSize + 1);
 
                 int[] nkeys = new int[n];
                 Object[] nvalues = new Object[n];
@@ -277,7 +277,7 @@ public class SparseArrayCompat<E> implements Cloneable {
             gc();
         }
 
-        return  ContainerHelpers.binarySearch(mKeys, mSize, key);
+        return ContainerHelpers.binarySearch(mKeys, mSize, key);
     }
 
     /**
@@ -333,7 +333,7 @@ public class SparseArrayCompat<E> implements Cloneable {
 
         int pos = mSize;
         if (pos >= mKeys.length) {
-            int n =  ContainerHelpers.idealIntArraySize(pos + 1);
+            int n = ContainerHelpers.idealIntArraySize(pos + 1);
 
             int[] nkeys = new int[n];
             Object[] nvalues = new Object[n];
@@ -353,7 +353,7 @@ public class SparseArrayCompat<E> implements Cloneable {
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * <p>This implementation composes a string by iterating over its mappings. If
      * this map contains itself as a value, the string "(this Map)"
      * will appear in its place.
@@ -366,7 +366,7 @@ public class SparseArrayCompat<E> implements Cloneable {
 
         StringBuilder buffer = new StringBuilder(mSize * 28);
         buffer.append('{');
-        for (int i=0; i<mSize; i++) {
+        for (int i = 0; i < mSize; i++) {
             if (i > 0) {
                 buffer.append(", ");
             }

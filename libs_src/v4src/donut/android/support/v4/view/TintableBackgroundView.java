@@ -27,6 +27,14 @@ import android.support.annotation.Nullable;
 public interface TintableBackgroundView {
 
     /**
+     * Return the tint applied to the background drawable, if specified.
+     *
+     * @return the tint applied to the background drawable
+     */
+    @Nullable
+    ColorStateList getSupportBackgroundTintList();
+
+    /**
      * Applies a tint to the background drawable. Does not modify the current tint
      * mode, which is {@link PorterDuff.Mode#SRC_IN} by default.
      * <p>
@@ -34,18 +42,19 @@ public interface TintableBackgroundView {
      * mutate the drawable and apply the specified tint and tint mode.
      *
      * @param tint the tint to apply, may be {@code null} to clear tint
-     *
      * @see #getSupportBackgroundTintList()
      */
     void setSupportBackgroundTintList(@Nullable ColorStateList tint);
 
     /**
-     * Return the tint applied to the background drawable, if specified.
+     * Return the blending mode used to apply the tint to the background
+     * drawable, if specified.
      *
-     * @return the tint applied to the background drawable
+     * @return the blending mode used to apply the tint to the background
+     * drawable
      */
     @Nullable
-    ColorStateList getSupportBackgroundTintList();
+    PorterDuff.Mode getSupportBackgroundTintMode();
 
     /**
      * Specifies the blending mode used to apply the tint specified by
@@ -57,14 +66,4 @@ public interface TintableBackgroundView {
      * @see #getSupportBackgroundTintMode()
      */
     void setSupportBackgroundTintMode(@Nullable PorterDuff.Mode tintMode);
-
-    /**
-     * Return the blending mode used to apply the tint to the background
-     * drawable, if specified.
-     *
-     * @return the blending mode used to apply the tint to the background
-     *         drawable
-     */
-    @Nullable
-    PorterDuff.Mode getSupportBackgroundTintMode();
 }

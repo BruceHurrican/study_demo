@@ -40,21 +40,23 @@ public class LogWriter extends Writer {
         mTag = tag;
     }
 
-    @Override public void close() {
+    @Override
+    public void close() {
         flushBuilder();
     }
 
-    @Override public void flush() {
+    @Override
+    public void flush() {
         flushBuilder();
     }
 
-    @Override public void write(char[] buf, int offset, int count) {
-        for(int i = 0; i < count; i++) {
+    @Override
+    public void write(char[] buf, int offset, int count) {
+        for (int i = 0; i < count; i++) {
             char c = buf[offset + i];
-            if ( c == '\n') {
+            if (c == '\n') {
                 flushBuilder();
-            }
-            else {
+            } else {
                 mBuilder.append(c);
             }
         }

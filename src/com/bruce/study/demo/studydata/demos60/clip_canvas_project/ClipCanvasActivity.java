@@ -23,7 +23,7 @@ import com.bruce.study.demo.base.BaseActivity;
  * 可视化区域 练习
  * Created by BruceHurrican on 2015/8/9.
  */
-public class ClipCanvasActivity extends BaseActivity{
+public class ClipCanvasActivity extends BaseActivity {
     @Override
     public String getTAG() {
         return null;

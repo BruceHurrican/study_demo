@@ -40,55 +40,43 @@ import java.lang.annotation.RetentionPolicy;
 public class DialogFragment extends Fragment
         implements DialogInterface.OnCancelListener, DialogInterface.OnDismissListener {
 
-    /** @hide */
-    @IntDef({STYLE_NORMAL, STYLE_NO_TITLE, STYLE_NO_FRAME, STYLE_NO_INPUT})
-    @Retention(RetentionPolicy.SOURCE)
-    private @interface DialogStyle {}
-
     /**
      * Style for {@link #setStyle(int, int)}: a basic,
      * normal dialog.
      */
     public static final int STYLE_NORMAL = 0;
-
     /**
      * Style for {@link #setStyle(int, int)}: don't include
      * a title area.
      */
     public static final int STYLE_NO_TITLE = 1;
-
     /**
      * Style for {@link #setStyle(int, int)}: don't draw
      * any frame at all; the view hierarchy returned by {@link #onCreateView}
      * is entirely responsible for drawing the dialog.
      */
     public static final int STYLE_NO_FRAME = 2;
-
     /**
      * Style for {@link #setStyle(int, int)}: like
      * {@link #STYLE_NO_FRAME}, but also disables all input to the dialog.
      * The user can not touch it, and its window will not receive input focus.
      */
     public static final int STYLE_NO_INPUT = 3;
-
     private static final String SAVED_DIALOG_STATE_TAG = "android:savedDialogState";
     private static final String SAVED_STYLE = "android:style";
     private static final String SAVED_THEME = "android:theme";
     private static final String SAVED_CANCELABLE = "android:cancelable";
     private static final String SAVED_SHOWS_DIALOG = "android:showsDialog";
     private static final String SAVED_BACK_STACK_ID = "android:backStackId";
-
     int mStyle = STYLE_NORMAL;
     int mTheme = 0;
     boolean mCancelable = true;
     boolean mShowsDialog = true;
     int mBackStackId = -1;
-
     Dialog mDialog;
     boolean mViewDestroyed;
     boolean mDismissed;
     boolean mShownByMe;
-
     public DialogFragment() {
     }
 
@@ -101,10 +89,10 @@ public class DialogFragment extends Fragment
      * created will have no effect.
      *
      * @param style Selects a standard style: may be {@link #STYLE_NORMAL},
-     * {@link #STYLE_NO_TITLE}, {@link #STYLE_NO_FRAME}, or
-     * {@link #STYLE_NO_INPUT}.
+     *              {@link #STYLE_NO_TITLE}, {@link #STYLE_NO_FRAME}, or
+     *              {@link #STYLE_NO_INPUT}.
      * @param theme Optional custom theme.  If 0, an appropriate theme (based
-     * on the style) will be selected for you.
+     *              on the style) will be selected for you.
      */
     public void setStyle(@DialogStyle int style, @StyleRes int theme) {
         mStyle = style;
@@ -123,9 +111,10 @@ public class DialogFragment extends Fragment
      * <em>not</em> add the transaction to the back stack.  When the fragment
      * is dismissed, a new transaction will be executed to remove it from
      * the activity.
+     *
      * @param manager The FragmentManager this fragment will be added to.
-     * @param tag The tag for this fragment, as per
-     * {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
+     * @param tag     The tag for this fragment, as per
+     *                {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
      */
     public void show(FragmentManager manager, String tag) {
         mDismissed = false;
@@ -138,9 +127,10 @@ public class DialogFragment extends Fragment
     /**
      * Display the dialog, adding the fragment using an existing transaction
      * and then committing the transaction.
+     *
      * @param transaction An existing transaction in which to add the fragment.
-     * @param tag The tag for this fragment, as per
-     * {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
+     * @param tag         The tag for this fragment, as per
+     *                    {@link FragmentTransaction#add(Fragment, String) FragmentTransaction.add}.
      * @return Returns the identifier of the committed transaction, as per
      * {@link FragmentTransaction#commit() FragmentTransaction.commit()}.
      */
@@ -198,7 +188,7 @@ public class DialogFragment extends Fragment
             }
         }
     }
-    
+
     public Dialog getDialog() {
         return mDialog;
     }
@@ -209,13 +199,20 @@ public class DialogFragment extends Fragment
     }
 
     /**
+     * Return the current value of {@link #setCancelable(boolean)}.
+     */
+    public boolean isCancelable() {
+        return mCancelable;
+    }
+
+    /**
      * Control whether the shown Dialog is cancelable.  Use this instead of
      * directly calling {@link Dialog#setCancelable(boolean)
      * Dialog.setCancelable(boolean)}, because DialogFragment needs to change
      * its behavior based on this.
      *
      * @param cancelable If true, the dialog is cancelable.  The default
-     * is true.
+     *                   is true.
      */
     public void setCancelable(boolean cancelable) {
         mCancelable = cancelable;
@@ -223,10 +220,10 @@ public class DialogFragment extends Fragment
     }
 
     /**
-     * Return the current value of {@link #setCancelable(boolean)}.
+     * Return the current value of {@link #setShowsDialog(boolean)}.
      */
-    public boolean isCancelable() {
-        return mCancelable;
+    public boolean getShowsDialog() {
+        return mShowsDialog;
     }
 
     /**
@@ -235,7 +232,7 @@ public class DialogFragment extends Fragment
      * and the fragment's view hierarchy will thus not be added to it.  This
      * allows you to instead use it as a normal fragment (embedded inside of
      * its activity).
-     *
+     * <p>
      * <p>This is normally set for you based on whether the fragment is
      * associated with a container view ID passed to
      * {@link FragmentTransaction#add(int, Fragment) FragmentTransaction.add(int, Fragment)}.
@@ -243,18 +240,11 @@ public class DialogFragment extends Fragment
      * initialized to false; otherwise, it will be true.
      *
      * @param showsDialog If true, the fragment will be displayed in a Dialog.
-     * If false, no Dialog will be created and the fragment's view hierarchly
-     * left undisturbed.
+     *                    If false, no Dialog will be created and the fragment's view hierarchly
+     *                    left undisturbed.
      */
     public void setShowsDialog(boolean showsDialog) {
         mShowsDialog = showsDialog;
-    }
-
-    /**
-     * Return the current value of {@link #setShowsDialog(boolean)}.
-     */
-    public boolean getShowsDialog() {
-        return mShowsDialog;
     }
 
     @Override
@@ -291,10 +281,12 @@ public class DialogFragment extends Fragment
             mShowsDialog = savedInstanceState.getBoolean(SAVED_SHOWS_DIALOG, mShowsDialog);
             mBackStackId = savedInstanceState.getInt(SAVED_BACK_STACK_ID, -1);
         }
-        
+
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     @Override
     public LayoutInflater getLayoutInflater(Bundle savedInstanceState) {
         if (!mShowsDialog) {
@@ -313,7 +305,9 @@ public class DialogFragment extends Fragment
                 Context.LAYOUT_INFLATER_SERVICE);
     }
 
-    /** @hide */
+    /**
+     * @hide
+     */
     public void setupDialog(Dialog dialog, int style) {
         switch (style) {
             case STYLE_NO_INPUT:
@@ -326,27 +320,26 @@ public class DialogFragment extends Fragment
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         }
     }
-    
+
     /**
      * Override to build your own custom Dialog container.  This is typically
      * used to show an AlertDialog instead of a generic Dialog; when doing so,
      * {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)} does not need
      * to be implemented since the AlertDialog takes care of its own content.
-     * 
+     * <p>
      * <p>This method will be called after {@link #onCreate(Bundle)} and
      * before {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.  The
      * default implementation simply instantiates and returns a {@link Dialog}
      * class.
-     * 
+     * <p>
      * <p><em>Note: DialogFragment own the {@link Dialog#setOnCancelListener
      * Dialog.setOnCancelListener} and {@link Dialog#setOnDismissListener
      * Dialog.setOnDismissListener} callbacks.  You must not set them yourself.</em>
      * To find out about these events, override {@link #onCancel(DialogInterface)}
      * and {@link #onDismiss(DialogInterface)}.</p>
-     * 
+     *
      * @param savedInstanceState The last saved instance state of the Fragment,
-     * or null if this is a freshly created Fragment.
-     * 
+     *                           or null if this is a freshly created Fragment.
      * @return Return a new Dialog instance to be displayed by the Fragment.
      */
     @NonNull
@@ -451,5 +444,13 @@ public class DialogFragment extends Fragment
             mDialog.dismiss();
             mDialog = null;
         }
+    }
+
+    /**
+     * @hide
+     */
+    @IntDef({STYLE_NORMAL, STYLE_NO_TITLE, STYLE_NO_FRAME, STYLE_NO_INPUT})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface DialogStyle {
     }
 }

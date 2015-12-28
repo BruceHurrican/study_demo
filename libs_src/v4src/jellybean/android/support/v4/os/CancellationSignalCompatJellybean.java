@@ -22,6 +22,6 @@ class CancellationSignalCompatJellybean {
     }
 
     public static void cancel(Object cancellationSignalObj) {
-        ((android.os.CancellationSignal)cancellationSignalObj).cancel();
+        ((android.os.CancellationSignal) cancellationSignalObj).cancel();
     }
 }

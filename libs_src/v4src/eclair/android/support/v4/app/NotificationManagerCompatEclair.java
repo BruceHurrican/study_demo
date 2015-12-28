@@ -21,12 +21,12 @@ import android.app.NotificationManager;
 
 class NotificationManagerCompatEclair {
     static void cancelNotification(NotificationManager notificationManager, String tag,
-            int id) {
+                                   int id) {
         notificationManager.cancel(tag, id);
     }
 
     public static void postNotification(NotificationManager notificationManager, String tag, int id,
-            Notification notification) {
+                                        Notification notification) {
         notificationManager.notify(tag, id, notification);
     }
 }

@@ -26,21 +26,21 @@ public interface TextDirectionHeuristicCompat {
      * @param array the char array.
      * @param start start index, inclusive.
      * @param count the length to check, must not be negative and not greater than
-     *          {@code array.length - start}.
+     *              {@code array.length - start}.
      * @return true if all chars in the range are to be considered in a RTL direction,
-     *          false otherwise.
+     * false otherwise.
      */
     boolean isRtl(char[] array, int start, int count);
 
     /**
      * Guess if a {@code CharSequence} is in the RTL direction or not.
      *
-     * @param cs the CharSequence.
+     * @param cs    the CharSequence.
      * @param start start index, inclusive.
      * @param count the length to check, must not be negative and not greater than
-     *            {@code CharSequence.length() - start}.
+     *              {@code CharSequence.length() - start}.
      * @return true if all chars in the range are to be considered in a RTL direction,
-     *          false otherwise.
+     * false otherwise.
      */
     boolean isRtl(CharSequence cs, int start, int count);
 }

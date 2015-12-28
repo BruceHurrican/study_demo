@@ -37,11 +37,11 @@ import java.io.PrintWriter;
  * applicable to the host.
  */
 public abstract class FragmentHostCallback<E> extends FragmentContainer {
-    private final Activity mActivity;
     final Context mContext;
-    private final Handler mHandler;
     final int mWindowAnimations;
     final FragmentManagerImpl mFragmentManager = new FragmentManagerImpl();
+    private final Activity mActivity;
+    private final Handler mHandler;
     private SimpleArrayMap<String, LoaderManager> mAllLoaderManagers;
     private LoaderManagerImpl mLoaderManager;
     private boolean mCheckedForLoaderManager;
@@ -56,7 +56,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     }
 
     FragmentHostCallback(Activity activity, Context context, Handler handler,
-            int windowAnimations) {
+                         int windowAnimations) {
         mActivity = activity;
         mContext = context;
         mHandler = handler;
@@ -67,10 +67,10 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
      * Print internal state into the given stream.
      *
      * @param prefix Desired prefix to prepend at each line of output.
-     * @param fd The raw file descriptor that the dump is being sent to.
+     * @param fd     The raw file descriptor that the dump is being sent to.
      * @param writer The PrintWriter to which you should dump your state. This will be closed
-     *                  for you after you return.
-     * @param args additional arguments to the dump request.
+     *               for you after you return.
+     * @param args   additional arguments to the dump request.
      */
     public void onDump(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
     }
@@ -122,7 +122,7 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
      * See {@link FragmentActivity#requestPermissions(String[], int)}
      */
     public void onRequestPermissionsFromFragment(@NonNull Fragment fragment,
-            @NonNull String[] permissions, int requestCode) {
+                                                 @NonNull String[] permissions, int requestCode) {
     }
 
     /**
@@ -251,10 +251,10 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
         if (mAllLoaderManagers != null) {
             final int N = mAllLoaderManagers.size();
             LoaderManagerImpl loaders[] = new LoaderManagerImpl[N];
-            for (int i=N-1; i>=0; i--) {
+            for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = (LoaderManagerImpl) mAllLoaderManagers.valueAt(i);
             }
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 LoaderManagerImpl lm = loaders[i];
                 lm.finishRetain();
                 lm.doReportStart();
@@ -285,10 +285,10 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
             // have nothing useful to retain.
             final int N = mAllLoaderManagers.size();
             LoaderManagerImpl loaders[] = new LoaderManagerImpl[N];
-            for (int i=N-1; i>=0; i--) {
+            for (int i = N - 1; i >= 0; i--) {
                 loaders[i] = (LoaderManagerImpl) mAllLoaderManagers.valueAt(i);
             }
-            for (int i=0; i<N; i++) {
+            for (int i = 0; i < N; i++) {
                 LoaderManagerImpl lm = loaders[i];
                 if (lm.mRetaining) {
                     retainLoaders = true;
@@ -310,10 +310,12 @@ public abstract class FragmentHostCallback<E> extends FragmentContainer {
     }
 
     void dumpLoaders(String prefix, FileDescriptor fd, PrintWriter writer, String[] args) {
-        writer.print(prefix); writer.print("mLoadersStarted=");
+        writer.print(prefix);
+        writer.print("mLoadersStarted=");
         writer.println(mLoadersStarted);
         if (mLoaderManager != null) {
-            writer.print(prefix); writer.print("Loader Manager ");
+            writer.print(prefix);
+            writer.print("Loader Manager ");
             writer.print(Integer.toHexString(System.identityHashCode(mLoaderManager)));
             writer.println(":");
             mLoaderManager.dump(prefix + "  ", fd, writer, args);

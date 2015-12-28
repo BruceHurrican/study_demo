@@ -23,6 +23,10 @@ import android.view.View;
 
 class LayoutInflaterCompatBase {
 
+    static void setFactory(LayoutInflater inflater, LayoutInflaterFactory factory) {
+        inflater.setFactory(factory != null ? new FactoryWrapper(factory) : null);
+    }
+
     static class FactoryWrapper implements LayoutInflater.Factory {
 
         final LayoutInflaterFactory mDelegateFactory;
@@ -39,10 +43,6 @@ class LayoutInflaterCompatBase {
         public String toString() {
             return getClass().getName() + "{" + mDelegateFactory + "}";
         }
-    }
-
-    static void setFactory(LayoutInflater inflater, LayoutInflaterFactory factory) {
-        inflater.setFactory(factory != null ? new FactoryWrapper(factory) : null);
     }
 
 }

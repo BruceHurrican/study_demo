@@ -28,7 +28,7 @@ import com.bruce.study.demo.github.parallax_listview_demo.widget.ParallaxScrollL
  * 下拉刷新头图片放大
  * Created by BruceHurrican on 2015/6/13.
  */
-public class ParallaxActivity extends Activity{
+public class ParallaxActivity extends Activity {
     private ParallaxScrollListView mListView;
 
     @Override
@@ -36,26 +36,26 @@ public class ParallaxActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.parallax_activity);
         mListView = (ParallaxScrollListView) findViewById(R.id.pslv);
-        View header = LayoutInflater.from(this).inflate(R.layout.parallax_view_listview_header,null);
+        View header = LayoutInflater.from(this).inflate(R.layout.parallax_view_listview_header, null);
         ImageView mImageView = (ImageView) header.findViewById(R.id.iv_header_image);
 
         mListView.setParallaxImageView(mImageView);
         mListView.addHeaderView(header);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_expandable_list_item_1, new String[]{"First Item","Second Item","Third Item","Forth Item","Fifth Item","Sixth Item","First Item","Second Item","Third Item","Forth Item","Fifth Item","Sixth Item","First Item","Second Item","Third Item","Forth Item","Fifth Item","Sixth Item"});
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, new String[]{"First Item", "Second Item", "Third Item", "Forth Item", "Fifth Item", "Sixth Item", "First Item", "Second Item", "Third Item", "Forth Item", "Fifth Item", "Sixth Item", "First Item", "Second Item", "Third Item", "Forth Item", "Fifth Item", "Sixth Item"});
         mListView.setAdapter(adapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.parallax_menu,menu);
+        getMenuInflater().inflate(R.menu.parallax_menu, menu);
         return true;
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus){
+        if (hasFocus) {
             mListView.setViewsBounds(ParallaxScrollListView.ZOOM_X2);
         }
     }

@@ -28,101 +28,6 @@ import android.widget.TextView;
  */
 public class TextViewCompat {
 
-    // Hide constructor
-    private TextViewCompat() {
-    }
-
-    interface TextViewCompatImpl {
-
-        public void setCompoundDrawablesRelative(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom);
-
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom);
-
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                int start, int top, int end, int bottom);
-
-    }
-
-    static class BaseTextViewCompatImpl implements TextViewCompatImpl {
-
-        @Override
-        public void setCompoundDrawablesRelative(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            textView.setCompoundDrawables(start, top, end, bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                int start, int top, int end, int bottom) {
-            textView.setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
-        }
-
-    }
-
-    static class JbMr1TextViewCompatImpl extends BaseTextViewCompatImpl {
-
-        @Override
-        public void setCompoundDrawablesRelative(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            TextViewCompatJbMr1.setCompoundDrawablesRelative(textView, start, top, end, bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            TextViewCompatJbMr1.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                    start, top, end, bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                int start, int top, int end, int bottom) {
-            TextViewCompatJbMr1.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                    start, top, end, bottom);
-        }
-
-    }
-
-    static class JbMr2TextViewCompatImpl extends JbMr1TextViewCompatImpl {
-
-        @Override
-        public void setCompoundDrawablesRelative(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            TextViewCompatJbMr2.setCompoundDrawablesRelative(textView, start, top, end, bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-                @Nullable Drawable bottom) {
-            TextViewCompatJbMr2
-                    .setCompoundDrawablesRelativeWithIntrinsicBounds(textView, start, top, end,
-                            bottom);
-        }
-
-        @Override
-        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-                int start, int top, int end, int bottom) {
-            TextViewCompatJbMr2.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
-                    start, top, end, bottom);
-        }
-    }
-
     static final TextViewCompatImpl IMPL;
 
     static {
@@ -136,12 +41,16 @@ public class TextViewCompat {
         }
     }
 
+    // Hide constructor
+    private TextViewCompat() {
+    }
+
     /**
      * Sets the Drawables (if any) to appear to the start of, above, to the end
      * of, and below the text. Use {@code null} if you do not want a Drawable
      * there. The Drawables must already have had {@link Drawable#setBounds}
      * called.
-     * <p/>
+     * <p>
      * Calling this method will overwrite any Drawables previously set using
      * {@link TextView#setCompoundDrawables} or related methods.
      *
@@ -152,8 +61,8 @@ public class TextViewCompat {
      * @attr ref android.R.styleable#TextView_drawableBottom
      */
     public static void setCompoundDrawablesRelative(@NonNull TextView textView,
-            @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-            @Nullable Drawable bottom) {
+                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                    @Nullable Drawable bottom) {
         IMPL.setCompoundDrawablesRelative(textView, start, top, end, bottom);
     }
 
@@ -161,7 +70,7 @@ public class TextViewCompat {
      * Sets the Drawables (if any) to appear to the start of, above, to the end
      * of, and below the text. Use {@code null} if you do not want a Drawable
      * there. The Drawables' bounds will be set to their intrinsic bounds.
-     * <p/>
+     * <p>
      * Calling this method will overwrite any Drawables previously set using
      * {@link TextView#setCompoundDrawables} or related methods.
      *
@@ -172,8 +81,8 @@ public class TextViewCompat {
      * @attr ref android.R.styleable#TextView_drawableBottom
      */
     public static void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-            @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
-            @Nullable Drawable bottom) {
+                                                                       @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                       @Nullable Drawable bottom) {
         IMPL.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, start, top, end, bottom);
     }
 
@@ -181,7 +90,7 @@ public class TextViewCompat {
      * Sets the Drawables (if any) to appear to the start of, above, to the end
      * of, and below the text. Use 0 if you do not want a Drawable there. The
      * Drawables' bounds will be set to their intrinsic bounds.
-     * <p/>
+     * <p>
      * Calling this method will overwrite any Drawables previously set using
      * {@link TextView#setCompoundDrawables} or related methods.
      *
@@ -196,8 +105,99 @@ public class TextViewCompat {
      * @attr ref android.R.styleable#TextView_drawableBottom
      */
     public static void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
-            int start, int top, int end, int bottom) {
+                                                                       int start, int top, int end, int bottom) {
         IMPL.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, start, top, end, bottom);
+    }
+
+    interface TextViewCompatImpl {
+
+        public void setCompoundDrawablesRelative(@NonNull TextView textView,
+                                                 @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                 @Nullable Drawable bottom);
+
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                    @Nullable Drawable bottom);
+
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    int start, int top, int end, int bottom);
+
+    }
+
+    static class BaseTextViewCompatImpl implements TextViewCompatImpl {
+
+        @Override
+        public void setCompoundDrawablesRelative(@NonNull TextView textView,
+                                                 @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                 @Nullable Drawable bottom) {
+            textView.setCompoundDrawables(start, top, end, bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                    @Nullable Drawable bottom) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    int start, int top, int end, int bottom) {
+            textView.setCompoundDrawablesWithIntrinsicBounds(start, top, end, bottom);
+        }
+
+    }
+
+    static class JbMr1TextViewCompatImpl extends BaseTextViewCompatImpl {
+
+        @Override
+        public void setCompoundDrawablesRelative(@NonNull TextView textView,
+                                                 @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                 @Nullable Drawable bottom) {
+            TextViewCompatJbMr1.setCompoundDrawablesRelative(textView, start, top, end, bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                    @Nullable Drawable bottom) {
+            TextViewCompatJbMr1.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
+                    start, top, end, bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    int start, int top, int end, int bottom) {
+            TextViewCompatJbMr1.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
+                    start, top, end, bottom);
+        }
+
+    }
+
+    static class JbMr2TextViewCompatImpl extends JbMr1TextViewCompatImpl {
+
+        @Override
+        public void setCompoundDrawablesRelative(@NonNull TextView textView,
+                                                 @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                 @Nullable Drawable bottom) {
+            TextViewCompatJbMr2.setCompoundDrawablesRelative(textView, start, top, end, bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    @Nullable Drawable start, @Nullable Drawable top, @Nullable Drawable end,
+                                                                    @Nullable Drawable bottom) {
+            TextViewCompatJbMr2
+                    .setCompoundDrawablesRelativeWithIntrinsicBounds(textView, start, top, end,
+                            bottom);
+        }
+
+        @Override
+        public void setCompoundDrawablesRelativeWithIntrinsicBounds(@NonNull TextView textView,
+                                                                    int start, int top, int end, int bottom) {
+            TextViewCompatJbMr2.setCompoundDrawablesRelativeWithIntrinsicBounds(textView,
+                    start, top, end, bottom);
+        }
     }
 
 }

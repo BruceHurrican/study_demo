@@ -29,9 +29,9 @@ class NotificationCompatIceCreamSandwich {
         private Notification.Builder b;
 
         public Builder(Context context, Notification n, CharSequence contentTitle,
-                CharSequence contentText, CharSequence contentInfo, RemoteViews tickerView,
-                int number, PendingIntent contentIntent, PendingIntent fullScreenIntent,
-                Bitmap largeIcon, int progressMax, int progress, boolean progressIndeterminate) {
+                       CharSequence contentText, CharSequence contentInfo, RemoteViews tickerView,
+                       int number, PendingIntent contentIntent, PendingIntent fullScreenIntent,
+                       Bitmap largeIcon, int progressMax, int progress, boolean progressIndeterminate) {
             b = new Notification.Builder(context)
                     .setWhen(n.when)
                     .setSmallIcon(n.icon, n.iconLevel)

@@ -35,6 +35,10 @@ class DonutAnimatorCompatProvider implements AnimatorProvider {
         return new DonutFloatValueAnimator();
     }
 
+    @Override
+    public void clearInterpolator(View view) {
+    }
+
     private static class DonutFloatValueAnimator implements ValueAnimatorCompat {
 
         List<AnimatorListenerCompat> mListeners = new ArrayList<AnimatorListenerCompat>();
@@ -47,10 +51,6 @@ class DonutAnimatorCompatProvider implements AnimatorProvider {
 
         private boolean mStarted = false;
         private boolean mEnded = false;
-
-        public DonutFloatValueAnimator() {
-        }
-
         private Runnable mLoopRunnable = new Runnable() {
             @Override
             public void run() {
@@ -68,6 +68,9 @@ class DonutAnimatorCompatProvider implements AnimatorProvider {
                 }
             }
         };
+
+        public DonutFloatValueAnimator() {
+        }
 
         private void notifyUpdateListeners() {
             for (int i = mUpdateListeners.size() - 1; i >= 0; i--) {
@@ -147,9 +150,5 @@ class DonutAnimatorCompatProvider implements AnimatorProvider {
         public float getAnimatedFraction() {
             return mFraction;
         }
-    }
-
-    @Override
-    public void clearInterpolator(View view) {
     }
 }

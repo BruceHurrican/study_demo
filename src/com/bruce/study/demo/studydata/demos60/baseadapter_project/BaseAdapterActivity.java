@@ -73,6 +73,12 @@ public class BaseAdapterActivity extends BaseActivity implements AdapterView.OnI
         }
     }
 
+    private static class ViewHolder {
+        private ImageView iv_base_adapter;
+        private TextView tv_base_adapter;
+        private Button btn_base_adapter;
+    }
+
     private class MyAdapter extends BaseAdapter implements View.OnClickListener {
         private Context context;
         private List<MyListItemAttr> list;
@@ -131,11 +137,5 @@ public class BaseAdapterActivity extends BaseActivity implements AdapterView.OnI
             Toast.makeText(context, String.format(STRING_FORMAT_2, v.getTag()), Toast.LENGTH_SHORT).show();
             logI(String.format(STRING_FORMAT_2, v.getTag()));
         }
-    }
-
-    private static class ViewHolder {
-        private ImageView iv_base_adapter;
-        private TextView tv_base_adapter;
-        private Button btn_base_adapter;
     }
 }

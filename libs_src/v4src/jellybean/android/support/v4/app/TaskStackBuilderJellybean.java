@@ -24,7 +24,7 @@ import android.os.Bundle;
 class TaskStackBuilderJellybean {
 
     public static PendingIntent getActivitiesPendingIntent(Context context, int requestCode,
-            Intent[] intents, int flags, Bundle options) {
+                                                           Intent[] intents, int flags, Bundle options) {
         return PendingIntent.getActivities(context, requestCode, intents, flags, options);
     }
 

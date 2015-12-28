@@ -28,10 +28,11 @@ import java.util.List;
  * 底栏
  * Created by BruceHurrican on 2015/12/1.
  */
-public class BottomBar extends RadioGroup implements RadioGroup.OnCheckedChangeListener{
+public class BottomBar extends RadioGroup implements RadioGroup.OnCheckedChangeListener {
     private Context context;
-    private RadioButton btn1,btn2,btn3,btn4;
+    private RadioButton btn1, btn2, btn3, btn4;
     private RadioGroup container;
+
     public BottomBar(Context context) {
         super(context);
         this.context = context;
@@ -44,7 +45,7 @@ public class BottomBar extends RadioGroup implements RadioGroup.OnCheckedChangeL
         initViews();
     }
 
-    private void initViews(){
+    private void initViews() {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_widget_bottombar, this);
         btn1 = (RadioButton) findViewById(R.id.btn_1);
@@ -61,9 +62,10 @@ public class BottomBar extends RadioGroup implements RadioGroup.OnCheckedChangeL
 
     /**
      * 设置导航栏文本信息
+     *
      * @param texts size大小应与 radiobutton 数目一致
      */
-    public void setBtnText(List<String> texts){
+    public void setBtnText(List<String> texts) {
         if (null != texts && null != container && texts.size() == container.getChildCount()) {
             for (int i = 0; i < texts.size(); i++) {
                 ((RadioButton) container.getChildAt(i)).setText(texts.get(i));
@@ -78,16 +80,16 @@ public class BottomBar extends RadioGroup implements RadioGroup.OnCheckedChangeL
         if (group.equals(container)) {
             switch (checkedId) {
                 case R.id.btn_1:
-                    Toast.makeText(context,"btn1 clicked",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "btn1 clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_2:
-                    Toast.makeText(context,"btn2 clicked",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "btn2 clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_3:
-                    Toast.makeText(context,"btn3 clicked",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "btn3 clicked", Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.btn_4:
-                    Toast.makeText(context,"btn4 clicked",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "btn4 clicked", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

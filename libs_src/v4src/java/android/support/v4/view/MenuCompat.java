@@ -27,7 +27,7 @@ public class MenuCompat {
      * Call {@link MenuItem#setShowAsAction(int) MenuItem.setShowAsAction()}.
      *
      * @deprecated Use {@link MenuItemCompat#setShowAsAction(MenuItem, int)
-     *     MenuItemCompat.setShowAsAction(MenuItem, int)}
+     * MenuItemCompat.setShowAsAction(MenuItem, int)}
      */
     @Deprecated
     public static void setShowAsAction(MenuItem item, int actionEnum) {

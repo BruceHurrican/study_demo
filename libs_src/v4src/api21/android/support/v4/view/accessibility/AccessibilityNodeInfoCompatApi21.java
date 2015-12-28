@@ -40,13 +40,13 @@ class AccessibilityNodeInfoCompatApi21 {
     }
 
     public static Object obtainCollectionInfo(int rowCount, int columnCount,
-            boolean hierarchical, int selectionMode) {
+                                              boolean hierarchical, int selectionMode) {
         return AccessibilityNodeInfo.CollectionInfo.obtain(rowCount, columnCount, hierarchical,
                 selectionMode);
     }
 
     public static Object obtainCollectionItemInfo(int rowIndex, int rowSpan, int columnIndex,
-            int columnSpan, boolean heading, boolean selected) {
+                                                  int columnSpan, boolean heading, boolean selected) {
         return AccessibilityNodeInfo.CollectionItemInfo.obtain(rowIndex, rowSpan, columnIndex,
                 columnSpan, heading, selected);
     }
@@ -79,12 +79,6 @@ class AccessibilityNodeInfoCompatApi21 {
         return ((AccessibilityNodeInfo) info).removeChild(root, virtualDescendantId);
     }
 
-    static class CollectionItemInfo {
-        public static boolean isSelected(Object info) {
-            return ((AccessibilityNodeInfo.CollectionItemInfo) info).isSelected();
-        }
-    }
-
     static Object newAccessibilityAction(int actionId, CharSequence label) {
         return new AccessibilityAction(actionId, label);
     }
@@ -95,5 +89,11 @@ class AccessibilityNodeInfoCompatApi21 {
 
     static CharSequence getAccessibilityActionLabel(Object action) {
         return ((AccessibilityNodeInfo.AccessibilityAction) action).getLabel();
+    }
+
+    static class CollectionItemInfo {
+        public static boolean isSelected(Object info) {
+            return ((AccessibilityNodeInfo.CollectionItemInfo) info).isSelected();
+        }
     }
 }

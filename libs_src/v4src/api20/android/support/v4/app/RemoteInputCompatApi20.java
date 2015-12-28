@@ -22,7 +22,7 @@ import android.os.Bundle;
 
 class RemoteInputCompatApi20 {
     static RemoteInputCompatBase.RemoteInput[] toCompat(RemoteInput[] srcArray,
-            RemoteInputCompatBase.RemoteInput.Factory factory) {
+                                                        RemoteInputCompatBase.RemoteInput.Factory factory) {
         if (srcArray == null) {
             return null;
         }
@@ -57,7 +57,7 @@ class RemoteInputCompatApi20 {
     }
 
     static void addResultsToIntent(RemoteInputCompatBase.RemoteInput[] remoteInputs,
-            Intent intent, Bundle results) {
+                                   Intent intent, Bundle results) {
         RemoteInput.addResultsToIntent(fromCompat(remoteInputs), intent, results);
     }
 }

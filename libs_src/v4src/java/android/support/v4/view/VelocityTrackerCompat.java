@@ -24,45 +24,10 @@ import android.view.VelocityTracker;
  */
 public class VelocityTrackerCompat {
     /**
-     * Interface for the full API.
-     */
-    interface VelocityTrackerVersionImpl {
-        public float getXVelocity(VelocityTracker tracker, int pointerId);
-        public float getYVelocity(VelocityTracker tracker, int pointerId);
-    }
-
-    /**
-     * Interface implementation that doesn't use anything about v4 APIs.
-     */
-    static class BaseVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
-        @Override
-        public float getXVelocity(VelocityTracker tracker, int pointerId) {
-            return tracker.getXVelocity();
-        }
-        @Override
-        public float getYVelocity(VelocityTracker tracker, int pointerId) {
-            return tracker.getYVelocity();
-        }
-    }
-
-    /**
-     * Interface implementation for devices with at least v11 APIs.
-     */
-    static class HoneycombVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
-        @Override
-        public float getXVelocity(VelocityTracker tracker, int pointerId) {
-            return VelocityTrackerCompatHoneycomb.getXVelocity(tracker, pointerId);
-        }
-        @Override
-        public float getYVelocity(VelocityTracker tracker, int pointerId) {
-            return VelocityTrackerCompatHoneycomb.getYVelocity(tracker, pointerId);
-        }
-    }
-
-    /**
      * Select the correct implementation to use for the current platform.
      */
     static final VelocityTrackerVersionImpl IMPL;
+
     static {
         if (android.os.Build.VERSION.SDK_INT >= 11) {
             IMPL = new HoneycombVelocityTrackerVersionImpl();
@@ -70,8 +35,6 @@ public class VelocityTrackerCompat {
             IMPL = new BaseVelocityTrackerVersionImpl();
         }
     }
-
-    // -------------------------------------------------------------------
 
     /**
      * Call {@link VelocityTracker#getXVelocity(int)}.
@@ -89,5 +52,46 @@ public class VelocityTrackerCompat {
      */
     public static float getYVelocity(VelocityTracker tracker, int pointerId) {
         return IMPL.getYVelocity(tracker, pointerId);
+    }
+
+    /**
+     * Interface for the full API.
+     */
+    interface VelocityTrackerVersionImpl {
+        public float getXVelocity(VelocityTracker tracker, int pointerId);
+
+        public float getYVelocity(VelocityTracker tracker, int pointerId);
+    }
+
+    // -------------------------------------------------------------------
+
+    /**
+     * Interface implementation that doesn't use anything about v4 APIs.
+     */
+    static class BaseVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
+        @Override
+        public float getXVelocity(VelocityTracker tracker, int pointerId) {
+            return tracker.getXVelocity();
+        }
+
+        @Override
+        public float getYVelocity(VelocityTracker tracker, int pointerId) {
+            return tracker.getYVelocity();
+        }
+    }
+
+    /**
+     * Interface implementation for devices with at least v11 APIs.
+     */
+    static class HoneycombVelocityTrackerVersionImpl implements VelocityTrackerVersionImpl {
+        @Override
+        public float getXVelocity(VelocityTracker tracker, int pointerId) {
+            return VelocityTrackerCompatHoneycomb.getXVelocity(tracker, pointerId);
+        }
+
+        @Override
+        public float getYVelocity(VelocityTracker tracker, int pointerId) {
+            return VelocityTrackerCompatHoneycomb.getYVelocity(tracker, pointerId);
+        }
     }
 }

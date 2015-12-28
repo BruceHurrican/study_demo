@@ -40,15 +40,15 @@ import java.util.List;
 public class FragmentController {
     private final FragmentHostCallback<?> mHost;
 
+    private FragmentController(FragmentHostCallback<?> callbacks) {
+        mHost = callbacks;
+    }
+
     /**
      * Returns a {@link FragmentController}.
      */
     public static final FragmentController createController(FragmentHostCallback<?> callbacks) {
         return new FragmentController(callbacks);
-    }
-
-    private FragmentController(FragmentHostCallback<?> callbacks) {
-        mHost = callbacks;
     }
 
     /**
@@ -66,7 +66,7 @@ public class FragmentController {
     }
 
     /**
-     * Returns the number of active fragments. 
+     * Returns the number of active fragments.
      */
     public int getActiveFragmentsCount() {
         final List<Fragment> actives = mHost.mFragmentManager.mActive;
@@ -99,12 +99,11 @@ public class FragmentController {
     /**
      * Instantiates a Fragment's view.
      *
-     * @param parent The parent that the created view will be placed
-     * in; <em>note that this may be null</em>.
-     * @param name Tag name to be inflated.
+     * @param parent  The parent that the created view will be placed
+     *                in; <em>note that this may be null</em>.
+     * @param name    Tag name to be inflated.
      * @param context The context the view is being created in.
-     * @param attrs Inflation attributes as specified in XML file.
-     *
+     * @param attrs   Inflation attributes as specified in XML file.
      * @return view the newly created view
      */
     public View onCreateView(View parent, String name, Context context, AttributeSet attrs) {
@@ -324,6 +323,7 @@ public class FragmentController {
      * controller's FragmentManager.
      * <p>Call when queued actions can be performed [eg when the
      * Fragment moves into a start or resume state].
+     *
      * @return {@code true} if queued actions were performed
      */
     public boolean execPendingActions() {
@@ -342,7 +342,7 @@ public class FragmentController {
      * loader state across configuration changes.
      *
      * @param retain When {@code true}, the loaders aren't stopped, but, their instances
-     * are retained in a started state
+     *               are retained in a started state
      */
     public void doLoaderStop(boolean retain) {
         mHost.doLoaderStop(retain);

@@ -23,12 +23,12 @@ import android.view.View;
 
 /**
  * Interface for direct access to a previously created menu item.
- *
+ * <p>
  * This version extends the one available in the framework to ensures that any necessary
  * elements added in later versions of the framework, are available for all platforms.
  *
- * @see android.view.MenuItem
  * @hide
+ * @see android.view.MenuItem
  */
 public interface SupportMenuItem extends android.view.MenuItem {
     /*
@@ -84,7 +84,7 @@ public interface SupportMenuItem extends android.view.MenuItem {
      * be used, and you may optionally OR the value with {@link #SHOW_AS_ACTION_WITH_TEXT}.
      * SHOW_AS_ACTION_WITH_TEXT requests that when the item is shown as an action,
      * it should be shown with a text label.
-     *
+     * <p>
      * <p>Note: This method differs from {@link #setShowAsAction(int)} only in that it
      * returns the current MenuItem instance for call chaining.
      *
@@ -101,7 +101,7 @@ public interface SupportMenuItem extends android.view.MenuItem {
      * Set an action view for this menu item. An action view will be displayed in place
      * of an automatically generated menu item element in the UI when this item is shown
      * as an action within a parent.
-     *
+     * <p>
      * <p><strong>Note:</strong> Setting an action view overrides the action provider
      * provider set via {@link #setSupportActionProvider(android.support.v4.view.ActionProvider)}. </p>
      *
@@ -115,7 +115,7 @@ public interface SupportMenuItem extends android.view.MenuItem {
      * Set an action view for this menu item. An action view will be displayed in place
      * of an automatically generated menu item element in the UI when this item is shown
      * as an action within a parent.
-     *
+     * <p>
      * <p><strong>Note:</strong> Setting an action view overrides the action provider
      * provider set via {@link #setSupportActionProvider(android.support.v4.view.ActionProvider)}. </p>
      *
@@ -135,10 +135,19 @@ public interface SupportMenuItem extends android.view.MenuItem {
     public View getActionView();
 
     /**
+     * Gets the {@link ActionProvider}.
+     *
+     * @return The action provider.
+     * @see ActionProvider
+     * @see #setSupportActionProvider(ActionProvider)
+     */
+    public ActionProvider getSupportActionProvider();
+
+    /**
      * Sets the {@link android.support.v4.view.ActionProvider} responsible for creating an action view if
      * the item is placed on the action bar. The provider also provides a default
      * action invoked if the item is placed in the overflow menu.
-     *
+     * <p>
      * <p><strong>Note:</strong> Setting an action provider overrides the action view
      * set via {@link #setActionView(int)} or {@link #setActionView(View)}.
      * </p>
@@ -148,15 +157,6 @@ public interface SupportMenuItem extends android.view.MenuItem {
      * @see android.support.v4.view.ActionProvider
      */
     public SupportMenuItem setSupportActionProvider(ActionProvider actionProvider);
-
-    /**
-     * Gets the {@link ActionProvider}.
-     *
-     * @return The action provider.
-     * @see ActionProvider
-     * @see #setSupportActionProvider(ActionProvider)
-     */
-    public ActionProvider getSupportActionProvider();
 
     /**
      * Expand the action view associated with this menu item. The menu item must have an action view

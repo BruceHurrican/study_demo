@@ -128,8 +128,8 @@ class DocumentsContractApi19 {
 
         Cursor c = null;
         try {
-            c = resolver.query(self, new String[] {
-                    DocumentsContract.Document.COLUMN_DOCUMENT_ID }, null, null, null);
+            c = resolver.query(self, new String[]{
+                    DocumentsContract.Document.COLUMN_DOCUMENT_ID}, null, null, null);
             return c.getCount() > 0;
         } catch (Exception e) {
             Log.w(TAG, "Failed query: " + e);
@@ -140,12 +140,12 @@ class DocumentsContractApi19 {
     }
 
     private static String queryForString(Context context, Uri self, String column,
-            String defaultValue) {
+                                         String defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
         try {
-            c = resolver.query(self, new String[] { column }, null, null, null);
+            c = resolver.query(self, new String[]{column}, null, null, null);
             if (c.moveToFirst() && !c.isNull(0)) {
                 return c.getString(0);
             } else {
@@ -160,17 +160,17 @@ class DocumentsContractApi19 {
     }
 
     private static int queryForInt(Context context, Uri self, String column,
-            int defaultValue) {
+                                   int defaultValue) {
         return (int) queryForLong(context, self, column, defaultValue);
     }
 
     private static long queryForLong(Context context, Uri self, String column,
-            long defaultValue) {
+                                     long defaultValue) {
         final ContentResolver resolver = context.getContentResolver();
 
         Cursor c = null;
         try {
-            c = resolver.query(self, new String[] { column }, null, null, null);
+            c = resolver.query(self, new String[]{column}, null, null, null);
             if (c.moveToFirst() && !c.isNull(0)) {
                 return c.getLong(0);
             } else {

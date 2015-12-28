@@ -37,7 +37,7 @@ import java.util.Set;
  * 客户端
  * Created by BruceHurrican on 2015/10/10.
  */
-public class ClientFragment extends BaseFragment implements View.OnClickListener{
+public class ClientFragment extends BaseFragment implements View.OnClickListener {
     private TextView output;
     private Button btn_start, btn_device;
     private BluetoothAdapter mBluetoothAdapter = null;
@@ -140,8 +140,8 @@ public class ClientFragment extends BaseFragment implements View.OnClickListener
      * with a device. It runs straight through; the connection either succeeds or fails.
      */
     private class ConnectThread extends Thread {
-        private BluetoothSocket socket;
         private final BluetoothDevice mmDevice;
+        private BluetoothSocket socket;
 
         public ConnectThread(BluetoothDevice device) {
             this.mmDevice = device;

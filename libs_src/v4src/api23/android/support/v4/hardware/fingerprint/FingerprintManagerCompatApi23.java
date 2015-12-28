@@ -26,6 +26,7 @@ import java.security.Signature;
 
 /**
  * Actual FingerprintManagerCompat implementation for API level 23 and later.
+ *
  * @hide
  */
 public final class FingerprintManagerCompatApi23 {
@@ -43,7 +44,7 @@ public final class FingerprintManagerCompatApi23 {
     }
 
     public static void authenticate(Context context, CryptoObject crypto, int flags, Object cancel,
-            AuthenticationCallback callback, Handler handler) {
+                                    AuthenticationCallback callback, Handler handler) {
         getFingerprintManager(context).authenticate(wrapCryptoObject(crypto),
                 (android.os.CancellationSignal) cancel, flags,
                 wrapCallback(callback), handler);
@@ -127,9 +128,17 @@ public final class FingerprintManagerCompatApi23 {
             mSignature = null;
         }
 
-        public Signature getSignature() { return mSignature; }
-        public Cipher getCipher() { return mCipher; }
-        public Mac getMac() { return mMac; }
+        public Signature getSignature() {
+            return mSignature;
+        }
+
+        public Cipher getCipher() {
+            return mCipher;
+        }
+
+        public Mac getMac() {
+            return mMac;
+        }
     }
 
     public static final class AuthenticationResultInternal {
@@ -139,14 +148,23 @@ public final class FingerprintManagerCompatApi23 {
             mCryptoObject = crypto;
         }
 
-        public CryptoObject getCryptoObject() { return mCryptoObject; }
+        public CryptoObject getCryptoObject() {
+            return mCryptoObject;
+        }
     }
 
     public static abstract class AuthenticationCallback {
 
-        public void onAuthenticationError(int errMsgId, CharSequence errString) { }
-        public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) { }
-        public void onAuthenticationSucceeded(AuthenticationResultInternal result) { }
-        public void onAuthenticationFailed() { }
+        public void onAuthenticationError(int errMsgId, CharSequence errString) {
+        }
+
+        public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
+        }
+
+        public void onAuthenticationSucceeded(AuthenticationResultInternal result) {
+        }
+
+        public void onAuthenticationFailed() {
+        }
     }
 }

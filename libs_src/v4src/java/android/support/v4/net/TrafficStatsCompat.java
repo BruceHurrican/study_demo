@@ -27,97 +27,6 @@ import java.net.SocketException;
  */
 public class TrafficStatsCompat {
 
-    interface TrafficStatsCompatImpl {
-        void clearThreadStatsTag();
-        int getThreadStatsTag();
-        void incrementOperationCount(int operationCount);
-        void incrementOperationCount(int tag, int operationCount);
-        void setThreadStatsTag(int tag);
-        void tagSocket(Socket socket) throws SocketException;
-        void untagSocket(Socket socket) throws SocketException;
-    }
-
-    static class BaseTrafficStatsCompatImpl implements TrafficStatsCompatImpl {
-        private static class SocketTags {
-            public int statsTag = -1;
-        }
-
-        private ThreadLocal<SocketTags> mThreadSocketTags = new ThreadLocal<SocketTags>() {
-            @Override
-            protected SocketTags initialValue() {
-                return new SocketTags();
-            }
-        };
-
-        @Override
-        public void clearThreadStatsTag() {
-            mThreadSocketTags.get().statsTag = -1;
-        }
-
-        @Override
-        public int getThreadStatsTag() {
-            return mThreadSocketTags.get().statsTag;
-        }
-
-        @Override
-        public void incrementOperationCount(int operationCount) {
-        }
-
-        @Override
-        public void incrementOperationCount(int tag, int operationCount) {
-        }
-
-        @Override
-        public void setThreadStatsTag(int tag) {
-            mThreadSocketTags.get().statsTag = tag;
-        }
-
-        @Override
-        public void tagSocket(Socket socket) {
-        }
-
-        @Override
-        public void untagSocket(Socket socket) {
-        }
-    }
-
-    static class IcsTrafficStatsCompatImpl implements TrafficStatsCompatImpl {
-        @Override
-        public void clearThreadStatsTag() {
-            TrafficStatsCompatIcs.clearThreadStatsTag();
-        }
-
-        @Override
-        public int getThreadStatsTag() {
-            return TrafficStatsCompatIcs.getThreadStatsTag();
-        }
-
-        @Override
-        public void incrementOperationCount(int operationCount) {
-            TrafficStatsCompatIcs.incrementOperationCount(operationCount);
-        }
-
-        @Override
-        public void incrementOperationCount(int tag, int operationCount) {
-            TrafficStatsCompatIcs.incrementOperationCount(tag, operationCount);
-        }
-
-        @Override
-        public void setThreadStatsTag(int tag) {
-            TrafficStatsCompatIcs.setThreadStatsTag(tag);
-        }
-
-        @Override
-        public void tagSocket(Socket socket) throws SocketException {
-            TrafficStatsCompatIcs.tagSocket(socket);
-        }
-
-        @Override
-        public void untagSocket(Socket socket) throws SocketException {
-            TrafficStatsCompatIcs.untagSocket(socket);
-        }
-    }
-
     private static final TrafficStatsCompatImpl IMPL;
 
     static {
@@ -146,6 +55,21 @@ public class TrafficStatsCompat {
     }
 
     /**
+     * Set active tag to use when accounting {@link Socket} traffic originating
+     * from the current thread. Only one active tag per thread is supported.
+     * <p>
+     * Changes only take effect during subsequent calls to
+     * {@link #tagSocket(Socket)}.
+     * <p>
+     * Tags between {@code 0xFFFFFF00} and {@code 0xFFFFFFFF} are reserved and
+     * used internally by system services like DownloadManager when performing
+     * traffic on behalf of an application.
+     */
+    public static void setThreadStatsTag(int tag) {
+        IMPL.setThreadStatsTag(tag);
+    }
+
+    /**
      * Increment count of network operations performed under the accounting tag
      * currently active on the calling thread. This can be used to derive
      * bytes-per-operation.
@@ -160,26 +84,11 @@ public class TrafficStatsCompat {
      * Increment count of network operations performed under the given
      * accounting tag. This can be used to derive bytes-per-operation.
      *
-     * @param tag Accounting tag used in {@link #setThreadStatsTag(int)}.
+     * @param tag            Accounting tag used in {@link #setThreadStatsTag(int)}.
      * @param operationCount Number of operations to increment count by.
      */
     public static void incrementOperationCount(int tag, int operationCount) {
         IMPL.incrementOperationCount(tag, operationCount);
-    }
-
-    /**
-     * Set active tag to use when accounting {@link Socket} traffic originating
-     * from the current thread. Only one active tag per thread is supported.
-     * <p>
-     * Changes only take effect during subsequent calls to
-     * {@link #tagSocket(Socket)}.
-     * <p>
-     * Tags between {@code 0xFFFFFF00} and {@code 0xFFFFFFFF} are reserved and
-     * used internally by system services like DownloadManager when performing
-     * traffic on behalf of an application.
-     */
-    public static void setThreadStatsTag(int tag) {
-        IMPL.setThreadStatsTag(tag);
     }
 
     /**
@@ -199,5 +108,102 @@ public class TrafficStatsCompat {
      */
     public static void untagSocket(Socket socket) throws SocketException {
         IMPL.untagSocket(socket);
+    }
+
+    interface TrafficStatsCompatImpl {
+        void clearThreadStatsTag();
+
+        int getThreadStatsTag();
+
+        void setThreadStatsTag(int tag);
+
+        void incrementOperationCount(int operationCount);
+
+        void incrementOperationCount(int tag, int operationCount);
+
+        void tagSocket(Socket socket) throws SocketException;
+
+        void untagSocket(Socket socket) throws SocketException;
+    }
+
+    static class BaseTrafficStatsCompatImpl implements TrafficStatsCompatImpl {
+        private ThreadLocal<SocketTags> mThreadSocketTags = new ThreadLocal<SocketTags>() {
+            @Override
+            protected SocketTags initialValue() {
+                return new SocketTags();
+            }
+        };
+
+        @Override
+        public void clearThreadStatsTag() {
+            mThreadSocketTags.get().statsTag = -1;
+        }
+
+        @Override
+        public int getThreadStatsTag() {
+            return mThreadSocketTags.get().statsTag;
+        }
+
+        @Override
+        public void setThreadStatsTag(int tag) {
+            mThreadSocketTags.get().statsTag = tag;
+        }
+
+        @Override
+        public void incrementOperationCount(int operationCount) {
+        }
+
+        @Override
+        public void incrementOperationCount(int tag, int operationCount) {
+        }
+
+        @Override
+        public void tagSocket(Socket socket) {
+        }
+
+        @Override
+        public void untagSocket(Socket socket) {
+        }
+
+        private static class SocketTags {
+            public int statsTag = -1;
+        }
+    }
+
+    static class IcsTrafficStatsCompatImpl implements TrafficStatsCompatImpl {
+        @Override
+        public void clearThreadStatsTag() {
+            TrafficStatsCompatIcs.clearThreadStatsTag();
+        }
+
+        @Override
+        public int getThreadStatsTag() {
+            return TrafficStatsCompatIcs.getThreadStatsTag();
+        }
+
+        @Override
+        public void setThreadStatsTag(int tag) {
+            TrafficStatsCompatIcs.setThreadStatsTag(tag);
+        }
+
+        @Override
+        public void incrementOperationCount(int operationCount) {
+            TrafficStatsCompatIcs.incrementOperationCount(operationCount);
+        }
+
+        @Override
+        public void incrementOperationCount(int tag, int operationCount) {
+            TrafficStatsCompatIcs.incrementOperationCount(tag, operationCount);
+        }
+
+        @Override
+        public void tagSocket(Socket socket) throws SocketException {
+            TrafficStatsCompatIcs.tagSocket(socket);
+        }
+
+        @Override
+        public void untagSocket(Socket socket) throws SocketException {
+            TrafficStatsCompatIcs.untagSocket(socket);
+        }
     }
 }

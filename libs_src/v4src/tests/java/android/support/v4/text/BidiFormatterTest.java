@@ -20,7 +20,9 @@ import android.test.AndroidTestCase;
 
 import java.util.Locale;
 
-/** @hide */
+/**
+ * @hide
+ */
 public class BidiFormatterTest extends AndroidTestCase {
 
     private static final BidiFormatter LTR_FMT = BidiFormatter.getInstance(false /* LTR context */);

@@ -36,7 +36,7 @@ public class PathInterpolatorCompat {
      * must begin at {@code (0, 0)} and end at {@code (1, 1)}. The x-coordinate along the
      * {@link Path} is the input value and the output is the y coordinate of the line at that
      * point. This means that the Path must conform to a function {@code y = f(x)}.
-     * <p/>
+     * <p>
      * The {@link Path} must not have gaps in the x direction and must not
      * loop back on itself such that there can be two points sharing the same x coordinate.
      *
@@ -76,7 +76,7 @@ public class PathInterpolatorCompat {
      * @return the {@link Interpolator} representing the cubic Bezier curve
      */
     public static Interpolator create(float controlX1, float controlY1,
-            float controlX2, float controlY2) {
+                                      float controlX2, float controlY2) {
         if (Build.VERSION.SDK_INT >= 21) {
             return PathInterpolatorCompatApi21.create(controlX1, controlY1, controlX2, controlY2);
         }

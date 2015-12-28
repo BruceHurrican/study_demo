@@ -25,32 +25,8 @@ import android.view.LayoutInflater;
  */
 public class LayoutInflaterCompat {
 
-    interface LayoutInflaterCompatImpl {
-        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory);
-    }
-
-    static class LayoutInflaterCompatImplBase implements LayoutInflaterCompatImpl {
-        @Override
-        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
-            LayoutInflaterCompatBase.setFactory(layoutInflater, factory);
-        }
-    }
-
-    static class LayoutInflaterCompatImplV11 extends LayoutInflaterCompatImplBase {
-        @Override
-        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
-            LayoutInflaterCompatHC.setFactory(layoutInflater, factory);
-        }
-    }
-
-    static class LayoutInflaterCompatImplV21 extends LayoutInflaterCompatImplV11 {
-        @Override
-        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
-            LayoutInflaterCompatLollipop.setFactory(layoutInflater, factory);
-        }
-    }
-
     static final LayoutInflaterCompatImpl IMPL;
+
     static {
         final int version = Build.VERSION.SDK_INT;
         if (version >= 21) {
@@ -77,6 +53,31 @@ public class LayoutInflaterCompat {
      */
     public static void setFactory(LayoutInflater inflater, LayoutInflaterFactory factory) {
         IMPL.setFactory(inflater, factory);
+    }
+
+    interface LayoutInflaterCompatImpl {
+        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory);
+    }
+
+    static class LayoutInflaterCompatImplBase implements LayoutInflaterCompatImpl {
+        @Override
+        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
+            LayoutInflaterCompatBase.setFactory(layoutInflater, factory);
+        }
+    }
+
+    static class LayoutInflaterCompatImplV11 extends LayoutInflaterCompatImplBase {
+        @Override
+        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
+            LayoutInflaterCompatHC.setFactory(layoutInflater, factory);
+        }
+    }
+
+    static class LayoutInflaterCompatImplV21 extends LayoutInflaterCompatImplV11 {
+        @Override
+        public void setFactory(LayoutInflater layoutInflater, LayoutInflaterFactory factory) {
+            LayoutInflaterCompatLollipop.setFactory(layoutInflater, factory);
+        }
     }
 
 }

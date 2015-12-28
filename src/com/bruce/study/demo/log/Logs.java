@@ -27,12 +27,13 @@ public final class Logs {
     private Logs() {
     }
 
-    public static Logs getInstance(){
-        if (null != instance){
+    public static Logs getInstance() {
+        if (null != instance) {
             instance = new Logs();
         }
         return instance;
     }
+
     public static void v(String tag, String text) {
         if (isDebug) {
             Log.v(tag, text);

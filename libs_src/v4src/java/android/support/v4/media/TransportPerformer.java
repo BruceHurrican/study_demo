@@ -27,6 +27,15 @@ import android.view.KeyEvent;
  * while your window is in focus.
  */
 public abstract class TransportPerformer {
+    // Copy constants from framework since we can't link to them.
+    static final int AUDIOFOCUS_GAIN = 1;
+    static final int AUDIOFOCUS_GAIN_TRANSIENT = 2;
+    static final int AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK = 3;
+    static final int AUDIOFOCUS_LOSS = -1 * AUDIOFOCUS_GAIN;
+    static final int AUDIOFOCUS_LOSS_TRANSIENT = -1 * AUDIOFOCUS_GAIN_TRANSIENT;
+    static final int AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =
+            -1 * AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK;
+
     /**
      * Request to start playback on the media, resuming from whatever current state
      * (position etc) it is in.
@@ -57,6 +66,7 @@ public abstract class TransportPerformer {
 
     /**
      * Request to move the current playback position.
+     *
      * @param pos New position to move to, in milliseconds.
      */
     public abstract void onSeekTo(long pos);
@@ -68,6 +78,7 @@ public abstract class TransportPerformer {
 
     /**
      * Request to find out how much of the media has been buffered on the local device.
+     *
      * @return Return a percentage (0-100) indicating how much of the total data
      * has been buffered.  The default implementation returns 100, meaning the content
      * is always on the local device.
@@ -79,20 +90,20 @@ public abstract class TransportPerformer {
     /**
      * Retrieves the flags for the media transport control buttons that this transport supports.
      * Result is a combination of the following flags:
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PREVIOUS},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_REWIND},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_STOP},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_FAST_FORWARD},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_NEXT}
-     *
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PREVIOUS},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_REWIND},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_STOP},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_FAST_FORWARD},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_NEXT}
+     * <p>
      * <p>The default implementation returns:
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE}, and
-     *      {@link TransportMediator#FLAG_KEY_MEDIA_STOP}</p>
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PLAY_PAUSE},
+     * {@link TransportMediator#FLAG_KEY_MEDIA_PAUSE}, and
+     * {@link TransportMediator#FLAG_KEY_MEDIA_STOP}</p>
      */
     public int onGetTransportControlFlags() {
         return TransportMediator.FLAG_KEY_MEDIA_PLAY
@@ -106,14 +117,15 @@ public abstract class TransportPerformer {
      * {@link android.view.KeyEvent.Callback#onKeyDown(int, android.view.KeyEvent)} but
      * will only deliver media keys.  The default implementation handles these keys:
      * <ul>
-     *     <li>KEYCODE_MEDIA_PLAY: call {@link #onStart}</li>
-     *     <li>KEYCODE_MEDIA_PAUSE: call {@link #onPause}</li>
-     *     <li>KEYCODE_MEDIA_STOP: call {@link #onStop}</li>
-     *     <li>KEYCODE_MEDIA_PLAY_PAUSE and KEYCODE_HEADSETHOOK: call {@link #onPause}
-     *          if {@link #onIsPlaying()} returns true, otherwise call {@link #onStart}</li>
+     * <li>KEYCODE_MEDIA_PLAY: call {@link #onStart}</li>
+     * <li>KEYCODE_MEDIA_PAUSE: call {@link #onPause}</li>
+     * <li>KEYCODE_MEDIA_STOP: call {@link #onStop}</li>
+     * <li>KEYCODE_MEDIA_PLAY_PAUSE and KEYCODE_HEADSETHOOK: call {@link #onPause}
+     * if {@link #onIsPlaying()} returns true, otherwise call {@link #onStart}</li>
      * </ul>
+     *
      * @param keyCode The code of the media key.
-     * @param event The full key event.
+     * @param event   The full key event.
      * @return Indicate whether the key has been consumed.  The default
      * implementation always returns true.  This only matters for keys
      * being dispatched here from
@@ -149,8 +161,9 @@ public abstract class TransportPerformer {
      * Report that a media button has been released.  This is like
      * {@link KeyEvent.Callback#onKeyUp(int, android.view.KeyEvent)} but
      * will only deliver media keys.  The default implementation does nothing.
+     *
      * @param keyCode The code of the media key.
-     * @param event The full key event.
+     * @param event   The full key event.
      * @return Indicate whether the key has been consumed.  The default
      * implementation always returns true.  This only matters for keys
      * being dispatched here from
@@ -164,25 +177,17 @@ public abstract class TransportPerformer {
         return true;
     }
 
-    // Copy constants from framework since we can't link to them.
-    static final int AUDIOFOCUS_GAIN = 1;
-    static final int AUDIOFOCUS_GAIN_TRANSIENT = 2;
-    static final int AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK = 3;
-    static final int AUDIOFOCUS_LOSS = -1 * AUDIOFOCUS_GAIN;
-    static final int AUDIOFOCUS_LOSS_TRANSIENT = -1 * AUDIOFOCUS_GAIN_TRANSIENT;
-    static final int AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK =
-            -1 * AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK;
-
     /**
      * Report that audio focus has changed on the app.  This only happens if
      * you have indicated you have started playing with
      * {@link TransportMediator#startPlaying TransportController.startPlaying},
      * which takes audio focus for you.
+     *
      * @param focusChange The type of focus change, as per
-     * {@link android.media.AudioManager.OnAudioFocusChangeListener#onAudioFocusChange(int)
-     * OnAudioFocusChangeListener.onAudioFocusChange}.  The default implementation will
-     * deliver a {@link KeyEvent#KEYCODE_MEDIA_STOP}
-     * when receiving {@link android.media.AudioManager#AUDIOFOCUS_LOSS}.
+     *                    {@link android.media.AudioManager.OnAudioFocusChangeListener#onAudioFocusChange(int)
+     *                    OnAudioFocusChangeListener.onAudioFocusChange}.  The default implementation will
+     *                    deliver a {@link KeyEvent#KEYCODE_MEDIA_STOP}
+     *                    when receiving {@link android.media.AudioManager#AUDIOFOCUS_LOSS}.
      */
     public void onAudioFocusChange(int focusChange) {
         int keyCode = 0;

@@ -34,9 +34,9 @@ class ICUCompatIcs {
             final Class<?> clazz = Class.forName("libcore.icu.ICU");
             if (clazz != null) {
                 sGetScriptMethod = clazz.getMethod("getScript",
-                        new Class[]{ String.class });
+                        new Class[]{String.class});
                 sAddLikelySubtagsMethod = clazz.getMethod("addLikelySubtags",
-                        new Class[]{ String.class });
+                        new Class[]{String.class});
             }
         } catch (Exception e) {
             sGetScriptMethod = null;
@@ -59,14 +59,13 @@ class ICUCompatIcs {
     private static String getScript(String localeStr) {
         try {
             if (sGetScriptMethod != null) {
-                final Object[] args = new Object[] { localeStr };
+                final Object[] args = new Object[]{localeStr};
                 return (String) sGetScriptMethod.invoke(null, args);
             }
         } catch (IllegalAccessException e) {
             // Nothing we can do here, we just log the exception
             Log.w(TAG, e);
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             // Nothing we can do here, we just log the exception
             Log.w(TAG, e);
         }
@@ -77,14 +76,13 @@ class ICUCompatIcs {
         final String localeStr = locale.toString();
         try {
             if (sAddLikelySubtagsMethod != null) {
-                final Object[] args = new Object[] { localeStr };
+                final Object[] args = new Object[]{localeStr};
                 return (String) sAddLikelySubtagsMethod.invoke(null, args);
             }
         } catch (IllegalAccessException e) {
             // Nothing we can do here, we just log the exception
             Log.w(TAG, e);
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             // Nothing we can do here, we just log the exception
             Log.w(TAG, e);
         }

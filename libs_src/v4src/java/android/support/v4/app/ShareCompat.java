@@ -37,18 +37,18 @@ import java.util.ArrayList;
 
 /**
  * Extra helper functionality for sharing data between activities.
- *
+ * <p>
  * ShareCompat provides functionality to extend the {@link Intent#ACTION_SEND}/
  * {@link Intent#ACTION_SEND_MULTIPLE} protocol and support retrieving more info
  * about the activity that invoked a social sharing action.
- *
+ * <p>
  * {@link IntentBuilder} provides helper functions for constructing a sharing
  * intent that always includes data about the calling activity and app.
  * This lets the called activity provide attribution for the app that shared
  * content. Constructing an intent this way can be done in a method-chaining style.
  * To obtain an IntentBuilder with info about your calling activity, use the static
  * method {@link IntentBuilder#from(Activity)}.
- *
+ * <p>
  * {@link IntentReader} provides helper functions for parsing the defined extras
  * within an {@link Intent#ACTION_SEND} or {@link Intent#ACTION_SEND_MULTIPLE} intent
  * used to launch an activity. You can also obtain a Drawable for the caller's
@@ -61,7 +61,7 @@ public class ShareCompat {
      * Intent extra that stores the name of the calling package for an ACTION_SEND intent.
      * When an activity is started using startActivityForResult this is redundant info.
      * (It is also provided by {@link Activity#getCallingPackage()}.)
-     *
+     * <p>
      * Instead of using this constant directly, consider using {@link #getCallingPackage(Activity)}
      * or {@link IntentReader#getCallingPackage()}.
      */
@@ -74,28 +74,122 @@ public class ShareCompat {
      */
     public static final String EXTRA_CALLING_ACTIVITY =
             "android.support.v4.app.EXTRA_CALLING_ACTIVITY";
+    private static ShareCompatImpl IMPL;
+
+    static {
+        if (Build.VERSION.SDK_INT >= 16) {
+            IMPL = new ShareCompatImplJB();
+        } else if (Build.VERSION.SDK_INT >= 14) {
+            IMPL = new ShareCompatImplICS();
+        } else {
+            IMPL = new ShareCompatImplBase();
+        }
+    }
+
+    /**
+     * Retrieve the name of the package that launched calledActivity from a share intent.
+     * Apps that provide social sharing functionality can use this to provide attribution
+     * for the app that shared the content.
+     * <p>
+     * <p><em>Note:</em> This data may have been provided voluntarily by the calling
+     * application. As such it should not be trusted for accuracy in the context of
+     * security or verification.</p>
+     *
+     * @param calledActivity Current activity that was launched to share content
+     * @return Name of the calling package
+     */
+    public static String getCallingPackage(Activity calledActivity) {
+        String result = calledActivity.getCallingPackage();
+        if (result == null) {
+            result = calledActivity.getIntent().getStringExtra(EXTRA_CALLING_PACKAGE);
+        }
+        return result;
+    }
+
+    /**
+     * Retrieve the ComponentName of the activity that launched calledActivity from a share intent.
+     * Apps that provide social sharing functionality can use this to provide attribution
+     * for the app that shared the content.
+     * <p>
+     * <p><em>Note:</em> This data may have been provided voluntarily by the calling
+     * application. As such it should not be trusted for accuracy in the context of
+     * security or verification.</p>
+     *
+     * @param calledActivity Current activity that was launched to share content
+     * @return ComponentName of the calling activity
+     */
+    public static ComponentName getCallingActivity(Activity calledActivity) {
+        ComponentName result = calledActivity.getCallingActivity();
+        if (result == null) {
+            result = calledActivity.getIntent().getParcelableExtra(EXTRA_CALLING_ACTIVITY);
+        }
+        return result;
+    }
+
+    /**
+     * Configure a {@link MenuItem} to act as a sharing action.
+     * <p>
+     * <p>If the app is running on API level 14 or higher (Android 4.0/Ice Cream Sandwich)
+     * this method will configure a ShareActionProvider to provide a more robust UI
+     * for selecting the target of the share. History will be tracked for each calling
+     * activity in a file named with the prefix ".sharecompat_" in the application's
+     * private data directory. If the application wishes to set this MenuItem to show
+     * as an action in the Action Bar it should use
+     * {@link MenuItemCompat#setShowAsAction(MenuItem, int)} to request that behavior
+     * in addition to calling this method.</p>
+     * <p>
+     * <p>If the app is running on an older platform version this method will configure
+     * a standard activity chooser dialog for the menu item.</p>
+     * <p>
+     * <p>During the calling activity's lifecycle, if data within the share intent must
+     * change the app should change that state in one of several ways:</p>
+     * <ul>
+     * <li>Call {@link ActivityCompat#invalidateOptionsMenu(Activity)}. If the app is running
+     * on API level 11 or above and uses the Action Bar its menu will be recreated and rebuilt.
+     * If not, the activity will receive a call to {@link Activity#onPrepareOptionsMenu(Menu)}
+     * the next time the user presses the menu key to open the options menu panel. The activity
+     * can then call configureMenuItem again with a new or altered IntentBuilder to reconfigure
+     * the share menu item.</li>
+     * <li>Keep a reference to the MenuItem object for the share item once it has been created
+     * and call configureMenuItem to update the associated sharing intent as needed.</li>
+     * </ul>
+     *
+     * @param item        MenuItem to configure for sharing
+     * @param shareIntent IntentBuilder with data about the content to share
+     */
+    public static void configureMenuItem(MenuItem item, IntentBuilder shareIntent) {
+        IMPL.configureMenuItem(item, shareIntent);
+    }
+
+    /**
+     * Configure a menu item to act as a sharing action.
+     *
+     * @param menu        Menu containing the item to use for sharing
+     * @param menuItemId  ID of the share item within menu
+     * @param shareIntent IntentBuilder with data about the content to share
+     * @see #configureMenuItem(MenuItem, IntentBuilder)
+     */
+    public static void configureMenuItem(Menu menu, int menuItemId, IntentBuilder shareIntent) {
+        MenuItem item = menu.findItem(menuItemId);
+        if (item == null) {
+            throw new IllegalArgumentException("Could not find menu item with id " + menuItemId +
+                    " in the supplied menu");
+        }
+        configureMenuItem(item, shareIntent);
+    }
 
     /**
      * Compatibility shims for sharing operations
      */
     interface ShareCompatImpl {
         void configureMenuItem(MenuItem item, IntentBuilder shareIntent);
+
         String escapeHtml(CharSequence text);
     }
 
     static class ShareCompatImplBase implements ShareCompatImpl {
-        public void configureMenuItem(MenuItem item, IntentBuilder shareIntent) {
-            item.setIntent(shareIntent.createChooserIntent());
-        }
-
-        public String escapeHtml(CharSequence text) {
-            StringBuilder out = new StringBuilder();
-            withinStyle(out, text, 0, text.length());
-            return out.toString();
-        }
-
         private static void withinStyle(StringBuilder out, CharSequence text,
-                int start, int end) {
+                                        int start, int end) {
             for (int i = start; i < end; i++) {
                 char c = text.charAt(i);
 
@@ -118,6 +212,16 @@ public class ShareCompat {
                     out.append(c);
                 }
             }
+        }
+
+        public void configureMenuItem(MenuItem item, IntentBuilder shareIntent) {
+            item.setIntent(shareIntent.createChooserIntent());
+        }
+
+        public String escapeHtml(CharSequence text) {
+            StringBuilder out = new StringBuilder();
+            withinStyle(out, text, 0, text.length());
+            return out.toString();
         }
     }
 
@@ -146,110 +250,6 @@ public class ShareCompat {
         }
     }
 
-    private static ShareCompatImpl IMPL;
-
-    static {
-        if (Build.VERSION.SDK_INT >= 16) {
-            IMPL = new ShareCompatImplJB();
-        } else if (Build.VERSION.SDK_INT >= 14) {
-            IMPL = new ShareCompatImplICS();
-        } else {
-            IMPL = new ShareCompatImplBase();
-        }
-    }
-
-    /**
-     * Retrieve the name of the package that launched calledActivity from a share intent.
-     * Apps that provide social sharing functionality can use this to provide attribution
-     * for the app that shared the content.
-     *
-     * <p><em>Note:</em> This data may have been provided voluntarily by the calling
-     * application. As such it should not be trusted for accuracy in the context of
-     * security or verification.</p>
-     *
-     * @param calledActivity Current activity that was launched to share content
-     * @return Name of the calling package
-     */
-    public static String getCallingPackage(Activity calledActivity) {
-        String result = calledActivity.getCallingPackage();
-        if (result == null) {
-            result = calledActivity.getIntent().getStringExtra(EXTRA_CALLING_PACKAGE);
-        }
-        return result;
-    }
-
-    /**
-     * Retrieve the ComponentName of the activity that launched calledActivity from a share intent.
-     * Apps that provide social sharing functionality can use this to provide attribution
-     * for the app that shared the content.
-     *
-     * <p><em>Note:</em> This data may have been provided voluntarily by the calling
-     * application. As such it should not be trusted for accuracy in the context of
-     * security or verification.</p>
-     *
-     * @param calledActivity Current activity that was launched to share content
-     * @return ComponentName of the calling activity
-     */
-    public static ComponentName getCallingActivity(Activity calledActivity) {
-        ComponentName result = calledActivity.getCallingActivity();
-        if (result == null) {
-            result = calledActivity.getIntent().getParcelableExtra(EXTRA_CALLING_ACTIVITY);
-        }
-        return result;
-    }
-
-    /**
-     * Configure a {@link MenuItem} to act as a sharing action.
-     *
-     * <p>If the app is running on API level 14 or higher (Android 4.0/Ice Cream Sandwich)
-     * this method will configure a ShareActionProvider to provide a more robust UI
-     * for selecting the target of the share. History will be tracked for each calling
-     * activity in a file named with the prefix ".sharecompat_" in the application's
-     * private data directory. If the application wishes to set this MenuItem to show
-     * as an action in the Action Bar it should use
-     * {@link MenuItemCompat#setShowAsAction(MenuItem, int)} to request that behavior
-     * in addition to calling this method.</p>
-     *
-     * <p>If the app is running on an older platform version this method will configure
-     * a standard activity chooser dialog for the menu item.</p>
-     *
-     * <p>During the calling activity's lifecycle, if data within the share intent must
-     * change the app should change that state in one of several ways:</p>
-     * <ul>
-     * <li>Call {@link ActivityCompat#invalidateOptionsMenu(Activity)}. If the app is running
-     * on API level 11 or above and uses the Action Bar its menu will be recreated and rebuilt.
-     * If not, the activity will receive a call to {@link Activity#onPrepareOptionsMenu(Menu)}
-     * the next time the user presses the menu key to open the options menu panel. The activity
-     * can then call configureMenuItem again with a new or altered IntentBuilder to reconfigure
-     * the share menu item.</li>
-     * <li>Keep a reference to the MenuItem object for the share item once it has been created
-     * and call configureMenuItem to update the associated sharing intent as needed.</li>
-     * </ul>
-     *
-     * @param item MenuItem to configure for sharing
-     * @param shareIntent IntentBuilder with data about the content to share
-     */
-    public static void configureMenuItem(MenuItem item, IntentBuilder shareIntent) {
-        IMPL.configureMenuItem(item, shareIntent);
-    }
-
-    /**
-     * Configure a menu item to act as a sharing action.
-     *
-     * @param menu Menu containing the item to use for sharing
-     * @param menuItemId ID of the share item within menu
-     * @param shareIntent IntentBuilder with data about the content to share
-     * @see #configureMenuItem(MenuItem, IntentBuilder)
-     */
-    public static void configureMenuItem(Menu menu, int menuItemId, IntentBuilder shareIntent) {
-        MenuItem item = menu.findItem(menuItemId);
-        if (item == null) {
-            throw new IllegalArgumentException("Could not find menu item with id " + menuItemId +
-                    " in the supplied menu");
-        }
-        configureMenuItem(item, shareIntent);
-    }
-
     /**
      * IntentBuilder is a helper for constructing {@link Intent#ACTION_SEND} and
      * {@link Intent#ACTION_SEND_MULTIPLE} sharing intents and starting activities
@@ -266,6 +266,14 @@ public class ShareCompat {
 
         private ArrayList<Uri> mStreams;
 
+        private IntentBuilder(Activity launchingActivity) {
+            mActivity = launchingActivity;
+            mIntent = new Intent().setAction(Intent.ACTION_SEND);
+            mIntent.putExtra(EXTRA_CALLING_PACKAGE, launchingActivity.getPackageName());
+            mIntent.putExtra(EXTRA_CALLING_ACTIVITY, launchingActivity.getComponentName());
+            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        }
+
         /**
          * Create a new IntentBuilder for launching a sharing action from launchingActivity.
          *
@@ -276,18 +284,10 @@ public class ShareCompat {
             return new IntentBuilder(launchingActivity);
         }
 
-        private IntentBuilder(Activity launchingActivity) {
-            mActivity = launchingActivity;
-            mIntent = new Intent().setAction(Intent.ACTION_SEND);
-            mIntent.putExtra(EXTRA_CALLING_PACKAGE, launchingActivity.getPackageName());
-            mIntent.putExtra(EXTRA_CALLING_ACTIVITY, launchingActivity.getComponentName());
-            mIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-        }
-
         /**
          * Retrieve the Intent as configured so far by the IntentBuilder. This Intent
          * is suitable for use in a ShareActionProvider or chooser dialog.
-         *
+         * <p>
          * <p>To create an intent that will launch the activity chooser so that the user
          * may select a target for the share, see {@link #createChooserIntent()}.
          *
@@ -376,10 +376,10 @@ public class ShareCompat {
 
         /**
          * Start a chooser activity for the current share intent.
-         *
+         * <p>
          * <p>Note that under most circumstances you should use
          * {@link ShareCompat#configureMenuItem(MenuItem, IntentBuilder)
-         *  ShareCompat.configureMenuItem()} to add a Share item to the menu while
+         * ShareCompat.configureMenuItem()} to add a Share item to the menu while
          * presenting a detail view of the content to be shared instead
          * of invoking this directly.</p>
          */
@@ -455,7 +455,7 @@ public class ShareCompat {
 
         /**
          * Set a stream URI to the data that should be shared.
-         *
+         * <p>
          * <p>This replaces all currently set stream URIs and will produce a single-stream
          * ACTION_SEND intent.</p>
          *
@@ -639,14 +639,14 @@ public class ShareCompat {
      * IntentReader is a helper for reading the data contained within a sharing (ACTION_SEND)
      * Intent. It provides methods to parse standard elements included with a share
      * in addition to extra metadata about the app that shared the content.
-     *
+     * <p>
      * <p>Social sharing apps are encouraged to provide attribution for the app that shared
      * the content. IntentReader offers access to the application label, calling activity info,
      * and application icon of the app that shared the content. This data may have been provided
      * voluntarily by the calling app and should always be displayed to the user before submission
      * for manual verification. The user should be offered the option to omit this information
      * from shared posts if desired.</p>
-     *
+     * <p>
      * <p>Activities that intend to receive sharing intents should configure an intent-filter
      * to accept {@link Intent#ACTION_SEND} intents ("android.intent.action.SEND") and optionally
      * accept {@link Intent#ACTION_SEND_MULTIPLE} ("android.intent.action.SEND_MULTIPLE") if
@@ -662,6 +662,13 @@ public class ShareCompat {
 
         private ArrayList<Uri> mStreams;
 
+        private IntentReader(Activity activity) {
+            mActivity = activity;
+            mIntent = activity.getIntent();
+            mCallingPackage = ShareCompat.getCallingPackage(activity);
+            mCallingActivity = ShareCompat.getCallingActivity(activity);
+        }
+
         /**
          * Get an IntentReader for parsing and interpreting the sharing intent
          * used to start the given activity.
@@ -673,20 +680,13 @@ public class ShareCompat {
             return new IntentReader(activity);
         }
 
-        private IntentReader(Activity activity) {
-            mActivity = activity;
-            mIntent = activity.getIntent();
-            mCallingPackage = ShareCompat.getCallingPackage(activity);
-            mCallingActivity = ShareCompat.getCallingActivity(activity);
-        }
-
         /**
          * Returns true if the activity this reader was obtained for was
          * started with an {@link Intent#ACTION_SEND} or {@link Intent#ACTION_SEND_MULTIPLE}
          * sharing Intent.
          *
          * @return true if the activity was started with an ACTION_SEND
-         *         or ACTION_SEND_MULTIPLE Intent
+         * or ACTION_SEND_MULTIPLE Intent
          */
         public boolean isShareIntent() {
             final String action = mIntent.getAction();
@@ -761,7 +761,7 @@ public class ShareCompat {
 
         /**
          * Get a URI referring to a data stream shared with the target activity.
-         *
+         * <p>
          * <p>This call will fail if the share intent contains multiple stream items.
          * If {@link #isMultipleShare()} returns true the application should use
          * {@link #getStream(int)} and {@link #getStreamCount()} to retrieve the
@@ -858,7 +858,7 @@ public class ShareCompat {
          * Get the name of the package that invoked this sharing intent. If the activity
          * was not started for a result, IntentBuilder will read this from extra metadata placed
          * in the Intent by ShareBuilder.
-         *
+         * <p>
          * <p><em>Note:</em> This data may have been provided voluntarily by the calling
          * application. As such it should not be trusted for accuracy in the context of
          * security or verification.</p>
@@ -875,7 +875,7 @@ public class ShareCompat {
          * Get the {@link ComponentName} of the Activity that invoked this sharing intent.
          * If the target sharing activity was not started for a result, IntentBuilder will read
          * this from extra metadata placed in the intent by ShareBuilder.
-         *
+         * <p>
          * <p><em>Note:</em> This data may have been provided voluntarily by the calling
          * application. As such it should not be trusted for accuracy in the context of
          * security or verification.</p>
@@ -891,7 +891,7 @@ public class ShareCompat {
         /**
          * Get the icon of the calling activity as a Drawable if data about
          * the calling activity is available.
-         *
+         * <p>
          * <p><em>Note:</em> This data may have been provided voluntarily by the calling
          * application. As such it should not be trusted for accuracy in the context of
          * security or verification.</p>
@@ -913,7 +913,7 @@ public class ShareCompat {
         /**
          * Get the icon of the calling application as a Drawable if data
          * about the calling package is available.
-         *
+         * <p>
          * <p><em>Note:</em> This data may have been provided voluntarily by the calling
          * application. As such it should not be trusted for accuracy in the context of
          * security or verification.</p>
@@ -935,7 +935,7 @@ public class ShareCompat {
         /**
          * Get the human-readable label (title) of the calling application if
          * data about the calling package is available.
-         *
+         * <p>
          * <p><em>Note:</em> This data may have been provided voluntarily by the calling
          * application. As such it should not be trusted for accuracy in the context of
          * security or verification.</p>

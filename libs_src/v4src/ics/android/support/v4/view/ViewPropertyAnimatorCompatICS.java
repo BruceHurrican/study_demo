@@ -131,7 +131,7 @@ class ViewPropertyAnimatorCompatICS {
     }
 
     public static void setListener(final View view,
-            final ViewPropertyAnimatorListener listener) {
+                                   final ViewPropertyAnimatorListener listener) {
         if (listener != null) {
             view.animate().setListener(new AnimatorListenerAdapter() {
                 @Override

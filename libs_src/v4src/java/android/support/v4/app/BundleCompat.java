@@ -28,9 +28,10 @@ public class BundleCompat {
     /**
      * A convenience method to handle getting an {@link IBinder} inside a {@link Bundle} for all
      * Android versions.
+     *
      * @param bundle The bundle to get the {@link IBinder}.
      * @param key    The key to use while getting the {@link IBinder}.
-     * @return       The {@link IBinder} that was obtained.
+     * @return The {@link IBinder} that was obtained.
      */
     public static IBinder getBinder(Bundle bundle, String key) {
         if (Build.VERSION.SDK_INT >= 18) {
@@ -43,6 +44,7 @@ public class BundleCompat {
     /**
      * A convenience method to handle putting an {@link IBinder} inside a {@link Bundle} for all
      * Android versions.
+     *
      * @param bundle The bundle to insert the {@link IBinder}.
      * @param key    The key to use while putting the {@link IBinder}.
      * @param binder The {@link IBinder} to put.

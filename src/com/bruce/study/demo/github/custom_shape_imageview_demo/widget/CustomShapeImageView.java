@@ -25,15 +25,8 @@ import com.bruce.study.demo.R;
  */
 public class CustomShapeImageView extends BaseImageView {
 
-    public static class Shape {
-        public static final int CIRCLE = 1;
-        public static final int RECTANGLE = 2;
-        public static final int SVG    = 3;
-    }
-
     private int mShape = Shape.CIRCLE;
     private int mSvgRawResourceId;
-
     public CustomShapeImageView(Context context) {
         super(context);
     }
@@ -74,6 +67,12 @@ public class CustomShapeImageView extends BaseImageView {
                 return SvgImageView.getBitmap(mContext, getWidth(), getHeight(), mSvgRawResourceId);
         }
         return null;
+    }
+
+    public static class Shape {
+        public static final int CIRCLE = 1;
+        public static final int RECTANGLE = 2;
+        public static final int SVG = 3;
     }
 
 }

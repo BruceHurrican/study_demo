@@ -52,7 +52,7 @@ class ViewCompatLollipop {
     }
 
     public static void setOnApplyWindowInsetsListener(View view,
-            final OnApplyWindowInsetsListener listener) {
+                                                      final OnApplyWindowInsetsListener listener) {
         view.setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
             @Override
             public WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
@@ -137,18 +137,18 @@ class ViewCompatLollipop {
     }
 
     public static boolean dispatchNestedScroll(View view, int dxConsumed, int dyConsumed,
-            int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
+                                               int dxUnconsumed, int dyUnconsumed, int[] offsetInWindow) {
         return view.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed,
                 offsetInWindow);
     }
 
     public static boolean dispatchNestedPreScroll(View view, int dx, int dy, int[] consumed,
-            int[] offsetInWindow) {
+                                                  int[] offsetInWindow) {
         return view.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow);
     }
 
     public static boolean dispatchNestedFling(View view, float velocityX, float velocityY,
-            boolean consumed) {
+                                              boolean consumed) {
         return view.dispatchNestedFling(velocityX, velocityY, consumed);
     }
 

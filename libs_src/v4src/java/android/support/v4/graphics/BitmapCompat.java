@@ -23,60 +23,10 @@ import android.graphics.Bitmap;
  */
 public class BitmapCompat {
     /**
-     * Interface for the full API.
-     */
-    interface BitmapImpl {
-        public boolean hasMipMap(Bitmap bitmap);
-        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap);
-        public int getAllocationByteCount(Bitmap bitmap);
-    }
-
-    static class BaseBitmapImpl implements BitmapImpl {
-        @Override
-        public boolean hasMipMap(Bitmap bitmap) {
-            return false;
-        }
-
-        @Override
-        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap) {
-        }
-
-        @Override
-        public int getAllocationByteCount(Bitmap bitmap) {
-            return bitmap.getRowBytes() * bitmap.getHeight();
-        }
-    }
-
-    static class HcMr1BitmapCompatImpl extends BaseBitmapImpl {
-        @Override
-        public int getAllocationByteCount(Bitmap bitmap) {
-            return BitmapCompatHoneycombMr1.getAllocationByteCount(bitmap);
-        }
-    }
-
-    static class JbMr2BitmapCompatImpl extends HcMr1BitmapCompatImpl {
-        @Override
-        public boolean hasMipMap(Bitmap bitmap){
-            return BitmapCompatJellybeanMR2.hasMipMap(bitmap);
-        }
-
-        @Override
-        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap) {
-            BitmapCompatJellybeanMR2.setHasMipMap(bitmap, hasMipMap);
-        }
-    }
-
-    static class KitKatBitmapCompatImpl extends JbMr2BitmapCompatImpl {
-        @Override
-        public int getAllocationByteCount(Bitmap bitmap) {
-            return BitmapCompatKitKat.getAllocationByteCount(bitmap);
-        }
-    }
-
-    /**
      * Select the correct implementation to use for the current platform.
      */
     static final BitmapImpl IMPL;
+
     static {
         final int version = android.os.Build.VERSION.SDK_INT;
         if (version >= 19) {
@@ -107,5 +57,58 @@ public class BitmapCompat {
      */
     public static int getAllocationByteCount(Bitmap bitmap) {
         return IMPL.getAllocationByteCount(bitmap);
+    }
+
+    /**
+     * Interface for the full API.
+     */
+    interface BitmapImpl {
+        public boolean hasMipMap(Bitmap bitmap);
+
+        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap);
+
+        public int getAllocationByteCount(Bitmap bitmap);
+    }
+
+    static class BaseBitmapImpl implements BitmapImpl {
+        @Override
+        public boolean hasMipMap(Bitmap bitmap) {
+            return false;
+        }
+
+        @Override
+        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap) {
+        }
+
+        @Override
+        public int getAllocationByteCount(Bitmap bitmap) {
+            return bitmap.getRowBytes() * bitmap.getHeight();
+        }
+    }
+
+    static class HcMr1BitmapCompatImpl extends BaseBitmapImpl {
+        @Override
+        public int getAllocationByteCount(Bitmap bitmap) {
+            return BitmapCompatHoneycombMr1.getAllocationByteCount(bitmap);
+        }
+    }
+
+    static class JbMr2BitmapCompatImpl extends HcMr1BitmapCompatImpl {
+        @Override
+        public boolean hasMipMap(Bitmap bitmap) {
+            return BitmapCompatJellybeanMR2.hasMipMap(bitmap);
+        }
+
+        @Override
+        public void setHasMipMap(Bitmap bitmap, boolean hasMipMap) {
+            BitmapCompatJellybeanMR2.setHasMipMap(bitmap, hasMipMap);
+        }
+    }
+
+    static class KitKatBitmapCompatImpl extends JbMr2BitmapCompatImpl {
+        @Override
+        public int getAllocationByteCount(Bitmap bitmap) {
+            return BitmapCompatKitKat.getAllocationByteCount(bitmap);
+        }
     }
 }

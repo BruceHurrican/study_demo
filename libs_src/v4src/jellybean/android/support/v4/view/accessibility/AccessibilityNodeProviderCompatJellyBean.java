@@ -26,13 +26,6 @@ import java.util.List;
  * JellyBean specific AccessibilityNodeProvider API implementation.
  */
 class AccessibilityNodeProviderCompatJellyBean {
-    interface AccessibilityNodeInfoBridge {
-        public Object createAccessibilityNodeInfo(int virtualViewId);
-        public boolean performAction(int virtualViewId, int action, Bundle arguments);
-        public List<Object> findAccessibilityNodeInfosByText(String text,
-            int virtualViewId);
-    }
-
     public static Object newAccessibilityNodeProviderBridge(
             final AccessibilityNodeInfoBridge bridge) {
         return new AccessibilityNodeProvider() {
@@ -47,7 +40,7 @@ class AccessibilityNodeProviderCompatJellyBean {
                     String text, int virtualViewId) {
                 // Use some voodoo to avoid creating intermediary instances.
                 return (List<AccessibilityNodeInfo>) (List<?>)
-                    bridge.findAccessibilityNodeInfosByText(text, virtualViewId);
+                        bridge.findAccessibilityNodeInfosByText(text, virtualViewId);
             }
 
             @Override
@@ -55,5 +48,14 @@ class AccessibilityNodeProviderCompatJellyBean {
                 return bridge.performAction(virtualViewId, action, arguments);
             }
         };
+    }
+
+    interface AccessibilityNodeInfoBridge {
+        public Object createAccessibilityNodeInfo(int virtualViewId);
+
+        public boolean performAction(int virtualViewId, int action, Bundle arguments);
+
+        public List<Object> findAccessibilityNodeInfosByText(String text,
+                                                             int virtualViewId);
     }
 }

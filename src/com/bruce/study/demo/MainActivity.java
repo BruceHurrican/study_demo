@@ -15,7 +15,11 @@
 package com.bruce.study.demo;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -73,6 +77,8 @@ import com.bruce.study.demo.studydata.viewpage.ViewPagerActivity;
 import com.bruce.study.demo.studydata.volley_demo.VolleyActivity;
 import com.bruce.study.demo.util_demo.PhoneInfoActivity;
 import com.bruce.study.demo.utils.DialogUtils;
+import com.bruce.study.demo.utils.LogUtils;
+import com.bruce.study.demo.utils.PublicUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -87,6 +93,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private List<Class<? extends Activity>> demos;
     private List<String> demoNamesList;
     private Intent it;
+    private NetWorkAvailableReceiver netWorkAvailableReceiver = new NetWorkAvailableReceiver();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +101,9 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         setContentView(R.layout.main);
 
         initContainer();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(netWorkAvailableReceiver, filter);
     }
 
     @Override
@@ -103,6 +113,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(netWorkAvailableReceiver);
         super.onDestroy();
 //        android.os.Process.killProcess(android.os.Process.myPid());
     }
@@ -203,5 +214,18 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    private class NetWorkAvailableReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            LogUtils.i("网络状态发生改变 ");
+            if (PublicUtil.isNetWorkAvailable(MainActivity.this)) {
+                LogUtils.d("当前设备已经联网");
+            } else {
+                showToastShort("亲的网络不给力啊╮(╯3╰)╭");
+            }
+        }
     }
 }

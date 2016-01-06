@@ -184,13 +184,14 @@ public final class PublicUtil {
      *
      * @return boolean
      */
-    public static String isNetWorkAvailable(Context context) {
+    public static boolean isNetWorkAvailable(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         boolean isWifiOK = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
-        Logs.i("PublicUtil", "isWifiOK -->" + isWifiOK);
+        LogUtils.i("isWifiOK -->" + isWifiOK);
         boolean isInternetOK = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).isConnectedOrConnecting();
-        Logs.i("PublicUtil", "isInternetOK -->" + isInternetOK);
-        return (isWifiOK || isInternetOK) ? "当前手机是否联网 ? 已经联网" : "当前手机是否联网 ? 未连接网络";
+        LogUtils.i("isInternetOK -->" + isInternetOK);
+        LogUtils.i((isWifiOK || isInternetOK) ? "当前手机是否联网 ? 已经联网" : "当前手机是否联网 ? 未连接网络");
+        return (isWifiOK || isInternetOK);
     }
 
     /**
@@ -258,11 +259,12 @@ public final class PublicUtil {
 
     /**
      * 判断 url 是否合法
+     *
      * @param url
      * @return
      */
-    public static boolean isUrl(String url){
-        if (TextUtils.isEmpty(url)){
+    public static boolean isUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
             return false;
         }
         String regEx = "^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]";

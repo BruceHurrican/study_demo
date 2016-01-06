@@ -47,6 +47,7 @@ public class HelpFragment extends BaseFragment implements View.OnClickListener {
     Button btn_client, btn_server;
     TextView logger;
     private Callbacks mCallbacks = sDummyCallbacks;
+
     public HelpFragment() {
     }
 

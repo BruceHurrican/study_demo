@@ -27,6 +27,7 @@ public class CustomShapeImageView extends BaseImageView {
 
     private int mShape = Shape.CIRCLE;
     private int mSvgRawResourceId;
+
     public CustomShapeImageView(Context context) {
         super(context);
     }

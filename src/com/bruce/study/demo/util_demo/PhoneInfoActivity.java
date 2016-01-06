@@ -75,7 +75,7 @@ public class PhoneInfoActivity extends BaseActivity implements View.OnClickListe
                 tv_utildemo.setText(PublicUtil.getScreenInPixels(PhoneInfoActivity.this));
                 break;
             case R.id.btn_utildemo_network:
-                tv_utildemo.setText(PublicUtil.isNetWorkAvailable(PhoneInfoActivity.this));
+                tv_utildemo.setText(PublicUtil.isNetWorkAvailable(PhoneInfoActivity.this) ? "当前手机是否联网 ? 已经联网" : "当前手机是否联网 ? 未连接网络");
                 break;
             case R.id.btn_utildemo_browser:
                 openSystemBrowser();

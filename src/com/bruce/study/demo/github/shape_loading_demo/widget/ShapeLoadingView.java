@@ -36,18 +36,20 @@ public class ShapeLoadingView extends View {
     private Paint mPaint;
     private double mControlX = 0;
 
-   /* @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public ShapeLoadingView(Context context, AttributeSet attrs, int defStyleAttr,int defStyleRes) {
-        super(context, attrs, defStyleAttr,defStyleAttr);
-        init();
-    }*/
+    /* @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+     public ShapeLoadingView(Context context, AttributeSet attrs, int defStyleAttr,int defStyleRes) {
+         super(context, attrs, defStyleAttr,defStyleAttr);
+         init();
+     }*/
     private double mControlY = 0;
     private double mAnimPercent;
     private double triangle2Circle = 0.25555555f;
+
     public ShapeLoadingView(Context context) {
         super(context);
         init();
     }
+
     public ShapeLoadingView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
